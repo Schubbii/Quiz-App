@@ -2,7 +2,7 @@
   "name": "quiz-app",
   "version": "1.0.0",
   "description": "Arbeitet nie direkt auf main/master.",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "start": "electron ."
   },
