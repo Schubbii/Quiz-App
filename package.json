@@ -1,0 +1,24 @@
+{
+  "name": "quiz-app",
+  "version": "1.0.0",
+  "description": "Arbeitet nie direkt auf main/master.",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Schubbii/Quiz-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Schubbii/Quiz-App/issues"
+  },
+  "homepage": "https://github.com/Schubbii/Quiz-App#readme",
+  "devDependencies": {
+    "electron": "^41.1.0"
+  }
+}
