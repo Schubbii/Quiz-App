@@ -12,7 +12,8 @@ function timer(t, textID, funcName) {
             document.getElementById(textID).innerHTML = t;
             if (t == 0) {
                 clearInterval(timerVar)
-                
+                timerVar = 0    
+                console.log(timerVar)
             }
             t = t-1; 
             
