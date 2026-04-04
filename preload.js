@@ -1,5 +1,5 @@
 const { contextBridge } = require('electron');
-const questions = require('./data/questions.json');
+const questions = require('./data/quizzes.json');
 
 contextBridge.exposeInMainWorld('quizAPI', {
   getQuestions: () => questions
