@@ -6,11 +6,13 @@ function createWindow() {
     width: 900,
     height: 700,
     webPreferences: {
-      preload: path.join(__dirname, "renderer.js")
+      contextIsolation: true,
     }
   });
 
   win.loadFile("src/index.html");
+
+  win.setMenuBarVisibility(false);
 }
 
 app.whenReady().then(() => {

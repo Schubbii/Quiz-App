@@ -1,72 +1,35 @@
-* {
-  justify-content: center;
-  padding: 24px;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #222;
 }
 
-.card {
-  width: 100%;
+.app {
   max-width: 700px;
+  margin: 60px auto;
   background: white;
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
   margin-top: 0;
 }
 
-.answers {
-  display: grid;
-  gap: 12px;
-  margin: 24px 0;
-}
-
-.answers button,
-#nextBtn,
-#restartBtn {
-  padding: 14px 16px;
-  border: none;
-  border-radius: 10px;
+button {
+  padding: 12px 18px;
   font-size: 16px;
+  border: none;
+  border-radius: 8px;
   cursor: pointer;
-}
-
-.answers button {
-  background: #e9eef5;
-}
-
-.answers button:hover {
-  background: #dbe5f0;
-}
-
-.answers button.correct {
-  background: #b9f6ca;
-}
-
-.answers button.wrong {
-  background: #ffcccb;
-}
-
-#nextBtn,
-#restartBtn {
-  background: #222;
+  background-color: #2d89ef;
   color: white;
-  margin-right: 10px;
 }
 
-#nextBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.feedback {
-  min-height: 24px;
-  font-weight: bold;
-}
-
-.score {
-  margin-bottom: 20px;
+button:hover {
+  opacity: 0.9;
 }
 
 .hidden {
