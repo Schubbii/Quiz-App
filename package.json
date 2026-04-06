@@ -4,7 +4,10 @@
   "description": "Arbeitet nie direkt auf main/master.",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "app:dir": "electron-builder --dir",
+  "app:dist": "electron-builder"
+
   },
   "repository": {
     "type": "git",
@@ -19,6 +22,23 @@
   },
   "homepage": "https://github.com/Schubbii/Quiz-App#readme",
   "devDependencies": {
-    "electron": "^41.1.0"
-  }
+    "electron": "^41.1.0",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "com.p1.quizapp",
+    "productName": "Quiz App",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+    
+}
 }
