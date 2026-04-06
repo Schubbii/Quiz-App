@@ -1,0 +1,28 @@
+{
+    "qestions": [
+        {
+            "ID": 0,
+            "question": "Frage Hier",
+            "answers": ["Antwort1", "Antwort2", "Anwort3", "Antwort4"],
+            "rightAnswer": 2,
+            "category": "Kategorie1",
+            "difficulty": "leicht"
+        },
+        {
+            "ID": 1,
+            "question": "Frage Hier",
+            "answers": ["Antwort1", "Antwort2", "Anwort3", "Antwort4"],
+            "rightAnswer": 2,
+            "category": "Kategorie1",
+            "difficulty": "leicht"
+        },
+        {
+            "ID": 2,
+            "question": "Frage Hier",
+            "answers": ["Antwort1", "Antwort2", "Anwort3", "Antwort4"],
+            "rightAnswer": 2,
+            "category": "Kategorie1",
+            "difficulty": "leicht"
+        }
+    ]
+}
