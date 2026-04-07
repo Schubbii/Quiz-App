@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fragen Verwaltung</title>
+    <link rel="stylesheet" href="./question-management.css">
+</head>
+<body>
+    <h1>Fragen Verwaltung</h1>
+    <p>Hier können Sie Fragen hinzufügen, bearbeiten oder löschen.</p>
+
+    <div class="add-question">
+        <h2>Frage hinzufügen</h2>
+        <form id="addQuestionForm">
+            <label for="questionText">Fragetext:</label>
+            <input type="text" id="questionText" name="questionText" required><br><br>
+
+            <label for="options">Antwortoptionen (durch Komma getrennt):</label>
+            <input type="text" id="options" name="options" required><br><br>
+
+            <label for="correctOption">Richtige Antwort (Index der Option):</label>
+            <input type="number" id="correctOption" name="correctOption" min="1" max="4" required><br><br>
+
+            <label for="category">Kategorie:</label>
+            <input type="text" id="category" name="category" required><br><br>
+
+            <label for="difficulty">Schwierigkeit:</label>
+            <select id="difficulty" name="difficulty" required>
+                <option value="einfach">einfach</option>
+                <option value="mittel">mittel</option>
+                <option value="schwer">schwer</option>
+            </select><br><br>
+
+            <button type="submit">Frage hinzufügen</button>
+        </form>
+    </div>
+
+    <div class="display-questions"></div>
+
+    <script type="module">
+        import DBHandler from "./quizzesHandler.js";
+
+        const db = new DBHandler("./data/quizzes.json");
+        const form = document.getElementById("addQuestionForm");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const questionText = document.getElementById("questionText").value.trim();
+            const optionsInput = document.getElementById("options").value.trim();
+            const correctOptionIndex = parseInt(document.getElementById("correctOption").value -1, 10);
+            const category = document.getElementById("category").value.trim();
+            const difficulty = document.getElementById("difficulty").value;
+
+            const antworten = optionsInput
+                .split(",")
+                .map(option => option.trim())
+                .filter(option => option !== "");
+
+            if (antworten.length < 2) {
+                alert("Bitte mindestens zwei Antwortmöglichkeiten eingeben.");
+                return;
+            }
+
+            if (
+                isNaN(correctOptionIndex) ||
+                correctOptionIndex < 0 ||
+                correctOptionIndex >= antworten.length
+            ) {
+                alert("Der Index der richtigen Antwort ist ungültig.");
+                return;
+            }
+
+            const neueFrage = {
+                frage: questionText,
+                antworten: antworten,
+                richtigeAntwort: antworten[correctOptionIndex],
+                kategorie: category,
+                schwierigkeit: difficulty
+            };
+
+            try {
+                const gespeichert = await db.addQuestion(neueFrage);
+                console.log("Neu gespeichert:", gespeichert);
+                alert("Frage wurde gespeichert.");
+                form.reset();
+            } catch (error) {
+                console.error(error);
+                alert("Fehler beim Speichern: " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -14,18 +14,8 @@ export default class QuizzesHandler {
     await fs.writeFile(this.filePath, JSON.stringify(data, null, 2));
   }
 
-  async getAllQuestions() {
-    const data = await this.getData();
-    return data.questions;
-  }
-
   async addQuestion(questionData) {
     const data = await this.getData();
-
-    /* let id = 1;
-    if (data.questions.length > 0) {
-      id = data.questions[data.questions.length - 1].id + 1;
-    } */
 
     let id = 1;
 
@@ -33,8 +23,6 @@ export default class QuizzesHandler {
       const ids = data.questions.map((q) => q.id);
       id = Math.max(...ids) + 1;
     }
-
-    //Erstelle eine Funktion dass die ID automotisch hochgezählt wird, damit man nicht immer die ID manuell eingeben muss, wenn man eine neue Frage hinzufügt. Die Funktion soll die ID der letzten Frage auslesen und um 1 erhöhen, bevor sie der neuen Frage zugewiesen wird.
 
     const newQuestion = {
       id: id,
@@ -51,7 +39,29 @@ export default class QuizzesHandler {
     return newQuestion;
   }
 
-  /* async updateQuestion(id, updates) {
+  async getAllQuestions() {
+    const data = await this.getData();
+    return data.questions;
+  }
+
+  async getQuestionsForRound(category, difficulty, count) {
+    const data = await this.getData();
+
+    const filteredQuestions = data.questions.filter(
+      (q) => q.category === category && q.difficulty === difficulty
+    );
+
+    const questionsForRound = [...filteredQuestions];
+
+    for (let i = questionsForRound.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [questionsForRound[i], questionsForRound[j]] = [questionsForRound[j], questionsForRound[i]];
+    }
+
+    return questionsForRound.slice(0, count);
+  }
+
+  async updateQuestion(id, updates) {
     const data = await this.getData();
 
     for (let i = 0; i < data.questions.length; i++) {
@@ -61,7 +71,7 @@ export default class QuizzesHandler {
         return data.questions[i];
       }
     }
-  } */
+  }
 
   async deleteQuestion(id) {
     const data = await this.getData();
