@@ -22,18 +22,27 @@ export default class QuizzesHandler {
   async addQuestion(questionData) {
     const data = await this.getData();
 
-    let id = 1;
+    /* let id = 1;
     if (data.questions.length > 0) {
       id = data.questions[data.questions.length - 1].id + 1;
+    } */
+
+    let id = 1;
+
+    if (data.questions.length > 0) {
+      const ids = data.questions.map((q) => q.id);
+      id = Math.max(...ids) + 1;
     }
+
+    //Erstelle eine Funktion dass die ID automotisch hochgezählt wird, damit man nicht immer die ID manuell eingeben muss, wenn man eine neue Frage hinzufügt. Die Funktion soll die ID der letzten Frage auslesen und um 1 erhöhen, bevor sie der neuen Frage zugewiesen wird.
 
     const newQuestion = {
       id: id,
       question: questionData.question,
       answers: questionData.answers,
       correctAnswerIndex: questionData.correctAnswerIndex,
-      category: questionData.category || "Allgemein",
-      difficulty: questionData.difficulty || "mittel"
+      category: questionData.category,
+      difficulty: questionData.difficulty,
     };
 
     data.questions.push(newQuestion);
@@ -42,7 +51,7 @@ export default class QuizzesHandler {
     return newQuestion;
   }
 
-  async updateQuestion(id, updates) {
+  /* async updateQuestion(id, updates) {
     const data = await this.getData();
 
     for (let i = 0; i < data.questions.length; i++) {
@@ -52,7 +61,7 @@ export default class QuizzesHandler {
         return data.questions[i];
       }
     }
-  }
+  } */
 
   async deleteQuestion(id) {
     const data = await this.getData();
