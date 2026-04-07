@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "app:dir": "electron-builder --dir",
-  "app:dist": "electron-builder"
+    "app:dist": "electron-builder"
 
   },
   "repository": {
@@ -40,5 +40,5 @@
       "allowToChangeInstallationDirectory": true
     }
     
-}
+  }
 }
