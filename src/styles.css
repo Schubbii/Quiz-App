@@ -32,6 +32,17 @@ button:hover {
   opacity: 0.9;
 }
 
+.answer-btn {
+  display: block;
+  margin: 10px;
+}
+
+#answers {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
 .hidden {
   display: none;
 }
