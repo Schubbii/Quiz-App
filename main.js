@@ -3,14 +3,14 @@ const path = require("path");
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 900,
-    height: 700,
+    width: 1440,
+    height: 1024,
     webPreferences: {
       contextIsolation: true,
     }
   });
 
-  win.loadFile("src/index.html");
+  win.loadFile("src/menu.html");
 
   win.setMenuBarVisibility(false);
 }

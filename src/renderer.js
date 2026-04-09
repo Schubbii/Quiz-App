@@ -24,14 +24,13 @@ function showQuestion() {
   currentQuestion.answers.forEach(answer => {
     const button = document.createElement("button");
     button.textContent = answer;
-    button.style.display = "block";
-    button.style.marginTop = "10px";
+    button.classList.add("answer-btn");
 
     button.addEventListener("click", () => {
       if (answer === currentQuestion.correct) {
-        alert("Richtig!");
+        button.style.backgroundColor = "green";
       } else {
-        alert("Falsch!");
+        button.style.backgroundColor = "red";
       }
     });
 

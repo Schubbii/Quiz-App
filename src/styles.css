@@ -1,9 +1,10 @@
-body {
+/* body {
   margin: 0;
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   color: #222;
-}
+} */
+
 
 .app {
   max-width: 700px;
@@ -13,7 +14,7 @@ body {
   border-radius: 12px;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
-
+/*
 h1 {
   margin-top: 0;
 }
@@ -32,6 +33,260 @@ button:hover {
   opacity: 0.9;
 }
 
+.answer-btn {
+  display: block;
+  margin: 10px;
+}
+
+#answers {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
 .hidden {
   display: none;
+}
+  */
+
+* {
+    box-sizing: border-box;
+}
+  html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Radio Canada Big', sans-serif;
+  }
+body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/*
+.container {
+  width: 1440px;
+  height: 1024px;
+  background:linear-gradient(180deg, #5813D8 0%, #1A086D 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+} */
+
+.background {
+   width: 1440px;
+  height: 1024px;
+  background:linear-gradient(180deg, #5813D8 0%, #1A086D 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  position: absolute;
+  background: radial-gradient(circle at 50% 50%, rgba(74, 167, 255, 0.9) 0%, rgba(74, 167, 255, 0.15) 18%, transparent 38%),
+              radial-gradient(circle at 25% 25%, rgba(214, 68, 255, 0.9) 0%, rgba(214, 68, 255, 0.2) 18%, transparent 40%),
+              radial-gradient(circle at 75% 30%, rgba(162, 44, 255, 0.9) 0%, rgba(162, 44, 255, 0.2) 18%, transparent 38%),
+              radial-gradient(circle at 50% 85%, rgba(255, 67, 210, 0.65) 0%, rgba(255, 67, 210, 0.16) 15%, transparent 35%),
+              linear-gradient(180deg, #7f1bff 0%, #5e16c7 22%, #2f2fc7 58%, #17004d 100%);
+  filter: saturate(120), blur(0.5px);
+  transform: scale(1.08);
+  animation: BGmoving 12s ease-in-out infinite alternate;
+}
+.background::before, .background::after {
+  content: "";
+  position: absolute;
+  inset: -100%;
+  background: radial-gradient(circle at 30% 60%, rgba(80, 190, 255, 0.22), transparent 25%),
+              radial-gradient(circle at 70% 40%, rgba(255, 0, 221, 0.18), transparent 24%);
+  animation: glow 12s ease-in-out infinite alternate;
+}
+
+.background::after {
+  animation-duration: 16s;
+  animation-direction: alternate-reverse;
+  opacity: 0.9;
+}
+
+@keyframes BGmoving {
+  0% {
+    transform: scale(1px) translate(0px, 0px);
+    filter: saturate(130%) hue-rotate(0deg);
+  }
+  50% {
+    transform: scale(1px) translate(-8px, 6px);
+    filter: saturate(130%) hue-rotate(20deg);
+  }
+  100% {
+    transform: scale(1px) translate(10px, -10px);
+    filter: saturate(120%) hue-rotate(-6deg);
+  }
+}
+
+@keyframes glow {
+  0% {
+    transform: translate(-12px, -8px) scale(1);
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate(12px, 10px) scale(1.06);
+    opacity: 1;
+  }
+}
+
+.menu {
+  position: absolute;
+  width: min(760px, 92vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 54px;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+.menuBtn {
+  width: 400px;
+  height: 192px;
+  fill: rgba(86, 76, 223, 0.50);
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 30px;
+  font-size: 28px;
+  background: linear-gradient(180deg, #5813D8 0%, #1A086D 100%);
+  backdrop-filter: blur(2px);
+}
+
+.playBtn {
+   width: 400px;
+    height: 192px;
+    fill: rgba(86, 76, 223, 0.50);
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 30px;
+    background: rgba(255, 100.53, 249.85, 0.73);
+    font-size: 28px;
+}
+
+.menuBtn:hover, .playBtn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 16px 28px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 0 22px rgba(255, 255, 255, 0.1);
+  filter: brightness(1.06);
+}
+
+.menuBtn:active, .playBtn:active {
+  transform: translateY(1px) scale(0.98);
+ 
+}
+.layout {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2,minmax(220px, 1fr));
+  gap: 58px 90px;
+  justify-items: center;
+}
+
+.menuBtn, .playBtn {
+  color: white;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  border-radius: 18px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.08);;
+}
+
+@media (max-width: 700px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .menu {
+    gap: 34px;
+  }
+  .menuBtn, .playBtn {
+    width: min(300px, 80vw);
+  }
+  .menuBtn {
+    font-size: 24px;
+    min-height: 86px;
+  }
+.playBtn {
+    font-size: 24px;
+    min-height: 86px; 
+  }
+}
+
+/* alles drunter nur für Fragen.html */
+
+.buttonAnswers {
+  width: 400px;
+  height: 192px;
+  fill: rgba(86, 76, 223, 0.50);
+  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 30px;
+  font-size: 28px;
+  background: linear-gradient(180deg, #5813D8 0%, #1A086D 100%);
+  backdrop-filter: blur(2px);
+}
+
+.rectangle {
+  display: flex;;
+  width: 1560px;
+  height: 112px;
+  background: rgba(217, 217, 217, 0.20);
+  top: 108px;
+  color: white;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.rectangleQuestion {
+  width: 1346px; 
+  height: 195px; 
+  background: rgba(255, 100.53, 249.85, 0.73); 
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); 
+  border-radius: 30px;
+  justify-items: center;
+  font-size: 50px;
+}
+
+.circleTimer {
+  left: 900px;
+  top: -40px;
+  width: 200px; 
+  height: 200px; 
+  background: rgba(38, 39, 182, 0.80); 
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); 
+  border-radius: 9999px;
+  position: absolute;
+}
+.buttonAnswers, .rectangleQuestion {
+  color: white;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  border-radius: 30px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  justify-items: center;
+}
+
+.buttonAnswers:hover {
+   transform: translateY(-3px) scale(1.02);
+  box-shadow:
+    0 16px 28px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 0 22px rgba(255, 255, 255, 0.1);
+  filter: brightness(1.06);
+}
+.buttonAnswers:active {
+  transform: translateY(1px) scale(0.98);
 }
