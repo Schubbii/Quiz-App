@@ -36,19 +36,33 @@ document.getElementById("btn1").addEventListener("click", testeTimer);
 
 
 
-function timer(t, textID, funcName) {
+function timer(t, textID) {
     console.log("in Timer");
 
     let timerVar = setInterval(function() {
             document.getElementById(textID).innerHTML = t;
-            if (t == 0) {
-                clearInterval(timerVar)
-                
+            if (t == 0) {           //Ende des Timers
+              //window.location.href = "cutoffscreen.html"; //Hiermit wird die aktuelle Seite auf eine Neue geleitet, damit der Nutzer nix mehr eingeben kann (zeitabgelaufen)
+              clearInterval(timerVar)  
             }
             t = t-1; 
             
         }, 1000);
-    
+}
+
+
+function displayTimer(t) {
+    console.log("in Timer");
+    document.appendChild(<p id="cutOffTimer"> 10</p>)
+    let timerVar = setInterval(function() {
+            document.getElementById(cutOffTimer).innerHTML = t;
+            if (t == 0) {           //Ende des Timers
+              //window.location.href = "cutoffscreen.html"; //Hiermit wird die aktuelle Seite auf eine Neue geleitet, damit der Nutzer nix mehr eingeben kann (zeitabgelaufen)
+              clearInterval(timerVar)  
+            }
+            t = t-1; 
+            
+        }, 1000);
 }
 
 
