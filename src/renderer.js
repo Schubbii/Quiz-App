@@ -1,3 +1,7 @@
+const startAnimation = document.getElementById("Startanimation");
+const logoAnimation = document.getElementById("Logoanimation");
+const hauptmenue = document.getElementById("Hauptmenue");
+
 const startBtn = document.getElementById("start-btn");
 const nextBtn = document.getElementById("next-btn");
 const quizBox = document.getElementById("quiz-box");
@@ -5,6 +9,17 @@ const questionEl = document.getElementById("question");
 const answersEl = document.getElementById("answers");
 
 let currentQuestionIndex = 0;
+
+logoAnimation.onended = function () {
+  startAnimation.style.display = "none";
+  hauptmenue.classList.remove("hidden");
+};
+
+logoAnimation.onloadedmetadata = function () {
+  setTimeout(() => {
+    zeigeHauptmenue();
+  }, logoAnimation.duration * 1000);
+};
 
 const quizQuestions = [
   {
