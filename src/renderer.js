@@ -5,6 +5,8 @@ const questionEl = document.getElementById("question");
 const answersEl = document.getElementById("answers");
 
 let currentQuestionIndex = 0;
+let correctAnswers = 0;
+let wrongAnswers = 0;
 
 const quizQuestions = [
   {
@@ -23,6 +25,8 @@ startBtn.addEventListener("click", () => {
   quizBox.classList.remove("hidden");
   nextBtn.classList.add("hidden");
   currentQuestionIndex = 0;
+  correctAnswers = 0;
+  wrongAnswers = 0;
   showQuestion();
 });
 
@@ -33,7 +37,15 @@ nextBtn.addEventListener("click", () => {
     nextBtn.classList.add("hidden");
   } else {
     questionEl.textContent = "Quiz beendet!";
-    answersEl.innerHTML = "";
+    
+    const total = correctAnswers + wrongAnswers;
+    const percentage = Math.round((correctAnswers / total) * 100);
+
+    answersEl.innerHTML = `
+      <p>Richtig: ${correctAnswers}</p>
+      <p>Falsch: ${wrongAnswers}</p>
+      <p>Quote: ${percentage}%</p>
+    `;
     nextBtn.classList.add("hidden");
   }
 });
@@ -51,8 +63,10 @@ function showQuestion() {
     button.addEventListener("click", () => {
       if (answer === currentQuestion.correct) {
         button.style.backgroundColor = "green";
+        correctAnswers++; 
       } else {
         button.style.backgroundColor = "red";
+        wrongAnswers++;
         const correctButton = Array.from(answersEl.children).find(btn => btn.textContent === currentQuestion.correct);
         if (correctButton) {
           correctButton.style.backgroundColor = "green";
