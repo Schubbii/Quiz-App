@@ -60,6 +60,7 @@ button:hover {
     font-family: 'Radio Canada Big', sans-serif;
   }
 body {
+  z-index: 0;
   position: relative;
   display: flex;
   align-items: center;
@@ -75,9 +76,15 @@ body {
   display: flex;
 } */
 
+
+#startanimation {
+  z-index: 1;
+}
+
 .background {
-   width: 1440px;
-  height: 1024px;
+  z-index: 0;
+   /* width: 1440px;
+  height: 1024px; */
   background:linear-gradient(180deg, #5813D8 0%, #1A086D 100%);
   position: relative;
   overflow: hidden;

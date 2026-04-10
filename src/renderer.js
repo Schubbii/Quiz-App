@@ -8,14 +8,16 @@ const quizBox = document.getElementById("quiz-box");
 const questionEl = document.getElementById("question");
 const answersEl = document.getElementById("answers");
 
+const playButton = document.querySelector(".playBtn");
+const hauptMenu = document.getElementById("menu");
+
+
 let currentQuestionIndex = 0;
 
 logoAnimation.addEventListener("ended", () => {
   startAnimation.style.display = "none";
   hauptmenue.classList.remove("hidden");
 });
-
-
 
 
 const quizQuestions = [
@@ -31,12 +33,21 @@ const quizQuestions = [
   }
 ];
 
-startBtn.addEventListener("click", () => {
-  quizBox.classList.remove("hidden");
-  nextBtn.classList.add("hidden");
-  currentQuestionIndex = 0;
-  showQuestion();
-});
+if (playButton) {
+  playButton.addEventListener("click", () => {
+    console.log("Play button clicked");
+    window.location.href = "index.html";
+  });
+}
+
+if (startBtn) {
+  startBtn.addEventListener("click", () => {
+    console.log("Start button clicked");
+    quizBox.classList.remove("hidden");
+    showQuestion();
+  });
+}
+
 
 nextBtn.addEventListener("click", () => {
   currentQuestionIndex++;
