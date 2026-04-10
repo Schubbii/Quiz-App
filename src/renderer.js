@@ -10,16 +10,13 @@ const answersEl = document.getElementById("answers");
 
 let currentQuestionIndex = 0;
 
-logoAnimation.onended = function () {
+logoAnimation.addEventListener("ended", () => {
   startAnimation.style.display = "none";
   hauptmenue.classList.remove("hidden");
-};
+});
 
-logoAnimation.onloadedmetadata = function () {
-  setTimeout(() => {
-    zeigeHauptmenue();
-  }, logoAnimation.duration * 1000);
-};
+
+
 
 const quizQuestions = [
   {
