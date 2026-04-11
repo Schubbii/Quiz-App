@@ -3,16 +3,26 @@ const logoAnimation = document.getElementById("Logoanimation");
 const hauptmenue = document.getElementById("Hauptmenue");
 
 const startBtn = document.getElementById("start-btn");
-const nextBtn = document.getElementById("next-btn");
+// const nextBtn = document.getElementById("next-btn");
 const quizBox = document.getElementById("quiz-box");
 const questionEl = document.getElementById("question");
-const answersEl = document.getElementById("answers");
+// const answersEl = document.getElementById("answers");
 
 const playButton = document.querySelector(".playBtn");
 const hauptMenu = document.getElementById("menu");
 
+const questionFrame = document.getElementById("question2");
+const answersEl = document.getElementById("answers");
+const nextBtn = document.getElementById("next-btn");
+const fragenText = document.querySelector(".FragenText");
 
 let currentQuestionIndex = 0;
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (window.location.pathname.includes("fragen.html")) {
+    showQuestion();
+  }
+});
 
 logoAnimation.addEventListener("ended", () => {
   startAnimation.style.display = "none";
@@ -36,17 +46,19 @@ const quizQuestions = [
 if (playButton) {
   playButton.addEventListener("click", () => {
     console.log("Play button clicked");
-    window.location.href = "index.html";
-  });
-}
-
-if (startBtn) {
-  startBtn.addEventListener("click", () => {
+    window.location.href = "fragen.html";
     console.log("Start button clicked");
-    quizBox.classList.remove("hidden");
     showQuestion();
   });
 }
+
+// if (startBtn) {
+//   startBtn.addEventListener("click", () => {
+//     console.log("Start button clicked");
+//     quizBox.classList.remove("hidden");
+//     showQuestion();
+//   });
+// }
 
 
 nextBtn.addEventListener("click", () => {
@@ -55,7 +67,7 @@ nextBtn.addEventListener("click", () => {
     showQuestion();
     nextBtn.classList.add("hidden");
   } else {
-    questionEl.textContent = "Quiz beendet!";
+    questionFrame.textContent = "Quiz beendet!";
     answersEl.innerHTML = "";
     nextBtn.classList.add("hidden");
   }
@@ -63,13 +75,17 @@ nextBtn.addEventListener("click", () => {
 
 function showQuestion() {
   const currentQuestion = quizQuestions[currentQuestionIndex];
-  questionEl.textContent = currentQuestion.question;
-  answersEl.innerHTML = "";
+  questionFrame.textContent = currentQuestion.question;
+  answersEl.innerHTML = ""; // Clear previous answers
+
+  if (fragenText) {
+    fragenText.textContent = `Frage ${currentQuestionIndex + 1} von ${quizQuestions.length}`;
+  }
 
   currentQuestion.answers.forEach(answer => {
     const button = document.createElement("button");
     button.textContent = answer;
-    button.classList.add("answer-btn");
+    button.classList.add("buttonAnswers");
 
     button.addEventListener("click", () => {
       if (answer === currentQuestion.correct) {

@@ -77,14 +77,14 @@ body {
 } */
 
 
-#startanimation {
-  z-index: 1;
-}
+/* #startanimation {
+  /* z-index: 1; */
+/* } */ 
 
 .background {
-  z-index: 0;
-   /* width: 1440px;
-  height: 1024px; */
+  /* z-index: 0; */
+   width: 1440px;
+  height: 1024px;
   background:linear-gradient(180deg, #5813D8 0%, #1A086D 100%);
   position: relative;
   overflow: hidden;
@@ -246,13 +246,18 @@ button {
 
 .rectangle {
   display: flex;;
-  width: 1560px;
+  width: 1500px;
   height: 112px;
   background: rgba(217, 217, 217, 0.20);
   top: 108px;
   color: white;
   font-weight: 800;
   letter-spacing: 0.5px;
+}
+
+.FragenText {
+  margin-left: 50px;
+  font-size: 15px;
 }
 
 .rectangleQuestion {
