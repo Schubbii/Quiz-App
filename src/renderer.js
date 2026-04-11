@@ -1,35 +1,3 @@
-const startAnimation = document.getElementById("Startanimation");
-const logoAnimation = document.getElementById("Logoanimation");
-const hauptmenue = document.getElementById("Hauptmenue");
-
-const startBtn = document.getElementById("start-btn");
-// const nextBtn = document.getElementById("next-btn");
-const quizBox = document.getElementById("quiz-box");
-const questionEl = document.getElementById("question");
-// const answersEl = document.getElementById("answers");
-
-const playButton = document.querySelector(".playBtn");
-const hauptMenu = document.getElementById("menu");
-
-const questionFrame = document.getElementById("question2");
-const answersEl = document.getElementById("answers");
-const nextBtn = document.getElementById("next-btn");
-const fragenText = document.querySelector(".FragenText");
-
-let currentQuestionIndex = 0;
-
-document.addEventListener("DOMContentLoaded", () => {
-  if (window.location.pathname.includes("fragen.html")) {
-    showQuestion();
-  }
-});
-
-logoAnimation.addEventListener("ended", () => {
-  startAnimation.style.display = "none";
-  hauptmenue.classList.remove("hidden");
-});
-
-
 const quizQuestions = [
   {
     question: "Welche Sprache wird oft mit Electron verwendet?",
@@ -43,64 +11,122 @@ const quizQuestions = [
   }
 ];
 
-if (playButton) {
-  playButton.addEventListener("click", () => {
-    console.log("Play button clicked");
-    window.location.href = "fragen.html";
-    console.log("Start button clicked");
-    showQuestion();
-  });
+let currentQuestionIndex = 0;
+
+function initMenuPage() {
+  const startAnimation = document.getElementById("Startanimation");
+  const logoAnimation = document.getElementById("Logoanimation");
+  const menu = document.getElementById("Hauptmenue");
+  const playButton = document.querySelector(".playBtn");
+
+  if (logoAnimation && startAnimation && menu) {
+    logoAnimation.addEventListener("ended", () => {
+      startAnimation.classList.add("hidden");
+      menu.classList.remove("hidden");
+    });
+  }
+
+  if (playButton) {
+    playButton.addEventListener("click", () => {
+      window.location.href = "fragen.html";
+    });
+  }
 }
 
-// if (startBtn) {
-//   startBtn.addEventListener("click", () => {
-//     console.log("Start button clicked");
-//     quizBox.classList.remove("hidden");
-//     showQuestion();
-//   });
-// }
+function initQuestionPage() {
+  const questionFrame = document.getElementById("question2");
+  const answersEl = document.getElementById("answers");
+  const nextBtn = document.getElementById("next-btn");
+  const fragenText = document.querySelector(".FragenText");
+  const resultText = document.getElementById("result-text");
 
+  if (!questionFrame || !answersEl || !nextBtn) {
+    return;
+  }
 
-nextBtn.addEventListener("click", () => {
-  currentQuestionIndex++;
-  if (currentQuestionIndex < quizQuestions.length) {
-    showQuestion();
-    nextBtn.classList.add("hidden");
-  } else {
+  function showQuestion() {
+    const currentQuestion = quizQuestions[currentQuestionIndex];
+    questionFrame.textContent = currentQuestion.question;
+    answersEl.innerHTML = "";
+
+    if (fragenText) {
+      fragenText.textContent = `Frage ${currentQuestionIndex + 1} von ${quizQuestions.length}`;
+    }
+
+    if (resultText) {
+      resultText.textContent = "";
+    }
+
+    currentQuestion.answers.forEach((answer) => {
+      const button = document.createElement("button");
+      button.textContent = answer;
+      button.classList.add("buttonAnswers");
+
+      button.addEventListener("click", () => {
+        const isCorrect = answer === currentQuestion.correct;
+
+        if (isCorrect) {
+          button.classList.add("correct");
+          if (resultText) {
+            resultText.textContent = "Richtig ✅";
+            resultText.className = "resultText correctText";
+          }
+        } else {
+          button.classList.add("wrong");
+          if (resultText) {
+            resultText.textContent = "Falsch ❌";
+            resultText.className = "resultText wrongText";
+          }
+
+          const correctButton = Array.from(answersEl.children).find(
+            (btn) => btn.textContent === currentQuestion.correct
+          );
+          if (correctButton) {
+            correctButton.classList.add("correct");
+          }
+        }
+
+        Array.from(answersEl.children).forEach((btn) => {
+          btn.disabled = true;
+        });
+
+        nextBtn.classList.remove("hidden");
+      });
+
+      answersEl.appendChild(button);
+    });
+  }
+
+  nextBtn.addEventListener("click", () => {
+    currentQuestionIndex += 1;
+
+    if (currentQuestionIndex < quizQuestions.length) {
+      showQuestion();
+      nextBtn.classList.add("hidden");
+      return;
+    }
+
     questionFrame.textContent = "Quiz beendet!";
     answersEl.innerHTML = "";
     nextBtn.classList.add("hidden");
+
+    if (resultText) {
+      resultText.textContent = "Super gespielt!";
+      resultText.className = "resultText";
+    }
+  });
+
+  showQuestion();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const path = window.location.pathname;
+
+  if (path.includes("menu.html")) {
+    initMenuPage();
+  }
+
+  if (path.includes("fragen.html")) {
+    initQuestionPage();
   }
 });
-
-function showQuestion() {
-  const currentQuestion = quizQuestions[currentQuestionIndex];
-  questionFrame.textContent = currentQuestion.question;
-  answersEl.innerHTML = ""; // Clear previous answers
-
-  if (fragenText) {
-    fragenText.textContent = `Frage ${currentQuestionIndex + 1} von ${quizQuestions.length}`;
-  }
-
-  currentQuestion.answers.forEach(answer => {
-    const button = document.createElement("button");
-    button.textContent = answer;
-    button.classList.add("buttonAnswers");
-
-    button.addEventListener("click", () => {
-      if (answer === currentQuestion.correct) {
-        button.style.backgroundColor = "green";
-      } else {
-        button.style.backgroundColor = "red";
-        const correctButton = Array.from(answersEl.children).find(btn => btn.textContent === currentQuestion.correct);
-        if (correctButton) {
-          correctButton.style.backgroundColor = "green";
-        }
-      }
-      Array.from(answersEl.children).forEach(btn => btn.disabled = true);
-      nextBtn.classList.remove("hidden");
-    });
-
-    answersEl.appendChild(button);
-  });
-}
