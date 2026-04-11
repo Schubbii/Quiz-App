@@ -1,4 +1,5 @@
 const startBtn = document.getElementById("start-btn");
+const adminBtn = document.getElementById("admin-btn");
 const quizBox = document.getElementById("quiz-box");
 const questionEl = document.getElementById("question");
 const answersEl = document.getElementById("answers");
@@ -14,6 +15,10 @@ const quizQuestions = [
 startBtn.addEventListener("click", () => {
   quizBox.classList.remove("hidden");
   showQuestion();
+});
+
+adminBtn.addEventListener("click", () => {
+  window.location.href = 'admin/question-management.html';
 });
 
 function showQuestion() {

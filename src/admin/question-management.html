@@ -8,6 +8,7 @@
 </head>
 <body>
     <h1>Fragen Verwaltung</h1>
+    <button onclick="window.location.href='../index.html';">Zurück zur Hauptseite</button>
     <p>Hier können Sie Fragen hinzufügen, bearbeiten oder löschen.</p>
 
     <div class="add-question">
@@ -39,7 +40,7 @@
     <div class="display-questions"></div>
 
     <script type="module">
-        import DBHandler from "./quizzesHandler.js";
+        import DBHandler from "./src/handlers/quizzesHandler.js";
 
         const db = new DBHandler("./data/quizzes.json");
         const form = document.getElementById("addQuestionForm");
