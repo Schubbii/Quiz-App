@@ -1,28 +1,173 @@
 {
-    "qestions": [
-        {
-            "id": 0,
-            "question": "Frage1",
-            "answers": ["Antwort1", "Antwort2", "Anwort3", "Antwort4"],
-            "rightAnswer": 0,
-            "category": "Kategorie1",
-            "difficulty": "leicht"
-        },
-        {
-            "id": 1,
-            "question": "Frage2",
-            "answers": ["Antwort1", "Antwort2", "Anwort3", "Antwort4"],
-            "rightAnswer": 1,
-            "category": "Kategorie2",
-            "difficulty": "mittel"
-        },
-        {
-            "id": 2,
-            "question": "Frage3",
-            "answers": ["Antwort1", "Antwort2", "Anwort3", "Antwort4"],
-            "rightAnswer": 2,
-            "category": "Kategorie3",
-            "difficulty": "schwer"
-        }
-    ]
+  "questions": [
+    {
+      "id": 0,
+      "question": "Frage1",
+      "answers": [
+        "Antwort1",
+        "Antwort2",
+        "Antwort3",
+        "Antwort4"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Kategorie1",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 1,
+      "question": "Frage2",
+      "answers": [
+        "Antwort1",
+        "Antwort2",
+        "Antwort3",
+        "Antwort4"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Kategorie2",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 2,
+      "question": "Frage3",
+      "answers": [
+        "Antwort1",
+        "Antwort2",
+        "Antwort3",
+        "Antwort4"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Kategorie3",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 3,
+      "question": "Was ist die Hauptstadt von Deutschland?",
+      "answers": [
+        "Berlin",
+        "München",
+        "Hamburg",
+        "Köln"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Geografie",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 4,
+      "question": "Wie viele Planeten hat unser Sonnensystem?",
+      "answers": [
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Astronomie",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 5,
+      "question": "Wer schrieb 'Faust'?",
+      "answers": [
+        "Goethe",
+        "Schiller",
+        "Heine",
+        "Mann"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Literatur",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 6,
+      "question": "Was ist die chemische Formel für Wasser?",
+      "answers": [
+        "H2O",
+        "CO2",
+        "O2",
+        "NaCl"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Chemie",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 7,
+      "question": "In welchem Jahr begann der Zweite Weltkrieg?",
+      "answers": [
+        "1939",
+        "1940",
+        "1938",
+        "1941"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Geschichte",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 9,
+      "question": "Was ist die Quadratwurzel von 144?",
+      "answers": [
+        "10",
+        "11",
+        "12",
+        "13"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Mathematik",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 11,
+      "question": "Wer malte die Mona Lisa?",
+      "answers": [
+        "Leonardo da Vinci",
+        "Michelangelo",
+        "Raphael",
+        "Donatello"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Kunst",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 12,
+      "question": "Wie viele Kontinente gibt es?",
+      "answers": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Geografie",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 13,
+      "question": "test",
+      "answers": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "test",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 15,
+      "question": "sadasd",
+      "answers": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "asdsadasdasfasaf",
+      "difficulty": "mittel"
+    }
+  ]
 }

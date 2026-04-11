@@ -1,96 +1,112 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fragen Verwaltung</title>
     <link rel="stylesheet" href="./question-management.css">
 </head>
+
 <body>
-    <h1>Fragen Verwaltung</h1>
-    <button onclick="window.location.href='../index.html';">Zurück zur Hauptseite</button>
-    <p>Hier können Sie Fragen hinzufügen, bearbeiten oder löschen.</p>
+    <main class="page">
+        <header class="page-header">
+            <p id="formMessage" class="status-message"></p>
+            <button id="backButton" class="secondary-btn" type="button">Zurück zur Hauptseite</button>
+        </header>
 
-    <div class="add-question">
-        <h2>Frage hinzufügen</h2>
-        <form id="addQuestionForm">
-            <label for="questionText">Fragetext:</label>
-            <input type="text" id="questionText" name="questionText" required><br><br>
+        <section class="card add-question">
+            <h2>Frage hinzufügen</h2>
+            <form id="addQuestionForm" class="question-form">
+                <input type="text" id="questionText" name="questionText" placeholder="Fragetext" required>
 
-            <label for="options">Antwortoptionen (durch Komma getrennt):</label>
-            <input type="text" id="options" name="options" required><br><br>
+                <input type="text" id="options" name="options" placeholder="Antwortoptionen (durch Komma getrennt)"
+                    required>
 
-            <label for="correctOption">Richtige Antwort (Index der Option):</label>
-            <input type="number" id="correctOption" name="correctOption" min="1" max="4" required><br><br>
+                <input type="number" id="correctOption" name="correctOption"
+                    placeholder="Richtige Antwort (Nummer der Option, beginnend bei 1)" min="1" required>
 
-            <label for="category">Kategorie:</label>
-            <input type="text" id="category" name="category" required><br><br>
+                <input type="text" id="category" name="category" placeholder="Kategorie" required>
 
-            <label for="difficulty">Schwierigkeit:</label>
-            <select id="difficulty" name="difficulty" required>
-                <option value="einfach">einfach</option>
-                <option value="mittel">mittel</option>
-                <option value="schwer">schwer</option>
-            </select><br><br>
+                <select id="difficulty" name="difficulty" required>
+                    <option value="" disabled selected>Schwierigkeit</option>
+                    <option value="leicht">leicht</option>
+                    <option value="mittel">mittel</option>
+                    <option value="schwer">schwer</option>
+                </select>
 
-            <button type="submit">Frage hinzufügen</button>
-        </form>
+                <button type="submit" class="primary-btn">Frage hinzufügen</button>
+            </form>
+        </section>
+
+        <section class="card question-list-section">
+            <div class="question-list-header">
+                <h2>Alle Fragen</h2>
+                <span id="questionCount" class="question-count">0 Fragen</span>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="questions-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Frage</th>
+                            <th>Kategorie</th>
+                            <th>Schwierigkeit</th>
+                            <th>Antworten</th>
+                        </tr>
+                    </thead>
+                    <tbody id="questionsTableBody">
+                        <tr>
+                            <td colspan="5" class="empty-state">Noch keine Fragen vorhanden.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="editModal" class="modal hidden">
+        <div class="modal-backdrop" data-close-modal="true"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Frage bearbeiten</h2>
+                <button id="closeModalButton" class="icon-btn" type="button">✕</button>
+            </div>
+
+            <form id="editQuestionForm" class="question-form">
+                <div class="readonly-field">
+                    <span>ID</span>
+                    <strong id="editQuestionId">-</strong>
+                </div>
+
+                <input type="text" id="editQuestionText" name="editQuestionText" placeholder="Fragetext" required>
+
+                <input type="text" id="editOptions" name="editOptions"
+                    placeholder="Antwortoptionen (durch Komma getrennt)" required>
+
+                <input type="number" id="editCorrectOption" name="editCorrectOption"
+                    placeholder="Richtige Antwort (Nummer der Option, beginnend bei 1)" min="1" required>
+
+                <input type="text" id="editCategory" name="editCategory" placeholder="Kategorie" required>
+
+                <select id="editDifficulty" name="editDifficulty" required>
+                    <option value="" disabled>Schwierigkeit</option>
+                    <option value="leicht">leicht</option>
+                    <option value="mittel">mittel</option>
+                    <option value="schwer">schwer</option>
+                </select>
+
+                <div class="modal-actions">
+                    <button type="submit" class="primary-btn">Speichern</button>
+                    <button type="button" id="deleteQuestionButton" class="danger-btn">Frage löschen</button>
+                </div>
+            </form>
+            <p id="editMessage" class="status-message"></p>
+        </div>
     </div>
 
-    <div class="display-questions"></div>
-
-    <script type="module">
-        import DBHandler from "./src/handlers/quizzesHandler.js";
-
-        const db = new DBHandler("./data/quizzes.json");
-        const form = document.getElementById("addQuestionForm");
-
-        form.addEventListener("submit", async (event) => {
-            event.preventDefault();
-
-            const questionText = document.getElementById("questionText").value.trim();
-            const optionsInput = document.getElementById("options").value.trim();
-            const correctOptionIndex = parseInt(document.getElementById("correctOption").value -1, 10);
-            const category = document.getElementById("category").value.trim();
-            const difficulty = document.getElementById("difficulty").value;
-
-            const antworten = optionsInput
-                .split(",")
-                .map(option => option.trim())
-                .filter(option => option !== "");
-
-            if (antworten.length < 2) {
-                alert("Bitte mindestens zwei Antwortmöglichkeiten eingeben.");
-                return;
-            }
-
-            if (
-                isNaN(correctOptionIndex) ||
-                correctOptionIndex < 0 ||
-                correctOptionIndex >= antworten.length
-            ) {
-                alert("Der Index der richtigen Antwort ist ungültig.");
-                return;
-            }
-
-            const neueFrage = {
-                frage: questionText,
-                antworten: antworten,
-                richtigeAntwort: antworten[correctOptionIndex],
-                kategorie: category,
-                schwierigkeit: difficulty
-            };
-
-            try {
-                const gespeichert = await db.addQuestion(neueFrage);
-                console.log("Neu gespeichert:", gespeichert);
-                alert("Frage wurde gespeichert.");
-                form.reset();
-            } catch (error) {
-                console.error(error);
-                alert("Fehler beim Speichern: " + error.message);
-            }
-        });
-    </script>
+    <script src="./question-management.js"></script>
 </body>
+
 </html>

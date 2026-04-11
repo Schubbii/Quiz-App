@@ -1,6 +1,8 @@
-const { contextBridge } = require('electron');
-const questions = require('./data/quizzes.json');
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('quizAPI', {
-  getQuestions: () => questions
+  getQuestions: () => ipcRenderer.invoke('questions:getAll'),
+  addQuestion: (questionData) => ipcRenderer.invoke('questions:add', questionData),
+  updateQuestion: (id, updates) => ipcRenderer.invoke('questions:update', id, updates),
+  deleteQuestion: (id) => ipcRenderer.invoke('questions:delete', id),
 });
