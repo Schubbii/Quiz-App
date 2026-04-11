@@ -32,34 +32,6 @@ const quizQuestions = [
   }
 ];
 
-startBtn.addEventListener("click", () => {
-  quizBox.classList.remove("hidden");
-  nextBtn.classList.add("hidden");
-  currentQuestionIndex = 0;
-  correctAnswers = 0;
-  wrongAnswers = 0;
-  showQuestion();
-});
-
-nextBtn.addEventListener("click", () => {
-  currentQuestionIndex++;
-  if (currentQuestionIndex < quizQuestions.length) {
-    showQuestion();
-    nextBtn.classList.add("hidden");
-  } else {
-    questionEl.textContent = "Quiz beendet!";
-    
-    const total = correctAnswers + wrongAnswers;
-    const percentage = Math.round((correctAnswers / total) * 100);
-
-    answersEl.innerHTML = `
-      <p>Richtig: ${correctAnswers}</p>
-      <p>Falsch: ${wrongAnswers}</p>
-      <p>Quote: ${percentage}%</p>
-    `;
-    nextBtn.classList.add("hidden");
-  }
-});
 
 //fragen werden angezeigt
 function showQuestion() {
@@ -88,8 +60,10 @@ function showQuestion() {
 
       if (answer === currentQuestion.correct) {
         button.classList.add("correct");
+        correctAnswers++;
       } else {
         button.classList.add("wrong");
+        wrongAnswers++;
 
         const correctButton = allButtons.find(
           btn => btn.textContent === currentQuestion.correct
@@ -151,10 +125,29 @@ if (nextBtn) {
 
     if (currentQuestionIndex < quizQuestions.length) {
       showQuestion();
+      nextBtn.classList.add("hidden");
     } else {
-      if (questionFrame) questionFrame.textContent = "Quiz beendet!";
-      if (answersEl) answersEl.innerHTML = "";
-      if (fragenText) fragenText.textContent = "Fertig";
+      if (questionFrame) {
+        questionFrame.textContent = "Quiz beendet!";
+      }
+
+      const total = correctAnswers + wrongAnswers;
+      const percentage = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
+
+      if (answersEl) {
+        answersEl.innerHTML = `
+          <div class="resultBox">
+            <p>Richtig: ${correctAnswers}</p>
+            <p>Falsch: ${wrongAnswers}</p>
+            <p>Quote: ${percentage}%</p>
+          </div>
+        `;
+      }
+
+      if (fragenText) {
+        fragenText.textContent = "Ergebnis";
+      }
+
       nextBtn.classList.add("hidden");
 
       if (menuBtn) {
@@ -172,5 +165,13 @@ if (menuBtn) {
 }
 // Überprüft, ob aktuelle Fragen-Seite sind und zeigt die erste Frage an
 if (window.location.pathname.includes("fragen.html")) {
+  currentQuestionIndex = 0;
+  correctAnswers = 0;
+  wrongAnswers = 0;
+
+  if (nextBtn) {
+    nextBtn.classList.add("hidden");
+  }
+
   showQuestion();
 }
