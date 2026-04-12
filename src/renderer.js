@@ -44,22 +44,6 @@ async function loadQuestions() {
     }
   }
 }
-//   {
-//     question: "Welche Sprache wird oft mit Electron verwendet?",
-//     answers: ["Python", "JavaScript", "C#", "PHP"],
-//     correct: "JavaScript"
-//   },
-//   {
-//     question: "Was ist Electron?",
-//     answers: [
-//       "Ein Framework für Desktop-Apps",
-//       "Ein Webserver",
-//       "Ein Datenbankmanagementsystem",
-//       "Ein Betriebssystem"
-//     ],
-//     correct: "Ein Framework für Desktop-Apps"
-//   }
-// ];
 
 
 //fragen werden angezeigt
