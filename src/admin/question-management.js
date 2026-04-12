@@ -20,7 +20,7 @@ function setMessage(element, message, isError = false) {
 
 function parseQuestionForm(values) {
     const answers = values.options
-        .split(',')
+        .split(';')
         .map((option) => option.trim())
         .filter(Boolean);
 
