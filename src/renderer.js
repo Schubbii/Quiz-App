@@ -11,25 +11,48 @@ const answersEl = document.getElementById("answers");
 const nextBtn = document.getElementById("next-btn");
 const fragenText = document.querySelector(".FragenText");
 
-let currentQuestionIndex = 0;
 
-const quizQuestions = [
-  {
-    question: "Welche Sprache wird oft mit Electron verwendet?",
-    answers: ["Python", "JavaScript", "C#", "PHP"],
-    correct: "JavaScript"
-  },
-  {
-    question: "Was ist Electron?",
-    answers: [
-      "Ein Framework für Desktop-Apps",
-      "Ein Webserver",
-      "Ein Datenbankmanagementsystem",
-      "Ein Betriebssystem"
-    ],
-    correct: "Ein Framework für Desktop-Apps"
+// fragen von quizzes.json laden
+let currentQuestionIndex = 0;
+let quizQuestions = [];
+
+async function loadQuestions() {
+  try {
+    quizQuestions = await window.quizAPI.getQuestions();
+
+    console.log("Geladene Fragen:", quizQuestions);
+
+    if (!Array.isArray(quizQuestions) || quizQuestions.length === 0) {
+      if (questionFrame) {
+        questionFrame.textContent = "Keine Fragen gefunden.";
+      }
+      return;
+    }
+
+    showQuestion();
+  } catch (error) {
+    console.error("Fehler beim Laden der Fragen:", error);
+    if (questionFrame) {
+      questionFrame.textContent = "Fragen konnten nicht geladen werden.";
+    }
   }
-];
+}
+//   {
+//     question: "Welche Sprache wird oft mit Electron verwendet?",
+//     answers: ["Python", "JavaScript", "C#", "PHP"],
+//     correct: "JavaScript"
+//   },
+//   {
+//     question: "Was ist Electron?",
+//     answers: [
+//       "Ein Framework für Desktop-Apps",
+//       "Ein Webserver",
+//       "Ein Datenbankmanagementsystem",
+//       "Ein Betriebssystem"
+//     ],
+//     correct: "Ein Framework für Desktop-Apps"
+//   }
+// ];
 
 
 //fragen werden angezeigt
@@ -37,8 +60,8 @@ function showQuestion() {
   if (!questionFrame || !answersEl || currentQuestionIndex >= quizQuestions.length) return;
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
-  questionFrame.textContent = currentQuestion.question;
   answersEl.innerHTML = "";
+  questionFrame.textContent = currentQuestion.question;
 
   if (fragenText) {
     fragenText.textContent = `Frage ${currentQuestionIndex + 1} von ${quizQuestions.length}`;
@@ -48,29 +71,26 @@ function showQuestion() {
     nextBtn.classList.add("hidden");
   }
 
-  //für jede Antwortmöglichkeit wird ein button erstellt
-  currentQuestion.answers.forEach(answer => {
+  currentQuestion.answers.forEach((answer, index) => {
     const button = document.createElement("button");
     button.textContent = answer;
     button.classList.add("buttonAnswers");
 
     button.addEventListener("click", () => {
       const allButtons = Array.from(answersEl.children);
+      const correctIndex = currentQuestion.correctAnswerIndex;
 
-      if (answer === currentQuestion.correct) {
+      if (index === correctIndex) {
         button.classList.add("correct");
       } else {
         button.classList.add("wrong");
 
-        const correctButton = allButtons.find(
-          btn => btn.textContent === currentQuestion.correct
-        );
-
+        const correctButton = allButtons[correctIndex];
         if (correctButton) {
           correctButton.classList.add("correct");
         }
       }
-// Alle Buttons werden deaktiviert
+
       allButtons.forEach(btn => {
         btn.disabled = true;
       });
@@ -143,9 +163,11 @@ if (menuBtn) {
 }
 // Überprüft, ob aktuelle Fragen-Seite sind und zeigt die erste Frage an
 if (window.location.pathname.includes("fragen.html")) {
-  showQuestion();
+  loadQuestions();
 }
 
-adminBtn.addEventListener("click", () => {
-  window.location.href = 'admin/question-management.html';
-});
+if(adminBtn) {
+  adminBtn.addEventListener("click", () => {
+    window.location.href = './admin/question-management.html';
+  });
+}

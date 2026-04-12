@@ -131,7 +131,7 @@ button {
 }
 
 /* Menübuttons */
-
+#admin-btn,
 .menuBtn,
 .playBtn {
   width: 100%;
@@ -155,6 +155,10 @@ button {
 
 .playBtn {
   background: rgba(255, 100.53, 249.85, 0.73);
+}
+
+#admin-btn {
+  background: rgba(253, 0, 0, 0.65);
 }
 
 .menuBtn:hover,

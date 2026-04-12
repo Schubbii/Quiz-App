@@ -188,7 +188,7 @@ deleteQuestionButton.addEventListener('click', async () => {
 });
 
 backButton.addEventListener('click', () => {
-    window.location.href = '../index.html';
+    window.location.href = '../menu.html';
 });
 
 closeModalButton.addEventListener('click', closeEditModal);

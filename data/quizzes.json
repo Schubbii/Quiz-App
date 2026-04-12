@@ -1,45 +1,6 @@
 {
   "questions": [
     {
-      "id": 0,
-      "question": "Frage1",
-      "answers": [
-        "Antwort1",
-        "Antwort2",
-        "Antwort3",
-        "Antwort4"
-      ],
-      "correctAnswerIndex": 0,
-      "category": "Kategorie1",
-      "difficulty": "leicht"
-    },
-    {
-      "id": 1,
-      "question": "Frage2",
-      "answers": [
-        "Antwort1",
-        "Antwort2",
-        "Antwort3",
-        "Antwort4"
-      ],
-      "correctAnswerIndex": 1,
-      "category": "Kategorie2",
-      "difficulty": "mittel"
-    },
-    {
-      "id": 2,
-      "question": "Frage3",
-      "answers": [
-        "Antwort1",
-        "Antwort2",
-        "Antwort3",
-        "Antwort4"
-      ],
-      "correctAnswerIndex": 2,
-      "category": "Kategorie3",
-      "difficulty": "schwer"
-    },
-    {
       "id": 3,
       "question": "Was ist die Hauptstadt von Deutschland?",
       "answers": [
