@@ -1,3 +1,6 @@
+const timeValue = document.getElementById("timeValue");
+const resultText = document.getElementById("result-text");
+
 const startAnimation = document.getElementById("Startanimation");
 const logoAnimation = document.getElementById("Logoanimation");
 const hauptmenue = document.getElementById("Hauptmenue");
@@ -19,6 +22,9 @@ let currentQuestionIndex = 0;
 let correctAnswers = 0;
 let wrongAnswers = 0;
 let quizQuestions = [];
+let timerInterval = null;
+let timeLeft = 15;
+const QUESTION_TIME = 15;
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -55,11 +61,15 @@ function showQuestion() {
   if (!questionFrame || !answersEl || currentQuestionIndex >= quizQuestions.length) return;
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
-  answersEl.innerHTML = "";
   questionFrame.textContent = currentQuestion.question;
+  answersEl.innerHTML = "";
 
   if (fragenText) {
     fragenText.textContent = `Frage ${currentQuestionIndex + 1} von ${quizQuestions.length}`;
+  }
+
+  if (resultText) {
+    resultText.textContent = "";
   }
 
   if (nextBtn) {
@@ -72,15 +82,23 @@ function showQuestion() {
     button.classList.add("buttonAnswers");
 
     button.addEventListener("click", () => {
+      stopTimer();
+
       const allButtons = Array.from(answersEl.children);
       const correctIndex = currentQuestion.correctAnswerIndex;
 
       if (index === correctIndex) {
         button.classList.add("correct");
         correctAnswers++;
+        if (resultText) {
+          resultText.textContent = "Richtig!";
+        }
       } else {
         button.classList.add("wrong");
         wrongAnswers++;
+        if (resultText) {
+          resultText.textContent = "Falsch!";
+        }
 
         const correctButton = allButtons[correctIndex];
         if (correctButton) {
@@ -99,6 +117,8 @@ function showQuestion() {
 
     answersEl.appendChild(button);
   });
+
+  startTimer();
 }
 
 // MENU.HTML
@@ -135,22 +155,26 @@ if (playButton) {
 // Nächste Frage oder Quiz beenden
 if (nextBtn) {
   nextBtn.addEventListener("click", () => {
+    stopTimer();
     currentQuestionIndex++;
 
     if (currentQuestionIndex < quizQuestions.length) {
-      showQuestion();
+      if (resultText) {
+        resultText.textContent = "";
+      }
+
       nextBtn.classList.add("hidden");
-    }
-   else {
+      showQuestion();
+    } else {
       const total = correctAnswers + wrongAnswers;
-      const percentage = Math.round((correctAnswers / total) * 100);
+      const percentage = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
 
       localStorage.setItem("c", correctAnswers);
       localStorage.setItem("w", wrongAnswers);
       localStorage.setItem("p", percentage);
 
-  window.location.href = "./scoreboard.html";
-    } 
+      window.location.href = "./scoreboard.html";
+    }
   });
 }
 
@@ -171,6 +195,54 @@ if (window.location.pathname.includes("fragen.html")) {
   }
 
   loadQuestions();
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = QUESTION_TIME;
+
+  if (timeValue) {
+    timeValue.textContent = timeLeft;
+  }
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+
+    if (timeValue) {
+      timeValue.textContent = timeLeft;
+    }
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      handleTimeUp();
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+}
+
+function handleTimeUp() {
+  const currentQuestion = quizQuestions[currentQuestionIndex];
+  const allButtons = Array.from(answersEl.children);
+
+  allButtons.forEach((btn, index) => {
+    btn.disabled = true;
+
+    if (index === currentQuestion.correctAnswerIndex) {
+      btn.classList.add("correct");
+      wrongAnswers++;
+    }
+  });
+
+  if (resultText) {
+    resultText.textContent = "Zeit abgelaufen!";
+  }
+
+  if (nextBtn) {
+    nextBtn.classList.remove("hidden");
+  }
 }
 
 // SCOREBOARD.HTML
@@ -196,3 +268,5 @@ if (restartBtn) {
     window.location.href = "./fragen.html";
   });
 }
+
+
