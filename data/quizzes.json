@@ -129,6 +129,19 @@
       "correctAnswerIndex": 0,
       "category": "asdsadasdasfasaf",
       "difficulty": "mittel"
+    },
+    {
+      "id": 16,
+      "question": "Wie viele Knochen hat ein erwachsener Mensch ungefähr?",
+      "answers": [
+        "186",
+        "206",
+        "226",
+        "246"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
     }
   ]
 }
