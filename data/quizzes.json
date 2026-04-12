@@ -467,19 +467,6 @@
       "correctAnswerIndex": 0,
       "category": "Allgemeinwissen",
       "difficulty": "mittel"
-    },
-    {
-      "id": 16,
-      "question": "test",
-      "answers": [
-        "1, 2",
-        "3",
-        "4",
-        "5"
-      ],
-      "correctAnswerIndex": 1,
-      "category": "Tets",
-      "difficulty": "leicht"
     }
   ]
 }
