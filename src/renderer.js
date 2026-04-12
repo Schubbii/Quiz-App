@@ -30,9 +30,7 @@ const quizQuestions = [
     correct: "Ein Framework für Desktop-Apps"
   }
 ];
-adminBtn.addEventListener("click", () => {
-  window.location.href = 'admin/question-management.html';
-});
+
 
 //fragen werden angezeigt
 function showQuestion() {
@@ -147,3 +145,7 @@ if (menuBtn) {
 if (window.location.pathname.includes("fragen.html")) {
   showQuestion();
 }
+
+adminBtn.addEventListener("click", () => {
+  window.location.href = 'admin/question-management.html';
+});
