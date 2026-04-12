@@ -10,6 +10,8 @@ const answersEl = document.getElementById("answers");
 const nextBtn = document.getElementById("next-btn");
 const fragenText = document.querySelector(".FragenText");
 
+const restartBtn = document.getElementById("restart-btn");
+
 let currentQuestionIndex = 0;
 let correctAnswers = 0;
 let wrongAnswers = 0;
@@ -126,34 +128,17 @@ if (nextBtn) {
     if (currentQuestionIndex < quizQuestions.length) {
       showQuestion();
       nextBtn.classList.add("hidden");
-    } else {
-      if (questionFrame) {
-        questionFrame.textContent = "Quiz beendet!";
-      }
-
-      const total = correctAnswers + wrongAnswers;
-      const percentage = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
-
-      if (answersEl) {
-        answersEl.innerHTML = `
-          <div class="resultBox">
-            <p>Richtig: ${correctAnswers}</p>
-            <p>Falsch: ${wrongAnswers}</p>
-            <p>Quote: ${percentage}%</p>
-          </div>
-        `;
-      }
-
-      if (fragenText) {
-        fragenText.textContent = "Ergebnis";
-      }
-
-      nextBtn.classList.add("hidden");
-
-      if (menuBtn) {
-        menuBtn.classList.remove("hidden");
-      }
     }
+   else {
+      const total = correctAnswers + wrongAnswers;
+      const percentage = Math.round((correctAnswers / total) * 100);
+
+      localStorage.setItem("c", correctAnswers);
+      localStorage.setItem("w", wrongAnswers);
+      localStorage.setItem("p", percentage);
+
+  window.location.href = "./scoreboard.html";
+    } 
   });
 }
 
@@ -174,4 +159,22 @@ if (window.location.pathname.includes("fragen.html")) {
   }
 
   showQuestion();
+}
+
+// SCOREBOARD.HTML
+if (window.location.pathname.includes("scoreboard.html")) {
+  document.getElementById("score-correct").textContent =
+    localStorage.getItem("c");
+
+  document.getElementById("score-wrong").textContent =
+    localStorage.getItem("w");
+
+  document.getElementById("score-percentage").textContent =
+    localStorage.getItem("p") + "%";
+}
+
+if (restartBtn) {
+  restartBtn.addEventListener("click", () => {
+    window.location.href = "./fragen.html";
+  });
 }
