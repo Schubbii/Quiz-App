@@ -16,6 +16,46 @@ const fragenText = document.querySelector(".FragenText");
 
 const restartBtn = document.getElementById("restart-btn");
 
+const startQuizBtn = document.getElementById("start-quiz-btn");
+const questionCountInput = document.getElementById("question-count");
+
+async function setMaxQuestionCount() {
+  try {
+    const questions = await window.quizAPI.getQuestions();
+    const maxCount = questions.length;
+
+    questionCountInput.max = maxCount;
+
+    // Optional: falls aktueller Wert zu hoch ist
+    if (Number(questionCountInput.value) > maxCount) {
+      questionCountInput.value = maxCount;
+    }
+  } catch (error) {
+    console.error("Fehler beim Laden der Fragen:", error);
+  }
+}
+
+if (window.location.pathname.includes("menu.html")) {
+  setMaxQuestionCount();
+}
+
+if (startQuizBtn) {
+  startQuizBtn.addEventListener("click", () => {
+    const count = Number(questionCountInput.value);
+
+    if (!count || count < 1) {
+      alert("Bitte eine gültige Anzahl eingeben.");
+      return;
+    }
+
+    // Anzahl speichern
+    localStorage.setItem("questionCount", count);
+
+    // zur Quiz-Seite
+    window.location.href = "./fragen.html";
+  });
+}
+
 
 // fragen von quizzes.json laden
 let currentQuestionIndex = 0;
@@ -35,17 +75,31 @@ function shuffleArray(array) {
 
 async function loadQuestions() {
   try {
-    quizQuestions = await window.quizAPI.getQuestions();
+    let questions = await window.quizAPI.getQuestions();
 
-    if (!Array.isArray(quizQuestions) || quizQuestions.length === 0) {
+    const count = Number(localStorage.getItem("questionCount")) || questions.length;
+
+    // Fragen mischen
+    shuffleArray(questions);
+
+    // nur gewünschte Anzahl nehmen
+    quizQuestions = questions.slice(0, count);
+
+    if (quizQuestions.length === 0) {
       if (questionFrame) {
         questionFrame.textContent = "Keine Fragen gefunden.";
       }
       return;
     }
 
-    shuffleArray(quizQuestions);
+    if (count > questions.length) {
+      alert(`Es gibt nur ${questions.length} Fragen.`);
+    }
+
     currentQuestionIndex = 0;
+    correctAnswers = 0;
+    wrongAnswers = 0;
+
     showQuestion();
   } catch (error) {
     console.error("Fehler beim Laden der Fragen:", error);
@@ -90,15 +144,15 @@ function showQuestion() {
       if (index === correctIndex) {
         button.classList.add("correct");
         correctAnswers++;
-        if (resultText) {
-          resultText.textContent = "Richtig!";
-        }
+        // if (resultText) {
+        //   resultText.textContent = "Richtig!";
+        // }
       } else {
         button.classList.add("wrong");
         wrongAnswers++;
-        if (resultText) {
-          resultText.textContent = "Falsch!";
-        }
+        // if (resultText) {
+        //   resultText.textContent = "Falsch!";
+        // }
 
         const correctButton = allButtons[correctIndex];
         if (correctButton) {

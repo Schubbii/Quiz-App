@@ -25,6 +25,9 @@ app.whenReady().then(() => {
   ipcMain.handle('questions:add', async (_event, questionData) => quizzesHandler.addQuestion(questionData));
   ipcMain.handle('questions:update', async (_event, id, updates) => quizzesHandler.updateQuestion(id, updates));
   ipcMain.handle('questions:delete', async (_event, id) => quizzesHandler.deleteQuestion(id));
+  ipcMain.handle('questions:getRound', async (_event, category, difficulty, count) => {
+  return quizzesHandler.getQuestionsForRound(category, difficulty, count);
+});
 
   createWindow();
 
@@ -40,3 +43,5 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+

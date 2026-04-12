@@ -21,9 +21,9 @@ body {
   padding: 24px 16px;
 }
 
-/* .hidden {
+.hidden {
   display: none !important;
-} */
+}
 
 /* Startanimation */
 
@@ -181,8 +181,7 @@ button {
 /* Quiz oben */
 
 .rectangle {
-  width: 100%;
-  max-width: 1100px;
+  flex: 1;
   min-height: 72px;
   padding: 16px 24px;
   display: flex;
@@ -235,24 +234,33 @@ button {
   padding: 18px 20px;
   background: linear-gradient(180deg, #5813D8 0%, #1A086D 100%);
 }
-.circleTimer {
-  left: 900px;
-  top: -40px;
-  width: 200px; 
-  height: 200px; 
-  background: rgba(38, 39, 182, 0.80); 
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); 
-  border-radius: 9999px;
-  position: absolute;
+
+.topBar {
+  width: 100%;
+  max-width: 1100px;
   display: flex;
-  justify-content: center;  /*horizontal zentriert*/
-  align-items: center;      /*vertikal zentriert*/
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.circleTimer {
+  flex-shrink: 0;
+  width: clamp(72px, 10vw, 110px);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background: rgba(38, 39, 182, 0.80);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #timeValue {
-  font-size: 80px;
+  margin: 0;
+  font-size: clamp(28px, 4vw, 48px);
   font-weight: bold;
-  color:white;
+  color: white;
 }
 
 .buttonAnswers, .rectangleQuestion {
@@ -295,7 +303,7 @@ button {
 
 .circleTimer {
   position: absolute;
-  top: 16px;
+  top: -16px;
   right: 16px;
   width: 110px;
   height: 110px;
@@ -372,7 +380,17 @@ button {
     top: 10px;
     right: 10px;
   }
-}
+
+@media (max-width: 600px) {
+  .topBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .circleTimer {
+    align-self: flex-end;
+  }
+}}
 
 @media (max-width: 600px) {
   body {
@@ -480,4 +498,70 @@ button {
 
 #nextQuestionBtn:active {
   transform: translateY(1px) scale(0.98);
+}
+
+
+/* eingabe für maximale Fragen */
+
+.quizSettings {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.settingsLabel {
+  color: white;
+  font-size: clamp(16px, 1.8vw, 22px);
+  font-weight: 800;
+  letter-spacing: 0.4px;
+}
+
+.questionCountBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.questionCountInput {
+  width: 100%;
+  min-height: 64px;
+  padding: 14px 18px;
+  border: none;
+  outline: none;
+  border-radius: 18px;
+  background: rgba(26, 8, 109, 0.78);
+  color: white;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 800;
+  text-align: center;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.questionCountInput:focus {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.24),
+    0 0 0 2px rgba(255, 255, 255, 0.18);
+  filter: brightness(1.05);
+}
+
+.questionCountHint {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
 }
