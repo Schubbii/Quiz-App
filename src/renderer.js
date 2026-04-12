@@ -185,6 +185,12 @@ if (window.location.pathname.includes("scoreboard.html")) {
     localStorage.getItem("p") + "%";
 }
 
+if (adminBtn) {
+  adminBtn.addEventListener("click", () => {
+    window.location.href = "admin/question-management.html";
+  });
+}
+
 if (restartBtn) {
   restartBtn.addEventListener("click", () => {
     window.location.href = "./fragen.html";
