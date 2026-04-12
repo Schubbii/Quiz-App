@@ -2,6 +2,7 @@ const startAnimation = document.getElementById("Startanimation");
 const logoAnimation = document.getElementById("Logoanimation");
 const hauptmenue = document.getElementById("Hauptmenue");
 
+const adminBtn = document.getElementById("admin-btn");
 const playButton = document.querySelector(".playBtn");
 const menuBtn = document.getElementById("menu-btn");
 
@@ -12,27 +13,41 @@ const fragenText = document.querySelector(".FragenText");
 
 const restartBtn = document.getElementById("restart-btn");
 
+
+// fragen von quizzes.json laden
 let currentQuestionIndex = 0;
 let correctAnswers = 0;
 let wrongAnswers = 0;
+let quizQuestions = [];
 
-const quizQuestions = [
-  {
-    question: "Welche Sprache wird oft mit Electron verwendet?",
-    answers: ["Python", "JavaScript", "C#", "PHP"],
-    correct: "JavaScript"
-  },
-  {
-    question: "Was ist Electron?",
-    answers: [
-      "Ein Framework für Desktop-Apps",
-      "Ein Webserver",
-      "Ein Datenbankmanagementsystem",
-      "Ein Betriebssystem"
-    ],
-    correct: "Ein Framework für Desktop-Apps"
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
-];
+}
+
+async function loadQuestions() {
+  try {
+    quizQuestions = await window.quizAPI.getQuestions();
+
+    if (!Array.isArray(quizQuestions) || quizQuestions.length === 0) {
+      if (questionFrame) {
+        questionFrame.textContent = "Keine Fragen gefunden.";
+      }
+      return;
+    }
+
+    shuffleArray(quizQuestions);
+    currentQuestionIndex = 0;
+    showQuestion();
+  } catch (error) {
+    console.error("Fehler beim Laden der Fragen:", error);
+    if (questionFrame) {
+      questionFrame.textContent = "Fragen konnten nicht geladen werden.";
+    }
+  }
+}
 
 
 //fragen werden angezeigt
@@ -40,8 +55,8 @@ function showQuestion() {
   if (!questionFrame || !answersEl || currentQuestionIndex >= quizQuestions.length) return;
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
-  questionFrame.textContent = currentQuestion.question;
   answersEl.innerHTML = "";
+  questionFrame.textContent = currentQuestion.question;
 
   if (fragenText) {
     fragenText.textContent = `Frage ${currentQuestionIndex + 1} von ${quizQuestions.length}`;
@@ -51,31 +66,28 @@ function showQuestion() {
     nextBtn.classList.add("hidden");
   }
 
-  //für jede Antwortmöglichkeit wird ein button erstellt
-  currentQuestion.answers.forEach(answer => {
+  currentQuestion.answers.forEach((answer, index) => {
     const button = document.createElement("button");
     button.textContent = answer;
     button.classList.add("buttonAnswers");
 
     button.addEventListener("click", () => {
       const allButtons = Array.from(answersEl.children);
+      const correctIndex = currentQuestion.correctAnswerIndex;
 
-      if (answer === currentQuestion.correct) {
+      if (index === correctIndex) {
         button.classList.add("correct");
         correctAnswers++;
       } else {
         button.classList.add("wrong");
         wrongAnswers++;
 
-        const correctButton = allButtons.find(
-          btn => btn.textContent === currentQuestion.correct
-        );
-
+        const correctButton = allButtons[correctIndex];
         if (correctButton) {
           correctButton.classList.add("correct");
         }
       }
-// Alle Buttons werden deaktiviert
+
       allButtons.forEach(btn => {
         btn.disabled = true;
       });
