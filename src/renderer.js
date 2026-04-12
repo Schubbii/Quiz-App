@@ -2,6 +2,7 @@ const startAnimation = document.getElementById("Startanimation");
 const logoAnimation = document.getElementById("Logoanimation");
 const hauptmenue = document.getElementById("Hauptmenue");
 
+const adminBtn = document.getElementById("admin-btn");
 const playButton = document.querySelector(".playBtn");
 const menuBtn = document.getElementById("menu-btn");
 
@@ -29,7 +30,9 @@ const quizQuestions = [
     correct: "Ein Framework für Desktop-Apps"
   }
 ];
-
+adminBtn.addEventListener("click", () => {
+  window.location.href = 'admin/question-management.html';
+});
 
 //fragen werden angezeigt
 function showQuestion() {
