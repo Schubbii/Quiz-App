@@ -170,7 +170,7 @@ if (window.location.pathname.includes("fragen.html")) {
     nextBtn.classList.add("hidden");
   }
 
-  showQuestion();
+  loadQuestions();
 }
 
 // SCOREBOARD.HTML
