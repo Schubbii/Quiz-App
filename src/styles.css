@@ -21,9 +21,9 @@ body {
   padding: 24px 16px;
 }
 
-.hidden {
+/* .hidden {
   display: none !important;
-}
+} */
 
 /* Startanimation */
 
@@ -234,6 +234,7 @@ button {
   min-height: 96px;
   padding: 18px 20px;
   background: linear-gradient(180deg, #5813D8 0%, #1A086D 100%);
+}
 .circleTimer {
   left: 900px;
   top: -40px;
