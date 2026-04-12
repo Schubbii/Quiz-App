@@ -16,11 +16,16 @@ const fragenText = document.querySelector(".FragenText");
 let currentQuestionIndex = 0;
 let quizQuestions = [];
 
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
 async function loadQuestions() {
   try {
     quizQuestions = await window.quizAPI.getQuestions();
-
-    console.log("Geladene Fragen:", quizQuestions);
 
     if (!Array.isArray(quizQuestions) || quizQuestions.length === 0) {
       if (questionFrame) {
@@ -29,6 +34,8 @@ async function loadQuestions() {
       return;
     }
 
+    shuffleArray(quizQuestions);
+    currentQuestionIndex = 0;
     showQuestion();
   } catch (error) {
     console.error("Fehler beim Laden der Fragen:", error);
