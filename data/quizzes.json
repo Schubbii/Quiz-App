@@ -105,32 +105,6 @@
       "difficulty": "leicht"
     },
     {
-      "id": 13,
-      "question": "test",
-      "answers": [
-        "a",
-        "b",
-        "c",
-        "d"
-      ],
-      "correctAnswerIndex": 0,
-      "category": "test",
-      "difficulty": "leicht"
-    },
-    {
-      "id": 15,
-      "question": "sadasd",
-      "answers": [
-        "a",
-        "b",
-        "c",
-        "d"
-      ],
-      "correctAnswerIndex": 0,
-      "category": "asdsadasdasfasaf",
-      "difficulty": "mittel"
-    },
-    {
       "id": 16,
       "question": "Wie viele Knochen hat ein erwachsener Mensch ungefähr?",
       "answers": [
@@ -140,6 +114,370 @@
         "246"
       ],
       "correctAnswerIndex": 1,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 17,
+      "question": "Was ist die Hauptstadt von Kanada?",
+      "answers": [
+        "Toronto",
+        "Vancouver",
+        "Ottawa",
+        "Montreal"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Allgemeinwissen",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 18,
+      "question": "Welcher dieser Stoffe ist magnetisch?",
+      "answers": [
+        "Aluminium",
+        "Kupfer",
+        "Gold",
+        "Nickel"
+      ],
+      "correctAnswerIndex": 3,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 19,
+      "question": "Welche Aufgabe hat Hämoglobin?",
+      "answers": [
+        "Fett speichern",
+        "Sauerstoff transportieren",
+        "Zucker abbauen",
+        "Nerven schützen"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Allgemeinwissen",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 20,
+      "question": "Was misst ein Barometer?",
+      "answers": [
+        "Luftdruck",
+        "Luftfeuchtigkeit",
+        "Temperatur",
+        "Windstärke"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 21,
+      "question": "Welcher dieser Begriffe bezeichnet keine Staatsform, sondern eine Regierungsform?",
+      "answers": [
+        "Monarchie",
+        "Republik",
+        "Demokratie",
+        "Parlamentarismus"
+      ],
+      "correctAnswerIndex": 3,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 22,
+      "question": "Welches dieser Meere ist kein Randmeer des Atlantiks?",
+      "answers": [
+        "Nordsee",
+        "Karibisches Meer",
+        "Schwarzes Meer",
+        "Arabisches Meer"
+      ],
+      "correctAnswerIndex": 3,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 23,
+      "question": "Welcher dieser Staaten war nie Mitglied des Warschauer Pakts?",
+      "answers": [
+        "Albanien",
+        "Rumänien",
+        "Jugoslawien",
+        "Bulgarien"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Allgemeinwissen",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 24,
+      "question": "Wer war der erste Bundeskanzler der Bundesrepublik Deutschland?",
+      "answers": [
+        "Theodor Heuss",
+        "Kurt Schumacher",
+        "Konrad Adenauer",
+        "Ludwig Erhard"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 25,
+      "question": "Wie weit ist der Mond von der Erde entfernt?",
+      "answers": [
+        "ca. 38.400 km",
+        "ca. 384.400 km",
+        "ca. 3.844.000 km",
+        "ca. 843.000 km"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 26,
+      "question": "Wer komponierte die 9. Sinfonie?",
+      "answers": [
+        "Ludwig van Beethoven",
+        "Johann Sebastian Bach",
+        "Wolfgang Amadeus Mozart",
+        "Franz Schubert"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 27,
+      "question": "Wer gilt als Erfinder des World Wide Web?",
+      "answers": [
+        "Vinton Cerf",
+        "Robert Cailliau",
+        "Tim Berners-Lee",
+        "Marc Andreessen"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 28,
+      "question": "Was ist die Hauptstadt von Australien?",
+      "answers": [
+        "Sydney",
+        "Melbourne",
+        "Perth",
+        "Canberra"
+      ],
+      "correctAnswerIndex": 3,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 29,
+      "question": "Wie viele Minuten dauert ein professionelles Basketballspiel in der NBA?",
+      "answers": [
+        "40 Minuten",
+        "44 Minuten",
+        "48 Minuten",
+        "52 Minuten"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 30,
+      "question": "Wie viele Zähne hat ein erwachsener Mensch normalerweise?",
+      "answers": [
+        "32",
+        "28",
+        "30",
+        "34"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Allgemeinwissen",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 31,
+      "question": "Wie viele Geister jagen Pac-Man zu Beginn jedes Spiels?",
+      "answers": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Allgemeinwissen",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 32,
+      "question": "Wer entwickelte die Theorie, dass sich die Erde um die Sonne dreht?",
+      "answers": [
+        "Galileo Galilei",
+        "Johannes Kepler",
+        "Nikolaus Kopernikus",
+        "Tycho Brahe"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 33,
+      "question": "Welches Software-Unternehmen hat seinen Hauptsitz in Redmond, Washington?",
+      "answers": [
+        "Oracle",
+        "IBM",
+        "Adobe",
+        "Microsoft"
+      ],
+      "correctAnswerIndex": 3,
+      "category": "Allgemeinwissen",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 34,
+      "question": "In welchem Land liegt das Kernkraftwerk Tschernobyl?",
+      "answers": [
+        "Belarus",
+        "Ukraine",
+        "Russland",
+        "Litauen"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 35,
+      "question": "In welchem Land ist Elon Musk geboren?",
+      "answers": [
+        "Südafrika",
+        "Kanada",
+        "USA",
+        "Australien"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 36,
+      "question": "Welches Land besitzt die meisten Inseln?",
+      "answers": [
+        "Indonesien",
+        "Kanada",
+        "Norwegen",
+        "Schweden"
+      ],
+      "correctAnswerIndex": 3,
+      "category": "Allgemeinwissen",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 37,
+      "question": "Wie viele Herzen hat ein Tintenfisch?",
+      "answers": [
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 38,
+      "question": "Wo befindet sich der stärkste Muskel des Menschen?",
+      "answers": [
+        "Im Kiefer",
+        "Im Oberschenkel",
+        "Im Rücken",
+        "Im Arm"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Allgemeinwissen",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 39,
+      "question": "Wann fiel die Berliner Mauer?",
+      "answers": [
+        "13. Oktober 1990",
+        "9. Oktober 1989",
+        "9. November 1989",
+        "13. August 1961"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 40,
+      "question": "Welche Nationalflagge hat als einzige nicht die Form eines Vierecks?",
+      "answers": [
+        "Bhutan",
+        "Nepal",
+        "Sri Lanka",
+        "Vatikanstadt"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 41,
+      "question": "Wie heißt die Schicht der Atmosphäre, die der Erde am nächsten ist?",
+      "answers": [
+        "Stratosphäre",
+        "Mesosphäre",
+        "Troposphäre",
+        "Thermosphäre"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Allgemeinwissen",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 42,
+      "question": "Wie schnell ist die Lichtgeschwindigkeit?",
+      "answers": [
+        "ca. 30.000 km/s",
+        "ca. 3.000.000 km/s",
+        "ca. 3.000 km/s",
+        "ca. 300.000 km/s"
+      ],
+      "correctAnswerIndex": 3,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 43,
+      "question": "Welche Gürtelfarbe kann man im Kampfsport Karate nicht verdienen?",
+      "answers": [
+        "Schwarz",
+        "Grün",
+        "Rot",
+        "Weiß"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Allgemeinwissen",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 44,
+      "question": "Mit welcher Mehrheit können Verfassungsänderungen in Deutschland beschlossen werden?",
+      "answers": [
+        "Mit Zweidrittelmehrheit",
+        "Mit absoluter Mehrheit",
+        "Mit einfacher Mehrheit",
+        "Mit Einstimmigkeit"
+      ],
+      "correctAnswerIndex": 0,
       "category": "Allgemeinwissen",
       "difficulty": "mittel"
     }
