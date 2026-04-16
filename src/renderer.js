@@ -323,4 +323,18 @@ if (restartBtn) {
   });
 }
 
+// Elemente holen
+    const dialog = document.getElementById('popupDialog');
+    const openBtn = document.getElementById('openBtn');
+    const closeBtn = document.getElementById('closeBtn');
+
+    // Öffnen
+    openBtn.addEventListener('click', () => {
+        dialog.showModal(); // Modal öffnen
+    });
+
+// Schließen
+    closeBtn.addEventListener('click', () => {
+        dialog.close();
+    });
 
