@@ -467,6 +467,409 @@
       "correctAnswerIndex": 0,
       "category": "Allgemeinwissen",
       "difficulty": "mittel"
+    },
+    {
+      "id": 45,
+      "question": "Wer hat den Song „Rolling in the Deep“ aufgeführt?",
+      "answers": [
+        "Beyoncé",
+        "Adele",
+        "Rihanna",
+        "Taylor Swift"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Musik",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 46,
+      "question": "Welcher Song enthält den Text „Just a small-town girl, livin' in a lonely world“?",
+      "answers": [
+        "„Sweet Child O' Mine“ von Guns N' Roses",
+        "„Livin' on a Prayer“ von Bon Jovi",
+        "„Don't Stop Believin'“ von Journey",
+        "„Eye of the Tiger“ von Survivor"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 47,
+      "question": "Welche Gruppe hatte 1977 einen Hit mit „Stayin' Alive“?",
+      "answers": [
+        "Bee Gees",
+        "Earth, Wind & Fire",
+        "Kool & the Gang",
+        "The Jackson 5"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 48,
+      "question": "Welche Band veröffentlichte 1973 das Album „Dark Side of the Moon“?",
+      "answers": [
+        "The Rolling Stones",
+        "Pink Floyd",
+        "The Beatles",
+        "The Doors"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 49,
+      "question": "Welche Band hatte 1984 einen Hit mit „Wake Me Up Before You Go-Go“?",
+      "answers": [
+        "Duran Duran",
+        "Wham!",
+        "Culture Club",
+        "a-ha"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 50,
+      "question": "Welches Lied von Whitney Houston war 1987 ein großer Hit?",
+      "answers": [
+        "„I Will Always Love You“",
+        "„How Will I Know“",
+        "„I Wanna Dance with Somebody (Who Loves Me)“",
+        "„Greatest Love of All“"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 51,
+      "question": "Welche Band hatte 1991 einen Hit mit „Losing My Religion“?",
+      "answers": [
+        "R.E.M.",
+        "Radiohead",
+        "The Cranberries",
+        "Oasis"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 52,
+      "question": "Welcher 1999er Song von Britney Spears wurde international bekannt?",
+      "answers": [
+        "„Sometimes“",
+        "„Lucky“",
+        "„Oops!... I Did It Again“",
+        "„...Baby One More Time“"
+      ],
+      "correctAnswerIndex": 3,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 53,
+      "question": "Welche Band veröffentlichte 1997 das Album „OK Computer“?",
+      "answers": [
+        "Blur",
+        "Radiohead",
+        "The Smashing Pumpkins",
+        "Pearl Jam"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Musik",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 54,
+      "question": "Welches Lied von Eminem (2002) enthält die Textzeilen „His palms are sweaty, knees weak, arms are heavy“?",
+      "answers": [
+        "„The Real Slim Shady“",
+        "„Stan“",
+        "„Lose Yourself“",
+        "„Without Me“"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Musik",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 55,
+      "question": "Welche Künstlerin hatte 2006 einen Hit mit „Hips Don't Lie“?",
+      "answers": [
+        "Rihanna",
+        "Jennifer Lopez",
+        "Shakira",
+        "Beyoncé"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Musik",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 56,
+      "question": "Welcher 2007 Song von Rihanna enthält Jay-Z?",
+      "answers": [
+        "„Umbrella“",
+        "„Disturbia“",
+        "„Don't Stop the Music“",
+        "„Rude Boy“"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 57,
+      "question": "Welche Band veröffentlichte 2004 „American Idiot“?",
+      "answers": [
+        "Blink-182",
+        "Green Day",
+        "Sum 41",
+        "The Offspring"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 58,
+      "question": "Welcher Komponist ist für die Oper „Die Zauberflöte“ bekannt?",
+      "answers": [
+        "Richard Wagner",
+        "Giuseppe Verdi",
+        "Wolfgang Amadeus Mozart",
+        "Giacomo Puccini"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Musik",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 59,
+      "question": "Wer komponierte „Die vier Jahreszeiten“?",
+      "answers": [
+        "Antonio Vivaldi",
+        "Georg Friedrich Händel",
+        "Franz Joseph Haydn",
+        "Johann Pachelbel"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Musik",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 60,
+      "question": "Wer komponierte „Clair de Lune“?",
+      "answers": [
+        "Maurice Ravel",
+        "Claude Debussy",
+        "Erik Satie",
+        "Camille Saint-Saëns"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Musik",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 61,
+      "question": "Welche Musikrichtung ist eng mit New Orleans verbunden?",
+      "answers": [
+        "Blues",
+        "Jazz",
+        "Gospel",
+        "Funk"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 62,
+      "question": "In welcher Band war Dave Grohl vor den Foo Fighters?",
+      "answers": [
+        "Pearl Jam",
+        "Soundgarden",
+        "Nirvana",
+        "Alice in Chains"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Musik",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 63,
+      "question": "Welche Rockband war bekannt für ihr Make-up und ihre Bühnenshows in den 70ern?",
+      "answers": [
+        "Led Zeppelin",
+        "Queen",
+        "Deep Purple",
+        "KISS"
+      ],
+      "correctAnswerIndex": 3,
+      "category": "Musik",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 64,
+      "question": "Wer komponierte die Filmmusik zu „Star Wars“?",
+      "answers": [
+        "John Williams",
+        "Hans Zimmer",
+        "Ennio Morricone",
+        "Howard Shore"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Musik",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 65,
+      "question": "Wer schrieb den Soundtrack zu „Fluch der Karibik“?",
+      "answers": [
+        "John Williams",
+        "Hans Zimmer",
+        "James Horner",
+        "Danny Elfman"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Musik",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 66,
+      "question": "Wie hieß der Leadsänger von AC/DC, der 1980 starb?",
+      "answers": [
+        "Brian Johnson",
+        "Bon Scott",
+        "Axl Rose",
+        "Robert Plant"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Musik",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 67,
+      "question": "Wer ist der Sänger der Band Die Ärzte?",
+      "answers": [
+        "Farin Urlaub",
+        "Jan Delay",
+        "Udo Lindenberg",
+        "Herbert Grönemeyer"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 68,
+      "question": "Welcher Song von Michael Jackson, bekannt für sein ikonisches Musikvideo, war in den 80ern ein Riesenerfolg in Deutschland?",
+      "answers": [
+        "„Billie Jean“",
+        "„Bad“",
+        "„Thriller“",
+        "„Beat It“"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 69,
+      "question": "Welches Genre wird oft mit der Band Scooter assoziiert?",
+      "answers": [
+        "Punkrock",
+        "Heavy Metal",
+        "Techno",
+        "Hip-Hop"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Musik",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 70,
+      "question": "Welches bekannte Weihnachtslied ist ursprünglich ein deutsches Lied?",
+      "answers": [
+        "„Stille Nacht“",
+        "„O Tannenbaum“",
+        "„Jingle Bells“",
+        "„White Christmas“"
+      ],
+      "correctAnswerIndex": 0,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 71,
+      "question": "Welcher Song von Lady Gaga aus 2008 war ein weltweiter Dance-Pop-Hit und auch in Deutschland sehr erfolgreich?",
+      "answers": [
+        "„Bad Romance\"",
+        "„Poker Face“",
+        "„Born This Way“",
+        "„Just Dance“"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 72,
+      "question": "Welcher internationale Hit von The Weeknd aus 2015, bekannt aus dem Film „Fifty Shades of Grey“, war in Deutschland ein großer Erfolg?",
+      "answers": [
+        "„Blinding Lights“",
+        "„Starboy“",
+        "„Earned It“",
+        "„Can’t Feel My Face“"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Musik",
+      "difficulty": "leicht"
+    },
+    {
+      "id": 73,
+      "question": "Aus welcher Stadt stammt die Band Scorpions, bekannt für die Rockballade „Wind of Change“?",
+      "answers": [
+        "Berlin",
+        "München",
+        "Hamburg",
+        "Hannover"
+      ],
+      "correctAnswerIndex": 3,
+      "category": "Musik",
+      "difficulty": "schwer"
+    },
+    {
+      "id": 74,
+      "question": "Welche britische Band hatte in den 80ern einen weltweiten Hit mit „Sweet Dreams (Are Made of This)“, der auch in Deutschland sehr populär war?",
+      "answers": [
+        "Depeche Mode",
+        "The Cure",
+        "Eurythmics",
+        "Duran Duran"
+      ],
+      "correctAnswerIndex": 2,
+      "category": "Musik",
+      "difficulty": "mittel"
+    },
+    {
+      "id": 75,
+      "question": "Welcher Künstler hatte einen Hit mit \"Firework\"?",
+      "answers": [
+        "Lady Gaga",
+        "Katy Perry",
+        "Selena Gomez",
+        "Ariana Grande"
+      ],
+      "correctAnswerIndex": 1,
+      "category": "Musik",
+      "difficulty": "leicht"
     }
   ]
 }
