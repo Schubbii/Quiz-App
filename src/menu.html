@@ -27,7 +27,6 @@
 
 <div class="quizSettings">
   <label for="question-count" class="settingsLabel">Anzahl der Fragen</label>
-
   <div class="questionCountBox">
     <input
       id="question-count"
@@ -38,6 +37,20 @@
     />
     <span class="questionCountHint" id="max-questions-info"></span>
   </div>
+
+
+  <label for="player-count" class="settingsLabel">Anzahl der Spieler</label>
+  <div class="playerCountBox">
+    <input
+      id="player-count"
+      class="playerCountInput"
+      type="number"
+      min="1"
+      value="1"
+      max="4"
+    />
+  </div>
+  
 
   <button id="start-quiz-btn" class="playBtn">
     Quiz starten

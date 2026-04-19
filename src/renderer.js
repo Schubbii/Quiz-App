@@ -18,6 +18,10 @@ const restartBtn = document.getElementById("restart-btn");
 
 const startQuizBtn = document.getElementById("start-quiz-btn");
 const questionCountInput = document.getElementById("question-count");
+const playerCountInput = document.getElementById("player-count");
+
+
+// Fragenanzahl setzen
 
 async function setMaxQuestionCount() {
   try {
@@ -39,6 +43,9 @@ if (window.location.pathname.includes("menu.html")) {
   setMaxQuestionCount();
 }
 
+
+// Quiz starten und alles was dazugehört
+
 if (startQuizBtn) {
   startQuizBtn.addEventListener("click", () => {
     const count = Number(questionCountInput.value);
@@ -50,6 +57,7 @@ if (startQuizBtn) {
 
     // Anzahl speichern
     localStorage.setItem("questionCount", count);
+    localStorage.setItem("playerCount", playerCountInput.value)
 
     // zur Quiz-Seite
     window.location.href = "./fragen.html";
@@ -58,6 +66,8 @@ if (startQuizBtn) {
 
 
 // fragen von quizzes.json laden
+
+// Quiz-Laufzeit-Variablen
 let currentQuestionIndex = 0;
 let correctAnswers = 0;
 let wrongAnswers = 0;
@@ -66,12 +76,18 @@ let timerInterval = null;
 let timeLeft = 15;
 const QUESTION_TIME = 15;
 
+
+// Mischt irgendwie arrays
+
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [array[i], array[j]] = [array[j], array[i]];
   }
 }
+
+
+// fragen Laden ig
 
 async function loadQuestions() {
   try {

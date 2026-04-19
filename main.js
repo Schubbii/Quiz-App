@@ -18,6 +18,7 @@ function createWindow() {
   win.loadFile("src/menu.html");
 
   win.setMenuBarVisibility(false);
+  win.webContents.openDevTools({ mode: 'detach' });
 }
 
 app.whenReady().then(() => {

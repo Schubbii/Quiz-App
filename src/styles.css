@@ -532,6 +532,7 @@ button {
   gap: 8px;
 }
 
+
 .questionCountInput {
   width: 100%;
   min-height: 64px;
@@ -559,9 +560,58 @@ button {
   filter: brightness(1.05);
 }
 
+.playerCountBox {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+.playerCountInput {
+  width: 100%;
+  min-height: 64px;
+  padding: 14px 18px;
+  border: none;
+  outline: none;
+  border-radius: 18px;
+  background: rgba(26, 8, 109, 0.78);
+  color: white;
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 800;
+  text-align: center;
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.playerCountInput:focus {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.24),
+    0 0 0 2px rgba(255, 255, 255, 0.18);
+  filter: brightness(1.05);
+}
+
 .questionCountHint {
   color: rgba(255, 255, 255, 0.82);
   font-size: 14px;
   font-weight: 600;
   text-align: center;
+}
+
+
+
+
+
+
+
+
+#debugText {
+  position:absolute;
+  top: 0px;
+  left: 0px;
+  font-size: 12px;
+  color: black;
 }
