@@ -376,3 +376,16 @@ if (restartBtn) {
         dialog.close();
     });
 
+
+// Menü - Button zum Menü Singleplayer o. Multiplayer
+
+const singleplayerBtn = document.getElementById("singleplayerBtn");
+const multiplayerBtn = document.getElementById("multiplayerBtn");
+
+//singleplayerBtn.addEventListener("click", () => {
+//  window.location.href = "./singleplayer.html";
+//});
+
+multiplayerBtn.addEventListener("click", () => {
+  window.location.href = "./menu.html";
+});
