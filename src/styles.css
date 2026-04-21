@@ -598,3 +598,17 @@ dialog {
         padding: 10px 20px;
 
     }
+
+/* Layout für Startanimation und Einstellungen */
+
+.layoutStart {
+        position: relative;
+        z-index: 1;
+        width: min(1100px, 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        justify-content: center;
+        min-height: 60vh; 
+}
