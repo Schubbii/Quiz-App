@@ -222,6 +222,11 @@ if (window.location.pathname.includes("menu.html")) {
     }
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
+      logoAnimation.addEventListener("loadedmetadata", () => {
+        const targetDuration = 1; // gewünschte Dauer in Sekunden
+        logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
+      });
+
       logoAnimation.addEventListener("ended", () => {
         startAnimation.style.display = "none";
         hauptmenue.classList.remove("hidden");
