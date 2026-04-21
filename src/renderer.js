@@ -23,16 +23,42 @@ const playerCountInput = document.getElementById("player-count");
 
 // Fragenanzahl setzen
 
-async function setMaxQuestionCount() {
+const categorySelect = document.getElementById("category-select");
+const maxQuestionsInfo = document.getElementById("max-questions-info");
+
+async function setQuizSettings() {
   try {
     const questions = await window.quizAPI.getQuestions();
-    const maxCount = questions.length;
 
+    // Kategorien automatisch aus allen Fragen holen
+    const categories = [...new Set(
+      questions
+        .map((q) => String(q.category || "").trim())
+        .filter(Boolean)
+    )].sort((a, b) => a.localeCompare(b, "de"));
+
+    // Kategorie-Dropdown füllen
+    if (categorySelect) {
+      categorySelect.innerHTML = '<option value="all">Alle Kategorien</option>';
+
+      categories.forEach((category) => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        categorySelect.appendChild(option);
+      });
+    }
+
+    // Maximalwert für Fragenanzahl setzen
+    const maxCount = questions.length;
     questionCountInput.max = maxCount;
 
-    // Optional: falls aktueller Wert zu hoch ist
     if (Number(questionCountInput.value) > maxCount) {
       questionCountInput.value = maxCount;
+    }
+
+    if (maxQuestionsInfo) {
+      maxQuestionsInfo.textContent = `Maximal ${maxCount} Fragen verfügbar`;
     }
   } catch (error) {
     console.error("Fehler beim Laden der Fragen:", error);
@@ -40,26 +66,26 @@ async function setMaxQuestionCount() {
 }
 
 if (window.location.pathname.includes("menu.html")) {
-  setMaxQuestionCount();
+  setQuizSettings();
 }
 
 
 // Quiz starten und alles was dazugehört
 
 if (startQuizBtn) {
-  startQuizBtn.addEventListener("click", () => {
+  startQuizBtn.addEventListener("click", async () => {
     const count = Number(questionCountInput.value);
+    const selectedCategory = categorySelect ? categorySelect.value : "all";
 
     if (!count || count < 1) {
       alert("Bitte eine gültige Anzahl eingeben.");
       return;
     }
 
-    // Anzahl speichern
     localStorage.setItem("questionCount", count);
     localStorage.setItem("playerCount", playerCountInput.value)
+    localStorage.setItem("selectedCategory", selectedCategory);
 
-    // zur Quiz-Seite
     window.location.href = "./fragen.html";
   });
 }
@@ -91,15 +117,22 @@ function shuffleArray(array) {
 
 async function loadQuestions() {
   try {
-    let questions = await window.quizAPI.getQuestions();
+   let questions = await window.quizAPI.getQuestions();
 
-    const count = Number(localStorage.getItem("questionCount")) || questions.length;
+const count = Number(localStorage.getItem("questionCount")) || questions.length;
+const selectedCategory = localStorage.getItem("selectedCategory") || "all";
 
-    // Fragen mischen
-    shuffleArray(questions);
+if (selectedCategory !== "all") {
+  questions = questions.filter(
+    (question) => String(question.category || "").trim() === selectedCategory
+  );
+}
 
-    // nur gewünschte Anzahl nehmen
-    quizQuestions = questions.slice(0, count);
+// Fragen mischen
+shuffleArray(questions);
+
+// nur gewünschte Anzahl nehmen
+quizQuestions = questions.slice(0, count);
 
     if (quizQuestions.length === 0) {
       if (questionFrame) {
