@@ -612,3 +612,12 @@ dialog {
         justify-content: center;
         min-height: 60vh; 
 }
+
+/*.layoutSettings {
+        position: relative;
+        width: min(1100px, 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        min-height: 60vh; 
+} */
