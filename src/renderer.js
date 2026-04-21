@@ -27,6 +27,10 @@ const categorySelect = document.getElementById("category-select");
 const maxQuestionsInfo = document.getElementById("max-questions-info");
 
 async function setQuizSettings() {
+const categorySelect = document.getElementById("category-select");
+const maxQuestionsInfo = document.getElementById("max-questions-info");
+
+async function setQuizSettings() {
   try {
     const questions = await window.quizAPI.getQuestions();
 
@@ -83,8 +87,8 @@ if (startQuizBtn) {
     }
 
     localStorage.setItem("questionCount", count);
+    localStorage.setItem("playerCount", playerCountInput.value)
     localStorage.setItem("selectedCategory", selectedCategory);
-    localStorage.setItem("playerCount", playerCountInput.value);
 
     window.location.href = "./fragen.html";
   });
