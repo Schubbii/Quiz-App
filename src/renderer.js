@@ -381,7 +381,7 @@ if (restartBtn) {
 
 const singleplayerBtn = document.getElementById("singleplayerBtn");
 const multiplayerBtn = document.getElementById("multiplayerBtn");
-
+const backBtn = document.getElementById("backBtn");
 
 singleplayerBtn.addEventListener("click", () => {
 window.location.href = "./menu.html";
@@ -390,5 +390,9 @@ window.location.href = "./menu.html";
 multiplayerBtn.addEventListener("click", () => {
   window.location.href = "./multiplayer.html";
 });
-
+if (backBtn) {  
+backBtn.addEventListener("click", () => {
+  window.location.href = "./start.html";
+});
+}
 
