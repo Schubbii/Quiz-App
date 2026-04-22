@@ -1,0 +1,873 @@
+module.exports = [
+  {
+    "id": 3,
+    "question": "Was ist die Hauptstadt von Deutschland?",
+    "answers": [
+      "Berlin",
+      "München",
+      "Hamburg",
+      "Köln"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Geografie",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 4,
+    "question": "Wie viele Planeten hat unser Sonnensystem?",
+    "answers": [
+      "7",
+      "8",
+      "9",
+      "10"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Astronomie",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 5,
+    "question": "Wer schrieb 'Faust'?",
+    "answers": [
+      "Goethe",
+      "Schiller",
+      "Heine",
+      "Mann"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Literatur",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 6,
+    "question": "Was ist die chemische Formel für Wasser?",
+    "answers": [
+      "H2O",
+      "CO2",
+      "O2",
+      "NaCl"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Chemie",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 7,
+    "question": "In welchem Jahr begann der Zweite Weltkrieg?",
+    "answers": [
+      "1939",
+      "1940",
+      "1938",
+      "1941"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Geschichte",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 9,
+    "question": "Was ist die Quadratwurzel von 144?",
+    "answers": [
+      "10",
+      "11",
+      "12",
+      "13"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Mathematik",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 11,
+    "question": "Wer malte die Mona Lisa?",
+    "answers": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Kunst",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 12,
+    "question": "Wie viele Kontinente gibt es?",
+    "answers": [
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Geografie",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 17,
+    "question": "Was ist die Hauptstadt von Kanada?",
+    "answers": [
+      "Toronto",
+      "Vancouver",
+      "Ottawa",
+      "Montreal"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Allgemeinwissen",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 18,
+    "question": "Welcher dieser Stoffe ist magnetisch?",
+    "answers": [
+      "Aluminium",
+      "Kupfer",
+      "Gold",
+      "Nickel"
+    ],
+    "correctAnswerIndex": 3,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 19,
+    "question": "Welche Aufgabe hat Hämoglobin?",
+    "answers": [
+      "Fett speichern",
+      "Sauerstoff transportieren",
+      "Zucker abbauen",
+      "Nerven schützen"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Allgemeinwissen",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 20,
+    "question": "Was misst ein Barometer?",
+    "answers": [
+      "Luftdruck",
+      "Luftfeuchtigkeit",
+      "Temperatur",
+      "Windstärke"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 21,
+    "question": "Welcher dieser Begriffe bezeichnet keine Staatsform, sondern eine Regierungsform?",
+    "answers": [
+      "Monarchie",
+      "Republik",
+      "Demokratie",
+      "Parlamentarismus"
+    ],
+    "correctAnswerIndex": 3,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 22,
+    "question": "Welches dieser Meere ist kein Randmeer des Atlantiks?",
+    "answers": [
+      "Nordsee",
+      "Karibisches Meer",
+      "Schwarzes Meer",
+      "Arabisches Meer"
+    ],
+    "correctAnswerIndex": 3,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 23,
+    "question": "Welcher dieser Staaten war nie Mitglied des Warschauer Pakts?",
+    "answers": [
+      "Albanien",
+      "Rumänien",
+      "Jugoslawien",
+      "Bulgarien"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Allgemeinwissen",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 24,
+    "question": "Wer war der erste Bundeskanzler der Bundesrepublik Deutschland?",
+    "answers": [
+      "Theodor Heuss",
+      "Kurt Schumacher",
+      "Konrad Adenauer",
+      "Ludwig Erhard"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 25,
+    "question": "Wie weit ist der Mond von der Erde entfernt?",
+    "answers": [
+      "ca. 38.400 km",
+      "ca. 384.400 km",
+      "ca. 3.844.000 km",
+      "ca. 843.000 km"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 26,
+    "question": "Wer komponierte die 9. Sinfonie?",
+    "answers": [
+      "Ludwig van Beethoven",
+      "Johann Sebastian Bach",
+      "Wolfgang Amadeus Mozart",
+      "Franz Schubert"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 27,
+    "question": "Wer gilt als Erfinder des World Wide Web?",
+    "answers": [
+      "Vinton Cerf",
+      "Robert Cailliau",
+      "Tim Berners-Lee",
+      "Marc Andreessen"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 28,
+    "question": "Was ist die Hauptstadt von Australien?",
+    "answers": [
+      "Sydney",
+      "Melbourne",
+      "Perth",
+      "Canberra"
+    ],
+    "correctAnswerIndex": 3,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 29,
+    "question": "Wie viele Minuten dauert ein professionelles Basketballspiel in der NBA?",
+    "answers": [
+      "40 Minuten",
+      "44 Minuten",
+      "48 Minuten",
+      "52 Minuten"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 30,
+    "question": "Wie viele Zähne hat ein erwachsener Mensch normalerweise?",
+    "answers": [
+      "32",
+      "28",
+      "30",
+      "34"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Allgemeinwissen",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 31,
+    "question": "Wie viele Geister jagen Pac-Man zu Beginn jedes Spiels?",
+    "answers": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Allgemeinwissen",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 32,
+    "question": "Wer entwickelte die Theorie, dass sich die Erde um die Sonne dreht?",
+    "answers": [
+      "Galileo Galilei",
+      "Johannes Kepler",
+      "Nikolaus Kopernikus",
+      "Tycho Brahe"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 33,
+    "question": "Welches Software-Unternehmen hat seinen Hauptsitz in Redmond, Washington?",
+    "answers": [
+      "Oracle",
+      "IBM",
+      "Adobe",
+      "Microsoft"
+    ],
+    "correctAnswerIndex": 3,
+    "category": "Allgemeinwissen",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 34,
+    "question": "In welchem Land liegt das Kernkraftwerk Tschernobyl?",
+    "answers": [
+      "Belarus",
+      "Ukraine",
+      "Russland",
+      "Litauen"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 35,
+    "question": "In welchem Land ist Elon Musk geboren?",
+    "answers": [
+      "Südafrika",
+      "Kanada",
+      "USA",
+      "Australien"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 36,
+    "question": "Welches Land besitzt die meisten Inseln?",
+    "answers": [
+      "Indonesien",
+      "Kanada",
+      "Norwegen",
+      "Schweden"
+    ],
+    "correctAnswerIndex": 3,
+    "category": "Allgemeinwissen",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 37,
+    "question": "Wie viele Herzen hat ein Tintenfisch?",
+    "answers": [
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 38,
+    "question": "Wo befindet sich der stärkste Muskel des Menschen?",
+    "answers": [
+      "Im Kiefer",
+      "Im Oberschenkel",
+      "Im Rücken",
+      "Im Arm"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Allgemeinwissen",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 39,
+    "question": "Wann fiel die Berliner Mauer?",
+    "answers": [
+      "13. Oktober 1990",
+      "9. Oktober 1989",
+      "9. November 1989",
+      "13. August 1961"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 40,
+    "question": "Welche Nationalflagge hat als einzige nicht die Form eines Vierecks?",
+    "answers": [
+      "Bhutan",
+      "Nepal",
+      "Sri Lanka",
+      "Vatikanstadt"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 41,
+    "question": "Wie heißt die Schicht der Atmosphäre, die der Erde am nächsten ist?",
+    "answers": [
+      "Stratosphäre",
+      "Mesosphäre",
+      "Troposphäre",
+      "Thermosphäre"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Allgemeinwissen",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 42,
+    "question": "Wie schnell ist die Lichtgeschwindigkeit?",
+    "answers": [
+      "ca. 30.000 km/s",
+      "ca. 3.000.000 km/s",
+      "ca. 3.000 km/s",
+      "ca. 300.000 km/s"
+    ],
+    "correctAnswerIndex": 3,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 43,
+    "question": "Welche Gürtelfarbe kann man im Kampfsport Karate nicht verdienen?",
+    "answers": [
+      "Schwarz",
+      "Grün",
+      "Rot",
+      "Weiß"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 44,
+    "question": "Mit welcher Mehrheit können Verfassungsänderungen in Deutschland beschlossen werden?",
+    "answers": [
+      "Mit Zweidrittelmehrheit",
+      "Mit absoluter Mehrheit",
+      "Mit einfacher Mehrheit",
+      "Mit Einstimmigkeit"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Allgemeinwissen",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 45,
+    "question": "Wer hat den Song „Rolling in the Deep“ aufgeführt?",
+    "answers": [
+      "Beyoncé",
+      "Adele",
+      "Rihanna",
+      "Taylor Swift"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Musik",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 46,
+    "question": "Welcher Song enthält den Text „Just a small-town girl, livin' in a lonely world“?",
+    "answers": [
+      "„Sweet Child O' Mine“ von Guns N' Roses",
+      "„Livin' on a Prayer“ von Bon Jovi",
+      "„Don't Stop Believin'“ von Journey",
+      "„Eye of the Tiger“ von Survivor"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 47,
+    "question": "Welche Gruppe hatte 1977 einen Hit mit „Stayin' Alive“?",
+    "answers": [
+      "Bee Gees",
+      "Earth, Wind & Fire",
+      "Kool & the Gang",
+      "The Jackson 5"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 48,
+    "question": "Welche Band veröffentlichte 1973 das Album „Dark Side of the Moon“?",
+    "answers": [
+      "The Rolling Stones",
+      "Pink Floyd",
+      "The Beatles",
+      "The Doors"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 49,
+    "question": "Welche Band hatte 1984 einen Hit mit „Wake Me Up Before You Go-Go“?",
+    "answers": [
+      "Duran Duran",
+      "Wham!",
+      "Culture Club",
+      "a-ha"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 50,
+    "question": "Welches Lied von Whitney Houston war 1987 ein großer Hit?",
+    "answers": [
+      "„I Will Always Love You“",
+      "„How Will I Know“",
+      "„I Wanna Dance with Somebody (Who Loves Me)“",
+      "„Greatest Love of All“"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 51,
+    "question": "Welche Band hatte 1991 einen Hit mit „Losing My Religion“?",
+    "answers": [
+      "R.E.M.",
+      "Radiohead",
+      "The Cranberries",
+      "Oasis"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 52,
+    "question": "Welcher 1999er Song von Britney Spears wurde international bekannt?",
+    "answers": [
+      "„Sometimes“",
+      "„Lucky“",
+      "„Oops!... I Did It Again“",
+      "„...Baby One More Time“"
+    ],
+    "correctAnswerIndex": 3,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 53,
+    "question": "Welche Band veröffentlichte 1997 das Album „OK Computer“?",
+    "answers": [
+      "Blur",
+      "Radiohead",
+      "The Smashing Pumpkins",
+      "Pearl Jam"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Musik",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 54,
+    "question": "Welches Lied von Eminem (2002) enthält die Textzeilen „His palms are sweaty, knees weak, arms are heavy“?",
+    "answers": [
+      "„The Real Slim Shady“",
+      "„Stan“",
+      "„Lose Yourself“",
+      "„Without Me“"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Musik",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 55,
+    "question": "Welche Künstlerin hatte 2006 einen Hit mit „Hips Don't Lie“?",
+    "answers": [
+      "Rihanna",
+      "Jennifer Lopez",
+      "Shakira",
+      "Beyoncé"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Musik",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 56,
+    "question": "Welcher 2007 Song von Rihanna enthält Jay-Z?",
+    "answers": [
+      "„Umbrella“",
+      "„Disturbia“",
+      "„Don't Stop the Music“",
+      "„Rude Boy“"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 57,
+    "question": "Welche Band veröffentlichte 2004 „American Idiot“?",
+    "answers": [
+      "Blink-182",
+      "Green Day",
+      "Sum 41",
+      "The Offspring"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 58,
+    "question": "Welcher Komponist ist für die Oper „Die Zauberflöte“ bekannt?",
+    "answers": [
+      "Richard Wagner",
+      "Giuseppe Verdi",
+      "Wolfgang Amadeus Mozart",
+      "Giacomo Puccini"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Musik",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 59,
+    "question": "Wer komponierte „Die vier Jahreszeiten“?",
+    "answers": [
+      "Antonio Vivaldi",
+      "Georg Friedrich Händel",
+      "Franz Joseph Haydn",
+      "Johann Pachelbel"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Musik",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 60,
+    "question": "Wer komponierte „Clair de Lune“?",
+    "answers": [
+      "Maurice Ravel",
+      "Claude Debussy",
+      "Erik Satie",
+      "Camille Saint-Saëns"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Musik",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 61,
+    "question": "Welche Musikrichtung ist eng mit New Orleans verbunden?",
+    "answers": [
+      "Blues",
+      "Jazz",
+      "Gospel",
+      "Funk"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 62,
+    "question": "In welcher Band war Dave Grohl vor den Foo Fighters?",
+    "answers": [
+      "Pearl Jam",
+      "Soundgarden",
+      "Nirvana",
+      "Alice in Chains"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Musik",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 63,
+    "question": "Welche Rockband war bekannt für ihr Make-up und ihre Bühnenshows in den 70ern?",
+    "answers": [
+      "Led Zeppelin",
+      "Queen",
+      "Deep Purple",
+      "KISS"
+    ],
+    "correctAnswerIndex": 3,
+    "category": "Musik",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 64,
+    "question": "Wer komponierte die Filmmusik zu „Star Wars“?",
+    "answers": [
+      "John Williams",
+      "Hans Zimmer",
+      "Ennio Morricone",
+      "Howard Shore"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Musik",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 65,
+    "question": "Wer schrieb den Soundtrack zu „Fluch der Karibik“?",
+    "answers": [
+      "John Williams",
+      "Hans Zimmer",
+      "James Horner",
+      "Danny Elfman"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Musik",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 66,
+    "question": "Wie hieß der Leadsänger von AC/DC, der 1980 starb?",
+    "answers": [
+      "Brian Johnson",
+      "Bon Scott",
+      "Axl Rose",
+      "Robert Plant"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Musik",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 67,
+    "question": "Wer ist der Sänger der Band Die Ärzte?",
+    "answers": [
+      "Farin Urlaub",
+      "Jan Delay",
+      "Udo Lindenberg",
+      "Herbert Grönemeyer"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 68,
+    "question": "Welcher Song von Michael Jackson, bekannt für sein ikonisches Musikvideo, war in den 80ern ein Riesenerfolg in Deutschland?",
+    "answers": [
+      "„Billie Jean“",
+      "„Bad“",
+      "„Thriller“",
+      "„Beat It“"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 69,
+    "question": "Welches Genre wird oft mit der Band Scooter assoziiert?",
+    "answers": [
+      "Punkrock",
+      "Heavy Metal",
+      "Techno",
+      "Hip-Hop"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Musik",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 70,
+    "question": "Welches bekannte Weihnachtslied ist ursprünglich ein deutsches Lied?",
+    "answers": [
+      "„Stille Nacht“",
+      "„O Tannenbaum“",
+      "„Jingle Bells“",
+      "„White Christmas“"
+    ],
+    "correctAnswerIndex": 0,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 71,
+    "question": "Welcher Song von Lady Gaga aus 2008 war ein weltweiter Dance-Pop-Hit und auch in Deutschland sehr erfolgreich?",
+    "answers": [
+      "„Bad Romance\"",
+      "„Poker Face“",
+      "„Born This Way“",
+      "„Just Dance“"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 72,
+    "question": "Welcher internationale Hit von The Weeknd aus 2015, bekannt aus dem Film „Fifty Shades of Grey“, war in Deutschland ein großer Erfolg?",
+    "answers": [
+      "„Blinding Lights“",
+      "„Starboy“",
+      "„Earned It“",
+      "„Can’t Feel My Face“"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Musik",
+    "difficulty": "leicht"
+  },
+  {
+    "id": 73,
+    "question": "Aus welcher Stadt stammt die Band Scorpions, bekannt für die Rockballade „Wind of Change“?",
+    "answers": [
+      "Berlin",
+      "München",
+      "Hamburg",
+      "Hannover"
+    ],
+    "correctAnswerIndex": 3,
+    "category": "Musik",
+    "difficulty": "schwer"
+  },
+  {
+    "id": 74,
+    "question": "Welche britische Band hatte in den 80ern einen weltweiten Hit mit „Sweet Dreams (Are Made of This)“, der auch in Deutschland sehr populär war?",
+    "answers": [
+      "Depeche Mode",
+      "The Cure",
+      "Eurythmics",
+      "Duran Duran"
+    ],
+    "correctAnswerIndex": 2,
+    "category": "Musik",
+    "difficulty": "mittel"
+  },
+  {
+    "id": 75,
+    "question": "Welcher Künstler hatte einen Hit mit \"Firework\"?",
+    "answers": [
+      "Lady Gaga",
+      "Katy Perry",
+      "Selena Gomez",
+      "Ariana Grande"
+    ],
+    "correctAnswerIndex": 1,
+    "category": "Musik",
+    "difficulty": "leicht"
+  },
+];
