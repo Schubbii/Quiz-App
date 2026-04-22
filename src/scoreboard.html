@@ -14,25 +14,52 @@
     <h1 class="scoreboard-title">QUIZ BEENDET</h1>
 
     <section class="scoreboard-card">
-      <div class="scoreboard-meta">
-        <p class="scoreboard-category">Kategorie: Allgemeinwissen</p>
-        <!-- <p class="scoreboard-time">Zeit: 02:50</p> -->
-      </div>
+  <div class="scoreboard-meta">
+    <p class="scoreboard-category">Kategorie: Allgemeinwissen</p>
+    <!-- <p class="scoreboard-time">Zeit: 02:50</p> -->
+  </div>
+
+  <div class="players-scoreboard">
+    <!-- Spieler 1 -->
+    <section class="player-score">
+      <h2 class="player-title">Spieler 1</h2>
 
       <div class="scoreboard-stats">
         <article class="stat-card">
-          <h2 class="stat-label stat-label--correct">Richtig</h2>
+          <h3 class="stat-label stat-label--correct">Richtig</h3>
           <p class="stat-value stat-value--correct" id="score-correct">0</p>
         </article>
 
         <article class="stat-card">
-          <h2 class="stat-label stat-label--wrong">Falsch</h2>
+          <h3 class="stat-label stat-label--wrong">Falsch</h3>
           <p class="stat-value stat-value--wrong" id="score-wrong">0</p>
         </article>
 
         <article class="stat-card">
-          <h2 class="stat-label stat-label--quote">Quote</h2>
+          <h3 class="stat-label stat-label--quote">Quote</h3>
           <p class="stat-value stat-value--quote" id="score-percentage">0%</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Spieler 2 Platzhalter -->
+    <section class="player-score player-score--placeholder">
+      <h2 class="player-title">Spieler 2</h2>
+
+      <div class="scoreboard-stats">
+        <article class="stat-card">
+          <h3 class="stat-label stat-label--correct">Richtig</h3>
+          <p class="stat-value stat-value--correct">--</p>
+        </article>
+
+        <article class="stat-card">
+          <h3 class="stat-label stat-label--wrong">Falsch</h3>
+          <p class="stat-value stat-value--wrong">--</p>
+        </article>
+
+        <article class="stat-card">
+          <h3 class="stat-label stat-label--quote">Quote</h3>
+          <p class="stat-value stat-value--quote">--%</p>
         </article>
       </div>
     </section>
