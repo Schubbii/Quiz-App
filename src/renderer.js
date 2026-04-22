@@ -361,4 +361,41 @@ if (restartBtn) {
   });
 }
 
+// Elemente holen
+    const dialog = document.getElementById('popupDialog');
+    const openBtn = document.getElementById('openBtn');
+    const closeBtn = document.getElementById('closeBtn');
+
+    // Öffnen
+    openBtn.addEventListener('click', () => {
+        dialog.showModal(); // Modal öffnen
+    });
+
+// Schließen
+    closeBtn.addEventListener('click', () => {
+        dialog.close();
+    });
+
+
+// Menü - Button zum Menü Singleplayer o. Multiplayer
+
+const singleplayerBtn = document.getElementById("singleplayerBtn");
+const multiplayerBtn = document.getElementById("multiplayerBtn");
+const backBtn = document.getElementById("backBtn");
+
+if (backBtn) {  
+backBtn.addEventListener("click", () => {
+  window.location.href = "./start.html";
+});
+}
+if (singleplayerBtn) {
+singleplayerBtn.addEventListener("click", () => {
+window.location.href = "./menu.html";
+});
+}
+if (multiplayerBtn) {
+multiplayerBtn.addEventListener("click", () => {
+  window.location.href = "./multiplayer.html";
+});
+}
 

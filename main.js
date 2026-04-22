@@ -15,7 +15,7 @@ function createWindow() {
     },
   });
 
-  win.loadFile("src/menu.html");
+  win.loadFile("src/start.html");
 
   win.setMenuBarVisibility(false);
 }
@@ -43,5 +43,3 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
-
