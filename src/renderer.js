@@ -388,13 +388,14 @@ backBtn.addEventListener("click", () => {
   window.location.href = "./start.html";
 });
 }
-
+if (singleplayerBtn) {
 singleplayerBtn.addEventListener("click", () => {
 window.location.href = "./menu.html";
 });
-
+}
+if (multiplayerBtn) {
 multiplayerBtn.addEventListener("click", () => {
   window.location.href = "./multiplayer.html";
 });
-
+}
 
