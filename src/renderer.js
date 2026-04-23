@@ -22,6 +22,9 @@ const questionCountInput = document.getElementById("question-count");
 const categorySelect = document.getElementById("category-select");
 const maxQuestionsInfo = document.getElementById("max-questions-info");
 
+const player1NameInput = document.getElementById("player1-name");
+const player2NameInput = document.getElementById("player2-name");
+
 async function setQuizSettings() {
   try {
     const questions = await window.quizAPI.getQuestions();
@@ -70,6 +73,9 @@ if (startQuizBtn) {
     const count = Number(questionCountInput.value);
     const selectedCategory = categorySelect ? categorySelect.value : "all";
 
+    const player1Name = player1NameInput ? player1NameInput.value.trim() : "";
+    const player2Name = player2NameInput ? player2NameInput.value.trim() : "";
+
     if (!count || count < 1) {
       alert("Bitte eine gültige Anzahl eingeben.");
       return;
@@ -77,6 +83,8 @@ if (startQuizBtn) {
 
     localStorage.setItem("questionCount", count);
     localStorage.setItem("selectedCategory", selectedCategory);
+    localStorage.setItem("player1Name", player1Name || "Player 1");
+    localStorage.setItem("player2Name", player2Name || "Player 2");
 
     window.location.href = "./fragen.html";
   });
