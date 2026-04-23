@@ -22,6 +22,7 @@ const questionCountInput = document.getElementById("question-count");
 const categorySelect = document.getElementById("category-select");
 const maxQuestionsInfo = document.getElementById("max-questions-info");
 
+
 async function setQuizSettings() {
   try {
     const questions = await window.quizAPI.getQuestions();
