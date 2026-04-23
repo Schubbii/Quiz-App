@@ -621,3 +621,12 @@ dialog {
         align-items: left;
         min-height: 60vh; 
 } */
+
+
+.playerDisplay {
+  margin: 6px 0 0 0;
+  color: white;
+  font-size: clamp(14px, 1.4vw, 18px);
+  font-weight: 800;
+  opacity: 0.95;
+}

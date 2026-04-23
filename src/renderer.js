@@ -24,6 +24,7 @@ const maxQuestionsInfo = document.getElementById("max-questions-info");
 
 const player1NameInput = document.getElementById("player1-name");
 const player2NameInput = document.getElementById("player2-name");
+const playerDisplay = document.getElementById("player-display");
 
 async function setQuizSettings() {
   try {
@@ -49,22 +50,46 @@ async function setQuizSettings() {
     }
 
     // Maximalwert für Fragenanzahl setzen
-    const maxCount = questions.length;
+function updateMaxQuestions() {
+  const selectedCategory = categorySelect ? categorySelect.value : "all";
+
+  const filteredQuestions =
+    selectedCategory === "all"
+      ? questions
+      : questions.filter(
+          (question) =>
+            String(question.category || "").trim() === selectedCategory
+        );
+
+  const maxCount = filteredQuestions.length;
+
+  if (questionCountInput) {
     questionCountInput.max = maxCount;
 
     if (Number(questionCountInput.value) > maxCount) {
       questionCountInput.value = maxCount;
     }
+  }
 
-    if (maxQuestionsInfo) {
-      maxQuestionsInfo.textContent = `Maximal ${maxCount} Fragen verfügbar`;
-    }
+  if (maxQuestionsInfo) {
+    maxQuestionsInfo.textContent = `Maximal ${maxCount} Fragen verfügbar`;
+  }
+}
+
+updateMaxQuestions();
+
+if (categorySelect) {
+  categorySelect.addEventListener("change", updateMaxQuestions);
+}
   } catch (error) {
     console.error("Fehler beim Laden der Fragen:", error);
   }
 }
 
-if (window.location.pathname.includes("menu.html")) {
+if (
+  window.location.pathname.includes("menu.html") ||
+  window.location.pathname.includes("multiplayer.html")
+) {
   setQuizSettings();
 }
 
@@ -81,10 +106,27 @@ if (startQuizBtn) {
       return;
     }
 
+    const isMultiplayer = window.location.pathname.includes("multiplayer.html");
+
     localStorage.setItem("questionCount", count);
     localStorage.setItem("selectedCategory", selectedCategory);
+    localStorage.setItem("gameMode", isMultiplayer ? "multi" : "single");
+
     localStorage.setItem("player1Name", player1Name || "Player 1");
     localStorage.setItem("player2Name", player2Name || "Player 2");
+
+    localStorage.removeItem("multiQuestions");
+    localStorage.removeItem("currentPlayer");
+    localStorage.removeItem("p1Correct");
+    localStorage.removeItem("p1Wrong");
+    localStorage.removeItem("p1Percentage");
+    localStorage.removeItem("p2Correct");
+    localStorage.removeItem("p2Wrong");
+    localStorage.removeItem("p2Percentage");
+
+    if (isMultiplayer) {
+      localStorage.setItem("currentPlayer", "1");
+    }
 
     window.location.href = "./fragen.html";
   });
@@ -109,22 +151,29 @@ function shuffleArray(array) {
 
 async function loadQuestions() {
   try {
-   let questions = await window.quizAPI.getQuestions();
+    let questions = await window.quizAPI.getQuestions();
 
-const count = Number(localStorage.getItem("questionCount")) || questions.length;
-const selectedCategory = localStorage.getItem("selectedCategory") || "all";
+    const count = Number(localStorage.getItem("questionCount")) || questions.length;
+    const selectedCategory = localStorage.getItem("selectedCategory") || "all";
+    const gameMode = localStorage.getItem("gameMode") || "single";
+    const currentPlayer = localStorage.getItem("currentPlayer") || "1";
 
-if (selectedCategory !== "all") {
-  questions = questions.filter(
-    (question) => String(question.category || "").trim() === selectedCategory
-  );
-}
+    if (selectedCategory !== "all") {
+      questions = questions.filter(
+        (question) => String(question.category || "").trim() === selectedCategory
+      );
+    }
 
-// Fragen mischen
-shuffleArray(questions);
+    if (gameMode === "multi" && currentPlayer === "2") {
+      quizQuestions = JSON.parse(localStorage.getItem("multiQuestions") || "[]");
+    } else {
+      shuffleArray(questions);
+      quizQuestions = questions.slice(0, count);
 
-// nur gewünschte Anzahl nehmen
-quizQuestions = questions.slice(0, count);
+      if (gameMode === "multi") {
+        localStorage.setItem("multiQuestions", JSON.stringify(quizQuestions));
+      }
+    }
 
     if (quizQuestions.length === 0) {
       if (questionFrame) {
@@ -141,6 +190,7 @@ quizQuestions = questions.slice(0, count);
     correctAnswers = 0;
     wrongAnswers = 0;
 
+    updatePlayerDisplay();
     showQuestion();
   } catch (error) {
     console.error("Fehler beim Laden der Fragen:", error);
@@ -149,7 +199,24 @@ quizQuestions = questions.slice(0, count);
     }
   }
 }
+function updatePlayerDisplay() {
+  if (!playerDisplay) return;
 
+  const gameMode = localStorage.getItem("gameMode") || "single";
+
+  if (gameMode !== "multi") {
+    playerDisplay.classList.add("hidden");
+    return;
+  }
+
+  const player1Name = localStorage.getItem("player1Name") || "Player 1";
+  const player2Name = localStorage.getItem("player2Name") || "Player 2";
+  const currentPlayer = localStorage.getItem("currentPlayer") || "1";
+
+  playerDisplay.classList.remove("hidden");
+  playerDisplay.textContent =
+    `Aktuell: ${currentPlayer === "1" ? player1Name : player2Name} | ${player1Name} vs. ${player2Name}`;
+}
 
 //fragen werden angezeigt
 function showQuestion() {
@@ -269,6 +336,31 @@ if (nextBtn) {
       const total = correctAnswers + wrongAnswers;
       const percentage = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
 
+      const gameMode = localStorage.getItem("gameMode") || "single";
+      const currentPlayer = localStorage.getItem("currentPlayer") || "1";
+
+      if (gameMode === "multi") {
+        if (currentPlayer === "1") {
+          localStorage.setItem("p1Correct", correctAnswers);
+          localStorage.setItem("p1Wrong", wrongAnswers);
+          localStorage.setItem("p1Percentage", percentage);
+
+          localStorage.setItem("currentPlayer", "2");
+
+          alert(`${localStorage.getItem("player1Name") || "Player 1"} ist fertig. Jetzt spielt ${localStorage.getItem("player2Name") || "Player 2"} mit den gleichen Fragen.`);
+
+          window.location.href = "./fragen.html";
+        } else {
+          localStorage.setItem("p2Correct", correctAnswers);
+          localStorage.setItem("p2Wrong", wrongAnswers);
+          localStorage.setItem("p2Percentage", percentage);
+
+          window.location.href = "./multi-scoreboard.html";
+        }
+
+        return;
+      }
+
       localStorage.setItem("c", correctAnswers);
       localStorage.setItem("w", wrongAnswers);
       localStorage.setItem("p", percentage);
@@ -278,10 +370,12 @@ if (nextBtn) {
   });
 }
 
+
+
 // Zurück zum Menü
 if (menuBtn) {
   menuBtn.addEventListener("click", () => {
-    window.location.href = "./menu.html";
+    window.location.href = "./start.html";
   });
 }
 // Überprüft, ob aktuelle Fragen-Seite sind und zeigt die erste Frage an
@@ -345,16 +439,52 @@ function handleTimeUp() {
   }
 }
 
-// SCOREBOARD.HTML
-if (window.location.pathname.includes("scoreboard.html")) {
+
+// SCOREBOARD.HTML nur im Singleplayer
+if (
+  window.location.pathname.includes("scoreboard.html") &&
+  !window.location.pathname.includes("multi-scoreboard.html")
+) {
   document.getElementById("score-correct").textContent =
-    localStorage.getItem("c");
+    localStorage.getItem("c") || 0;
 
   document.getElementById("score-wrong").textContent =
-    localStorage.getItem("w");
+    localStorage.getItem("w") || 0;
 
   document.getElementById("score-percentage").textContent =
-    localStorage.getItem("p") + "%";
+    (localStorage.getItem("p") || 0) + "%";
+}
+
+// MULTI-SCOREBOARD.HTML
+if (window.location.pathname.includes("multi-scoreboard.html")) {
+  const player1Name = localStorage.getItem("player1Name") || "Player 1";
+  const player2Name = localStorage.getItem("player2Name") || "Player 2";
+  const selectedCategory = localStorage.getItem("selectedCategory") || "all";
+
+  const p1Title = document.getElementById("player1-title");
+  const p2Title = document.getElementById("player2-title");
+
+  if (p1Title) p1Title.textContent = player1Name;
+  if (p2Title) p2Title.textContent = player2Name;
+
+  document.getElementById("p1-correct").textContent = localStorage.getItem("p1Correct") || 0;
+  document.getElementById("p1-wrong").textContent = localStorage.getItem("p1Wrong") || 0;
+  document.getElementById("p1-percentage").textContent = (localStorage.getItem("p1Percentage") || 0) + "%";
+
+  document.getElementById("p2-correct").textContent = localStorage.getItem("p2Correct") || 0;
+  document.getElementById("p2-wrong").textContent = localStorage.getItem("p2Wrong") || 0;
+  document.getElementById("p2-percentage").textContent = (localStorage.getItem("p2Percentage") || 0) + "%";
+
+  const categoryEl = document.getElementById("multi-category");
+
+if (categoryEl) {
+  const categoryText =
+    selectedCategory === "all" || !selectedCategory
+      ? "Alle Kategorien"
+      : selectedCategory;
+
+  categoryEl.textContent = "Kategorie: " + categoryText;
+}
 }
 
 if (adminBtn) {
@@ -365,24 +495,45 @@ if (adminBtn) {
 
 if (restartBtn) {
   restartBtn.addEventListener("click", () => {
+    const gameMode = localStorage.getItem("gameMode") || "single";
+
+    if (gameMode === "multi") {
+      localStorage.setItem("currentPlayer", "1");
+
+      localStorage.removeItem("multiQuestions");
+      localStorage.removeItem("p1Correct");
+      localStorage.removeItem("p1Wrong");
+      localStorage.removeItem("p1Percentage");
+      localStorage.removeItem("p2Correct");
+      localStorage.removeItem("p2Wrong");
+      localStorage.removeItem("p2Percentage");
+
+      window.location.href = "./fragen.html";
+      return;
+    }
+
     window.location.href = "./fragen.html";
   });
 }
 
 // Elemente holen
-    const dialog = document.getElementById('popupDialog');
-    const openBtn = document.getElementById('openBtn');
-    const closeBtn = document.getElementById('closeBtn');
+const dialog = document.getElementById("popupDialog");
+const openBtn = document.getElementById("openBtn");
+const closeBtn = document.getElementById("closeBtn");
 
-    // Öffnen
-    openBtn.addEventListener('click', () => {
-        dialog.showModal(); // Modal öffnen
-    });
+// Öffnen
+if (openBtn && dialog) {
+  openBtn.addEventListener("click", () => {
+    dialog.showModal();
+  });
+}
 
 // Schließen
-    closeBtn.addEventListener('click', () => {
-        dialog.close();
-    });
+if (closeBtn && dialog) {
+  closeBtn.addEventListener("click", () => {
+    dialog.close();
+  });
+}
 
 
 // Menü - Button zum Menü Singleplayer o. Multiplayer
