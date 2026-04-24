@@ -13,9 +13,14 @@
     <div class="background"></div>
     <main id="Hauptmenue" class="menu">
 
-<div class="quizSettings">
-  <label for="player1-name" class="settingsLabel">Player 1</label>
+<div class="quizSettings multiplayer">
 
+  <div class="menuGrid">
+
+    <!-- LINKE SEITE -->
+<div class="leftColumn">
+
+  <label for="player1-name" class="settingsLabel">Player 1</label>
   <div class="questionCountBox">
     <input
       id="player1-name"
@@ -27,7 +32,6 @@
   </div>
 
   <label for="player2-name" class="settingsLabel">Player 2</label>
-
   <div class="questionCountBox">
     <input
       id="player2-name"
@@ -38,8 +42,15 @@
     />
   </div>
 
-  <label for="question-count" class="settingsLabel">Anzahl der Fragen</label>
+  <button class="menuBtn" id="backBtn">Zurück</button>
 
+</div>
+
+
+    <!-- RECHTE SEITE -->
+  <div class="rightColumn">
+
+  <label for="question-count" class="settingsLabel">Anzahl der Fragen</label>
   <div class="questionCountBox">
     <input
       id="question-count"
@@ -52,23 +63,27 @@
   </div>
 
   <label for="category-select" class="settingsLabel">Kategorie</label>
+  <div class="questionCountBox">
+    <select id="category-select" class="questionCountInput">
+      <option value="all">Alle Kategorien</option>
+    </select>
+  </div>
 
-<div class="questionCountBox">
-  <select id="category-select" class="questionCountInput">
-    <option value="all">Alle Kategorien</option>
-  </select>
-</div>
+  <button id="openBtn" class="menuBtn">Settings</button>
 
   <button id="start-quiz-btn" class="playBtn">
     Quiz starten
   </button>
-  <button class ="menuBtn" id="backBtn">Zurück</button>
-  <button id = "openBtn"class="menuBtn">Settings</button>
-            <dialog id="popupDialog">
-              
-              <input type="checkbox" id="musicToggle" name="musicToggle">Musik An/Aus
-              <button id="closeBtn" class="menuBtn">Zurück</button>
-            </dialog>
+
+</div>
+
+  </div>
+
+  <dialog id="popupDialog">
+    <input type="checkbox" id="musicToggle" name="musicToggle">Musik An/Aus
+    <button id="closeBtn" class="menuBtn">Zurück</button>
+  </dialog>
+
 </div>
 
         <!-- <button class="playBtn">PLAY</button> -->
