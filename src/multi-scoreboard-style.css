@@ -214,6 +214,11 @@ body {
   line-height: 1;
 }
 
+#player1-title { color: green; }
+#player2-title { color: pink; }
+
+
+
 .player-score--placeholder {
   opacity: 0.88;
 }

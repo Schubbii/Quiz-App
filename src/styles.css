@@ -613,6 +613,94 @@ dialog {
         min-height: 60vh;
 }
 
+.menuGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  width: 100%;
+}
+
+.leftColumn,
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Nur Multiplayer-Menü */
+
+.multiplayerMenu {
+  position: relative;
+  width: min(1100px, 100%);
+  min-height: 70vh;
+  justify-content: center;
+}
+
+.multiplayer {
+  width: 100%;
+  max-width: 920px;
+  padding: 18px;
+}
+
+.multiplayer .menuGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  width: 100%;
+}
+
+.multiplayer .questionCountInput {
+  width: 100%;
+  max-width: 100%;
+  min-height: 72px;
+}
+
+.multiplayer .settingsLabel {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.topBackBtn,
+.topSettingsBtn {
+  position: fixed;
+  top: 36px;
+  width: 150px;
+  min-height: 42px;
+  font-size: 14px;
+  border-radius: 8px;
+  z-index: 5;
+}
+
+.topBackBtn {
+  left: 36px;
+}
+
+.topSettingsBtn {
+  right: 36px;
+}
+
+.multiplayerStartBtn {
+  width: min(560px, 100%);
+  max-width: 560px;
+  min-height: 90px;
+  margin-top: 18px;
+}
+
+.iconBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 26px;
+  font-weight: bold;
+
+  width: 56px;
+  height: 56px;
+  min-height: unset;
+  padding: 0;
+  border-radius: 14px;
+}
+
 /*.layoutSettings {
         position: relative;
         width: min(1100px, 100%);
@@ -621,3 +709,12 @@ dialog {
         align-items: left;
         min-height: 60vh; 
 } */
+
+
+.playerDisplay {
+  margin: 6px 0 0 0;
+  color: white;
+  font-size: clamp(14px, 1.4vw, 18px);
+  font-weight: 800;
+  opacity: 0.95;
+}
