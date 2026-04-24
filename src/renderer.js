@@ -558,3 +558,21 @@ multiplayerBtn.addEventListener("click", () => {
 });
 }
 
+
+//Gewinner anzeige
+const p1Correct = Number(localStorage.getItem("p1Correct")) || 0;
+const p2Correct = Number(localStorage.getItem("p2Correct")) || 0;
+
+const player1Card = document.getElementById("player1-title")?.closest(".player-score");
+const player2Card = document.getElementById("player2-title")?.closest(".player-score");
+
+if (p1Correct > p2Correct) {
+  player1Card?.classList.add("winner-card");
+  document.getElementById("player1-title").textContent = player1Name + " 🏆";
+} else if (p2Correct > p1Correct) {
+  player2Card?.classList.add("winner-card");
+  document.getElementById("player2-title").textContent = player2Name + " 🏆";
+} else {
+  player1Card?.classList.add("draw-card");
+  player2Card?.classList.add("draw-card");
+}
