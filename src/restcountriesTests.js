@@ -16,6 +16,8 @@ cca3 = Ländercode im cca3 Format
 unMember = boolean ist eine UN mitglied
 region = Region bsp. Europa
 border[] = Angrenzende Länder (im "cca3" Format)
+cca3 = Land im cca3 Format
+
 
 */
 
@@ -326,4 +328,48 @@ function getQuestion() {
     output("questionString: " + questionString);
     output("answerArray: " + answerArray);
     output("correctAnswerIndex: " + correctAnswerIndex);
+
+
+    let questionObject = [];
+    questionObject.push({
+        question: questionString,
+        answers: answerArray,
+        correctAnswerIndex: correctAnswerIndex
+    })
+
+
+    output("questionObject: " + questionObject);
+
+    return questionObject;
+
+    
+}
+
+
+function hs() {
+    output(Math.random() * 4);
+    output(Math.random() * 4);
+    output(Math.random() * 4);
+    output(Math.random() * 4);
+    output(Math.random() * 4);
+    output(Math.random() * 4);
+    output(Math.random() * 4);
+    output(Math.random() * 4);
+    output(Math.random() * 4);
+    output(Math.random() * 4);
+    output(Math.random() * 4);
+
+    output(Math.floor(Math.random() * 4));
+    output(Math.floor(Math.random() * 4));
+    output(Math.floor(Math.random() * 4));
+    output(Math.floor(Math.random() * 4));
+    output(Math.floor(Math.random() * 4));
+    output(Math.floor(Math.random() * 4));
+    output(Math.floor(Math.random() * 4));
+    output(Math.floor(Math.random() * 4));
+    output(Math.floor(Math.random() * 4));
+    output(Math.floor(Math.random() * 4));
+    output(Math.floor(Math.random() * 4));
+
+
 }

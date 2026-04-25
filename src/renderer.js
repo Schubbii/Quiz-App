@@ -26,6 +26,362 @@ const player1NameInput = document.getElementById("player1-name");
 const player2NameInput = document.getElementById("player2-name");
 const playerDisplay = document.getElementById("player-display");
 
+
+
+//////////////////////////////////////////////////////////////////
+/// Setup für API-Generierte Fragen bei Kategorie "Geographie" ///
+//////////////////////////////////////////////////////////////////
+
+/*
+0: Welches dieser Länder ist Teil der UN
+1: Welches dieser Länder ist nicht Teil der UN
+2: Welches dieser Länder gehört zur Region {region}
+3: Welches dieser Länder gehört nicht zur Region {region}
+4: Welches dieser Länder grenzt an {land}
+5: Welches dieser Länder grenzt nicht an {land}
+6: Was ist die Hauptstadt von {land}
+
+
+250 Länder
+
+
+name.common = string Name
+cca3 = Ländercode im cca3 Format
+unMember = boolean ist eine UN mitglied
+region = Region bsp. Europa
+border[] = Angrenzende Länder (im "cca3" Format)
+cca3 = Land im cca3 Format
+
+
+*/
+
+let response;
+let countryDataJson;
+let regions = ["Asia", "Europe", "Oceania", "Americas", "Africa"];
+
+async function fetchCountries() {
+  response = await fetch("https://restcountries.com/v3.1/all?fields=name,capital,borders,unMember,region,cca3");
+  countryDataJson = await response.json();
+  await output(countryDataJson);
+  await output("fetched Country Data")
+}
+
+
+let geoQuestions = ["Welches dieser Länder ist Teil der UN?",
+  "Welches dieser Länder ist nicht Teil der UN?",
+  "Welches dieser Länder gehört zur Region {region}?",
+  "Welches dieser Länder gehört nicht zur Region {region}?",
+  "Welches dieser Länder grenzt an {land}?",
+  "Welches dieser Länder grenzt nicht an {land}?",
+  "Was ist die Hauptstadt von {land}?"
+];
+
+function output(input) {
+  console.log(input);
+}
+
+function rndCountry() {
+  let countryIndex = Math.floor(Math.random() * countryDataJson.length);
+  output("got new country");
+  // output("countryDataJson[countryIndex].name.common: " + countryDataJson[countryIndex].name.common);
+  return countryDataJson[countryIndex];
+}
+
+function fetchGeoQuestion() {
+  let randomQuestion = Math.floor(Math.random() * 7);
+  let questionString = "";
+  let answerArray = [];
+  let testCountry;
+  let breakOutIteration = 0;
+  let correctAnswerIndex;
+  let selectedRegion;
+  let iteration;
+  let selectedCountry;
+  let bordersOfSelectedCountry;
+  let borderOfSelectedCountry;
+  let falseAnswers;
+  let falseAnswer;
+  let cca3AnswerArray = [];
+
+  output("randomQuestion: " + randomQuestion);
+
+  ///////////////////////////////////////////////////
+  /// Fragengenerierung für API-Geographie-Fragen ///
+  ///////////////////////////////////////////////////
+
+  switch (randomQuestion) {
+
+    case 0:
+
+      questionString = geoQuestions[0];
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+      while (answerArray.length < 4) {
+        testCountry = rndCountry();
+        if (answerArray.length == correctAnswerIndex) {
+          if (testCountry.unMember == true) {
+            answerArray.push(testCountry.name.common);
+          }
+        } else {
+          if (testCountry.unMember == false) {
+            answerArray.push(testCountry.name.common);
+          }
+        }
+
+      }
+
+
+      breakOutIteration += 1;
+      if (breakOutIteration > 500) { answerArray = ["1", "2", "3", "4", "5", "6", "7"] }
+      break;
+
+
+    case 1:
+
+      questionString = geoQuestions[1];
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+      while (answerArray.length < 4) {
+        testCountry = rndCountry();
+        if (answerArray.length == correctAnswerIndex) {
+          if (testCountry.unMember == false) {
+            answerArray.push(testCountry.name.common);
+          }
+        } else {
+          if (testCountry.unMember == true) {
+            answerArray.push(testCountry.name.common);
+          }
+        }
+
+      }
+
+
+      breakOutIteration += 1;
+      if (breakOutIteration > 500) { answerArray = ["1", "2", "3", "4", "5", "6", "7"] }
+      break;
+
+
+    case 2:
+      selectedRegion = regions[Math.floor(Math.random() * 5)]
+      questionString = geoQuestions[2].replace("{region}", selectedRegion);
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+
+      while (answerArray.length < 4) {
+        testCountry = rndCountry();
+        if (answerArray.length == correctAnswerIndex) {
+          if (testCountry.region == selectedRegion) {
+            answerArray.push(testCountry.name.common);
+          } else { output("badcountry1")}
+        } else {
+          if (testCountry.region != selectedRegion) {
+            answerArray.push(testCountry.name.common);
+          }
+        }
+
+      }
+
+      breakOutIteration += 1;
+      if (breakOutIteration > 500) { answerArray = ["1", "2", "3", "4", "5", "6", "7"] }
+      break;
+
+    case 3:
+      selectedRegion = regions[Math.floor(Math.random() * 5)]
+      questionString = geoQuestions[3].replace("{region}", selectedRegion);
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+
+      while (answerArray.length < 4) {
+        testCountry = rndCountry();
+        if (answerArray.length == correctAnswerIndex) {
+          if (testCountry.region != selectedRegion) {
+            answerArray.push(testCountry.name.common);
+          }
+        } else {
+          if (testCountry.region == selectedRegion) {
+            answerArray.push(testCountry.name.common);
+          }
+        }
+
+      }
+
+      breakOutIteration += 1;
+      if (breakOutIteration > 500) { answerArray = ["1", "2", "3", "4", "5", "6", "7"] }
+      break;
+
+
+
+
+    case 4: //Welches dieser Länder grenz an {land}
+      selectedCountry = null;
+      while (selectedCountry == null) {
+        testCountry = rndCountry();
+        if (testCountry.borders.length >= 1) {
+          selectedCountry = testCountry;
+        } else { output("bad country") }
+      }
+
+      questionString = geoQuestions[4].replace("{land}", selectedCountry.name.common);
+
+      borderOfSelectedCountry = selectedCountry.borders[Math.floor(Math.random() * selectedCountry.borders.length)];
+
+      falseAnswers = [];
+      iteration = 0;
+      while (falseAnswers.length < 3) {
+        testCountry = rndCountry();
+        if (!(selectedCountry.borders.includes(testCountry.cca3)) && !(falseAnswers.includes(testCountry.cca3))) {
+          falseAnswers.push(testCountry.cca3);
+        }
+        iteration += 1;
+        if (iteration > 500) break;
+      }
+
+
+
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+      iteration = 0;
+      while (cca3AnswerArray.length < 4) {
+        if (cca3AnswerArray.length == correctAnswerIndex) {
+          cca3AnswerArray.push(borderOfSelectedCountry);
+        } else {
+          cca3AnswerArray.push(falseAnswers[iteration]);
+          iteration += 1;
+        }
+
+        breakOutIteration += 1;
+        if (breakOutIteration > 500) {
+          cca3AnswerArray = ["1", "2", "3", "4", "5", "6", "7"]
+        }
+      }
+
+
+
+      cca3AnswerArray.forEach(a => {
+        const country = countryDataJson.find(countryDataJson => countryDataJson.cca3 === a);
+        answerArray.push(country.name.common);
+      })
+
+      break;
+
+
+
+
+    case 5: //Welches dieser Länder grenzt nicht an {land}
+
+      selectedCountry = null;
+      bordersOfSelectedCountry = [];
+      while (selectedCountry == null) {
+        testCountry = rndCountry();
+        if (testCountry.borders.length >= 3) {
+          selectedCountry = testCountry;
+        } else { output("bad country") }
+      }
+
+      questionString = geoQuestions[5].replace("{land}", selectedCountry.name.common);
+
+      bordersOfSelectedCountry[0] = selectedCountry.borders[Math.floor(Math.random() * selectedCountry.borders.length)];
+      bordersOfSelectedCountry[1] = bordersOfSelectedCountry[0];
+
+      while (bordersOfSelectedCountry[1] == bordersOfSelectedCountry[0]) {
+        bordersOfSelectedCountry[1] = selectedCountry.borders[Math.floor(Math.random() * selectedCountry.borders.length)];
+      }
+
+      bordersOfSelectedCountry[2] = bordersOfSelectedCountry[0];
+      while ((bordersOfSelectedCountry[2] == bordersOfSelectedCountry[0]) || (bordersOfSelectedCountry[2] == bordersOfSelectedCountry[1])) {
+        bordersOfSelectedCountry[2] = selectedCountry.borders[Math.floor(Math.random() * selectedCountry.borders.length)];
+      }
+
+      falseAnswer = "";
+
+      while ((falseAnswer == "") || (bordersOfSelectedCountry.includes(falseAnswer))) {
+        testCountry = rndCountry();
+        if (!(selectedCountry.borders.includes(testCountry.cca3))) { falseAnswer = testCountry.cca3 }
+      }
+
+
+      cca3AnswerArray = []
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+      iteration = 0;
+      while (cca3AnswerArray.length < 4) {
+        if (cca3AnswerArray.length == correctAnswerIndex) {
+          cca3AnswerArray.push(falseAnswer);
+        } else {
+          cca3AnswerArray.push(bordersOfSelectedCountry[iteration]);
+          iteration += 1;
+        }
+
+        breakOutIteration += 1;
+        if (breakOutIteration > 500) {
+          cca3AnswerArray = ["1", "2", "3", "4", "5", "6", "7"]
+        }
+      }
+
+
+      cca3AnswerArray.forEach(a => {
+        const country = countryDataJson.find(countryDataJson => countryDataJson.cca3 === a);
+        answerArray.push(country.name.common);
+      })
+
+      break;
+
+    case 6: //Was ist die Hauptstadt von {land}
+      selectedCountry = rndCountry();
+      falseAnswers = [];
+
+      questionString = geoQuestions[6].replace("{land}", selectedCountry.name.common);
+
+      while (falseAnswers.length < 3) {
+        testCountry = rndCountry();
+
+        if (!(falseAnswers.includes(testCountry.capital[0]))) {
+          if (testCountry.capital[0] == undefined) {
+          } else {
+            falseAnswers.push(testCountry.capital[0]);
+          }
+
+        }
+      }
+
+
+      answerArray = [];
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+
+      iteration = 0;
+      while (answerArray.length < 4) {
+        if (answerArray.length == correctAnswerIndex) {
+          answerArray.push(selectedCountry.capital[0]);
+        } else {
+          answerArray.push(falseAnswers[iteration]);
+          iteration += 1;
+        }
+
+        breakOutIteration += 1;
+        if (breakOutIteration > 500) {
+          answerArray = ["1", "2", "3", "4", "5", "6", "7"]
+        }
+
+      }
+
+      break;
+  }
+  output("questionString: " + questionString);
+  output("answerArray: " + answerArray);
+  output("correctAnswerIndex: " + correctAnswerIndex);
+
+  let questionObject = [];
+  questionObject.push({
+    question: questionString,
+    answers: answerArray,
+    correctAnswerIndex: correctAnswerIndex
+  })
+
+  return questionObject;
+
+}
+
+
+//////////////////////////////////////////////////////////
+/// ENDE - Fragengenerierung für API-Geographie-Fragen ///
+//////////////////////////////////////////////////////////
+
+
+
 async function setQuizSettings() {
   try {
     const questions = await window.quizAPI.getQuestions();
@@ -50,37 +406,62 @@ async function setQuizSettings() {
     }
 
     // Maximalwert für Fragenanzahl setzen
-function updateMaxQuestions() {
-  const selectedCategory = categorySelect ? categorySelect.value : "all";
+    function updateMaxQuestions() {
+      const selectedCategory = categorySelect ? categorySelect.value : "all";
 
-  const filteredQuestions =
-    selectedCategory === "all"
-      ? questions
-      : questions.filter(
-          (question) =>
-            String(question.category || "").trim() === selectedCategory
-        );
+      const filteredQuestions =
+        selectedCategory === "all"
+          ? questions
+          : questions.filter(
+            (question) =>
+              String(question.category || "").trim() === selectedCategory
+          );
 
-  const maxCount = filteredQuestions.length;
 
-  if (questionCountInput) {
-    questionCountInput.max = maxCount;
+      let maxCount = filteredQuestions.length;
 
-    if (Number(questionCountInput.value) > maxCount) {
-      questionCountInput.value = maxCount;
+      if (selectedCategory == "Geografie") {
+        // Da beim erstmaligen Auswählen von der Kategorie "Geographie" die Fragen geladen werden müssen, wird das Starten kurz blockiert, damit das Quiz nicht ohne Fragen startet
+        console.log("countryDataJson: " + countryDataJson);
+        console.log("Boolean(countryDataJson): " + Boolean(countryDataJson));
+        if (!(countryDataJson)) {
+          fetchCountries();
+          document.getElementById("start-quiz-btn").innerText = "Daten werden heruntergeladen";
+          document.getElementById("start-quiz-btn").style.background = "rgba(125, 125, 125, 0.73)";
+          startQuizBtn.disabled = true;
+          const hasDataLoaded = setInterval(() => {
+            if (Boolean(countryDataJson)) {
+              console.log("daten haben geladen")
+              startQuizBtn.disabled = false;
+              document.getElementById("start-quiz-btn").innerText = "Quiz starten";
+              document.getElementById("start-quiz-btn").style.background = " rgba(255, 100.53, 249.85, 0.73)";
+              clearInterval(hasDataLoaded);
+            }
+          }, 50)
+
+        }
+
+        maxCount = 30;
+      }
+
+      if (questionCountInput) {
+        questionCountInput.max = maxCount;
+
+        if (Number(questionCountInput.value) > maxCount) {
+          questionCountInput.value = maxCount;
+        }
+      }
+
+      if (maxQuestionsInfo) {
+        maxQuestionsInfo.textContent = `Maximal ${maxCount} Fragen verfügbar`;
+      }
     }
-  }
 
-  if (maxQuestionsInfo) {
-    maxQuestionsInfo.textContent = `Maximal ${maxCount} Fragen verfügbar`;
-  }
-}
+    updateMaxQuestions();
 
-updateMaxQuestions();
-
-if (categorySelect) {
-  categorySelect.addEventListener("change", updateMaxQuestions);
-}
+    if (categorySelect) {
+      categorySelect.addEventListener("change", updateMaxQuestions);
+    }
   } catch (error) {
     console.error("Fehler beim Laden der Fragen:", error);
   }
@@ -159,9 +540,23 @@ async function loadQuestions() {
     const currentPlayer = localStorage.getItem("currentPlayer") || "1";
 
     if (selectedCategory !== "all") {
-      questions = questions.filter(
-        (question) => String(question.category || "").trim() === selectedCategory
-      );
+      if (selectedCategory === "Geografie") {
+        if (!countryDataJson) {
+          await fetchCountries();
+        }
+
+        questions = [];
+
+        for (let i = 0; i < count; i++) {
+          const geoQuestion = await fetchGeoQuestion()[0];
+          await questions.push(geoQuestion);
+        }
+      } else {
+        questions = questions.filter((question) => {
+          return String(question.category || "").trim() === selectedCategory;
+        });
+      }
+
     }
 
     if (gameMode === "multi" && currentPlayer === "2") {
@@ -192,13 +587,18 @@ async function loadQuestions() {
 
     updatePlayerDisplay();
     showQuestion();
+
+
   } catch (error) {
     console.error("Fehler beim Laden der Fragen:", error);
+
     if (questionFrame) {
       questionFrame.textContent = "Fragen konnten nicht geladen werden.";
     }
   }
 }
+
+
 function updatePlayerDisplay() {
   if (!playerDisplay) return;
 
@@ -378,6 +778,7 @@ if (menuBtn) {
     window.location.href = "./start.html";
   });
 }
+
 // Überprüft, ob aktuelle Fragen-Seite sind und zeigt die erste Frage an
 if (window.location.pathname.includes("fragen.html")) {
   currentQuestionIndex = 0;
@@ -477,14 +878,14 @@ if (window.location.pathname.includes("multi-scoreboard.html")) {
 
   const categoryEl = document.getElementById("multi-category");
 
-if (categoryEl) {
-  const categoryText =
-    selectedCategory === "all" || !selectedCategory
-      ? "Alle Kategorien"
-      : selectedCategory;
+  if (categoryEl) {
+    const categoryText =
+      selectedCategory === "all" || !selectedCategory
+        ? "Alle Kategorien"
+        : selectedCategory;
 
-  categoryEl.textContent = "Kategorie: " + categoryText;
-}
+    categoryEl.textContent = "Kategorie: " + categoryText;
+  }
 }
 
 if (adminBtn) {
@@ -542,20 +943,20 @@ const singleplayerBtn = document.getElementById("singleplayerBtn");
 const multiplayerBtn = document.getElementById("multiplayerBtn");
 const backBtn = document.getElementById("backBtn");
 
-if (backBtn) {  
-backBtn.addEventListener("click", () => {
-  window.location.href = "./start.html";
-});
+if (backBtn) {
+  backBtn.addEventListener("click", () => {
+    window.location.href = "./start.html";
+  });
 }
 if (singleplayerBtn) {
-singleplayerBtn.addEventListener("click", () => {
-window.location.href = "./menu.html";
-});
+  singleplayerBtn.addEventListener("click", () => {
+    window.location.href = "./menu.html";
+  });
 }
 if (multiplayerBtn) {
-multiplayerBtn.addEventListener("click", () => {
-  window.location.href = "./multiplayer.html";
-});
+  multiplayerBtn.addEventListener("click", () => {
+    window.location.href = "./multiplayer.html";
+  });
 }
 
 

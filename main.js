@@ -14,6 +14,12 @@ function createWindow() {
 
   win.loadFile('src/start.html');
   win.setMenuBarVisibility(false);
+
+
+  // vvv Fenster mit Konsole öffnet sich beim start, bitte bei zuküftigen Versionen ohne Fenster nur auskommentieren, dass man das easy wieder einschalten kann
+   win.webContents.openDevTools(); // Variante mit Konsole im Spielfenster
+  // win.webContents.openDevTools({ mode: 'detach' }); // Variante mit Konsle als seperates Fenster
+
 }
 
 app.whenReady().then(() => {
@@ -27,3 +33,4 @@ app.whenReady().then(() => {
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
+
