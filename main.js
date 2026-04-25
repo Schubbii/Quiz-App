@@ -16,8 +16,9 @@ function createWindow() {
   win.setMenuBarVisibility(false);
 
 
-  // vvv Fenster mit Konsole öffnet sich beim start, bitte bei zuküftigen Versionen ohne Fenster nur auskommentieren, dass man das easy wieder einschalten kann
-   win.webContents.openDevTools(); // Variante mit Konsole im Spielfenster
+  // Fenster mit Konsole öffnet sich beim start, bitte bei zuküftigen Versionen ohne Fenster nur auskommentieren, dass man das easy wieder einschalten kann:
+  //                                        vvv
+  // win.webContents.openDevTools(); // Variante mit Konsole im Spielfenster
   // win.webContents.openDevTools({ mode: 'detach' }); // Variante mit Konsle als seperates Fenster
 
 }

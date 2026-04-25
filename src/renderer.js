@@ -26,7 +26,19 @@ const player1NameInput = document.getElementById("player1-name");
 const player2NameInput = document.getElementById("player2-name");
 const playerDisplay = document.getElementById("player-display");
 
+const bgMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
+const bgMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
+const bgMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
 
+
+function resetMusic () {
+  bgMusic1.pause();         //laufende Audios pausieren und zurück and den Anfang setzen
+        bgMusic1.currentTime = 0;
+        bgMusic2.pause();
+        bgMusic2.currentTime = 0;
+        bgMusic3.pause();
+        bgMusic3.currentTime = 0;
+}
 
 //////////////////////////////////////////////////////////////////
 /// Setup für API-Generierte Fragen bei Kategorie "Geographie" ///
@@ -521,7 +533,7 @@ let wrongAnswers = 0;
 let quizQuestions = [];
 let timerInterval = null;
 let timeLeft = 15;
-const QUESTION_TIME = 15;
+const QUESTION_TIME = 11;
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -674,6 +686,7 @@ function showQuestion() {
 
       if (nextBtn) {
         nextBtn.classList.remove("hidden");
+        resetMusic();
       }
     });
 
@@ -681,7 +694,14 @@ function showQuestion() {
   });
 
   startTimer();
+  // output("questionCount: " + questionCount);
+  if(localStorage.getItem("questionCount") >= (0.6 * questionCountInput)) {bgMusic3.play()} else {
+    if (localStorage.getItem("questionCount") >= (0.3 * questionCountInput)) {bgMusic2.play()} else {  
+      bgMusic1.play();
+    }
+  }
 }
+
 
 // MENU.HTML
 // Überprüft, ob Animation bereits abgespielt wurde
@@ -716,6 +736,7 @@ if (window.location.pathname.includes("menu.html")) {
 if (playButton) {
   playButton.addEventListener("click", () => {
     window.location.href = "./fragen.html";
+    resetMusic();
   });
 }
 
@@ -723,6 +744,7 @@ if (playButton) {
 if (nextBtn) {
   nextBtn.addEventListener("click", () => {
     stopTimer();
+    resetMusic();
     currentQuestionIndex++;
 
     if (currentQuestionIndex < quizQuestions.length) {
