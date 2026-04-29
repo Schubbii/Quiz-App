@@ -1,8 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
-const QuizzesHandler = require('./src/handlers/quizzesHandler');
-
-const quizzesHandler = new QuizzesHandler(path.join(__dirname, 'data', 'quizzes.json'));
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -15,33 +12,26 @@ function createWindow() {
     },
   });
 
-  win.loadFile("src/menu.html");
-
+  win.loadFile('src/start.html');
   win.setMenuBarVisibility(false);
+
+
+  // Fenster mit Konsole öffnet sich beim start, bitte bei zuküftigen Versionen ohne Fenster nur auskommentieren, dass man das easy wieder einschalten kann:
+  //                                        vvv
+  // win.webContents.openDevTools(); // Variante mit Konsole im Spielfenster
+  // win.webContents.openDevTools({ mode: 'detach' }); // Variante mit Konsle als seperates Fenster
+
 }
 
 app.whenReady().then(() => {
-  ipcMain.handle('questions:getAll', async () => quizzesHandler.getAllQuestions());
-  ipcMain.handle('questions:add', async (_event, questionData) => quizzesHandler.addQuestion(questionData));
-  ipcMain.handle('questions:update', async (_event, id, updates) => quizzesHandler.updateQuestion(id, updates));
-  ipcMain.handle('questions:delete', async (_event, id) => quizzesHandler.deleteQuestion(id));
-  ipcMain.handle('questions:getRound', async (_event, category, difficulty, count) => {
-  return quizzesHandler.getQuestionsForRound(category, difficulty, count);
-});
-
   createWindow();
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  if (process.platform !== 'darwin') app.quit();
 });
-
 
