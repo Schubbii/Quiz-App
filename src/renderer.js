@@ -705,7 +705,7 @@ function showQuestion() {
 
 // MENU.HTML
 // Überprüft, ob Animation bereits abgespielt wurde
-if (window.location.pathname.includes("menu.html")) {
+if (window.location.pathname.includes("start.html")) {
   const animationPlayed = sessionStorage.getItem("animationPlayed");
 
   if (animationPlayed === "true") {
@@ -718,7 +718,7 @@ if (window.location.pathname.includes("menu.html")) {
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
       logoAnimation.addEventListener("loadedmetadata", () => {
-        const targetDuration = 1; // gewünschte Dauer in Sekunden
+        const targetDuration = 0; // gewünschte Dauer in Sekunden
         logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
       });
 
