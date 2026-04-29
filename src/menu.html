@@ -9,21 +9,18 @@
 </head>
 
 <body>
-    <div id="Startanimation">
+<!--   <div id="Startanimation">
         <video id="Logoanimation" autoplay muted playsinline>
             <source src="../Logo/Logoanimation.mp4" type="video/mp4" />
             Dein Browser unterstützt kein Video.
         </video>
-    </div>
+    </div> --> 
 
     <div class="background"></div>
-    <main id="Hauptmenue" class="menu hidden">
-        <div class="layout">
-            <!-- <button class="menuBtn">CATEGORY</button>
-            <button class="menuBtn">SETTINGS</button>
-            <button class="menuBtn">STATS</button>
-            <button class="menuBtn">FRIENDS</button> -->
-        </div>
+    <main id="Hauptmenue" class="menu">
+        
+      <button class="menuBtn topBackBtn iconBtn" id="backBtn">←</button>
+  <button id="openBtn" class="menuBtn topSettingsBtn iconBtn">⚙</button>
 
 <div class="quizSettings">
   <label for="question-count" class="settingsLabel">Anzahl der Fragen</label>
@@ -50,10 +47,16 @@
   <button id="start-quiz-btn" class="playBtn">
     Quiz starten
   </button>
+  
+            <dialog id="popupDialog">
+              
+              <input type="checkbox" id="musicToggle" name="musicToggle">Musik An/Aus
+              <button id="closeBtn" class="menuBtn">Zurück</button>
+            </dialog>
 </div>
 
         <!-- <button class="playBtn">PLAY</button> -->
-        <button id="admin-btn">Admin</button>
+       <!-- <button id="admin-btn">Admin</button> -->
     </main>
 
     <script src="renderer.js"></script>

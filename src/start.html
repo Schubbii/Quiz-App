@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spiel Menü</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+     <div id="Startanimation">
+        <video id="Logoanimation" autoplay muted playsinline>
+            <source src="../Logo/Logoanimation.mp4" type="video/mp4" />
+            Dein Browser unterstützt kein Video.
+        </video>
+    </div>
+
+    <div class = "background"></div> 
+
+    <main id="Hauptmenue" class="menu">
+        <div class="layoutStart">
+           <button id = "openBtn"class="menuBtn">Settings</button>
+            <dialog id="popupDialog">
+              
+              <input type="checkbox" id="musicToggle" name="musicToggle">Musik An/Aus
+              <button id="closeBtn" class="menuBtn">Zurück</button>
+            </dialog>
+
+            <button id = "singleplayerBtn" class="menuBtn">Singleplayer</button>
+            <button id = "multiplayerBtn" class="menuBtn">Multiplayer</button>
+            <!-- <button id="admin-btn">Admin</button> -->
+    </div>
+    </main>
+
+ <script src="renderer.js"></script>
+
+</body>
+</html>
