@@ -13,6 +13,7 @@ function createWindow() {
   });
 
   win.loadFile('src/start.html');
+  win.webContents.openDevTools({mode: 'detach'});
   win.setMenuBarVisibility(false);
 
 
