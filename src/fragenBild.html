@@ -1,0 +1,47 @@
+<!-- Fragenseiten -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fragen</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="background"></div>
+
+    <main class="menu">
+       <div class="topBar">
+  <div class="rectangle">
+    <div>
+      <p class="FragenText">Frage 1 von 10</p>
+      <p id="player-display" class="playerDisplay hidden"></p>
+    </div>
+  </div>
+
+  <div class="circleTimer">
+    <p id="timeValue">10</p>
+  </div>
+</div>
+        <div class="rectangleQuestion">
+            <h2 id="question2">Hier steht die Frage</h2>
+        </div>
+        <p id="result-text" class="resultText"></p>
+        <div class="layout" id="answers">
+            <!-- Antwort-Buttons werden hier dynamisch hinzugefügt -->
+        </div>
+        <button id="next-btn" class="buttonAnswers hidden">Weiter</button>
+        <button id="menu-btn" class="buttonAnswers hidden">Zum Menü</button>
+
+    <div class = "image">  
+        <img src="https://placehold.co/722x724" alt="Platzhalterbild">
+    </div>
+        
+    </main>
+    <script src="renderer.js"></script>
+</body>
+</html>
+
+
+
