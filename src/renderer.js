@@ -718,7 +718,7 @@ if (window.location.pathname.includes("start.html")) {
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
       logoAnimation.addEventListener("loadedmetadata", () => {
-        const targetDuration = 0; // gewünschte Dauer in Sekunden
+        const targetDuration = 1; // gewünschte Dauer in Sekunden
         logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
       });
 
@@ -735,7 +735,7 @@ if (window.location.pathname.includes("start.html")) {
 // Startet Quiz
 if (playButton) {
   playButton.addEventListener("click", () => {
-    window.location.href = "./fragen.html";
+    window.location.href = "./fragenBild.html";
     resetMusic();
   });
 }
@@ -802,7 +802,7 @@ if (menuBtn) {
 }
 
 // Überprüft, ob aktuelle Fragen-Seite sind und zeigt die erste Frage an
-if (window.location.pathname.includes("fragen.html")) {
+if (window.location.pathname.includes("fragenBild.html")) {
   currentQuestionIndex = 0;
   correctAnswers = 0;
   wrongAnswers = 0;
