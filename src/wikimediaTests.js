@@ -3,7 +3,9 @@ async function fetchWikimedia() {
     const pageJson = await pageData.json();
     const imageURL = await pageJson.thumbnail.source;
     await console.log(pageJson.thumbnail.source);
-    
     document.getElementById("wikiemediaQuestionImage").src = await pageJson.thumbnail.source;
 }
 
+function output(input) {
+    console.log(input);
+}
