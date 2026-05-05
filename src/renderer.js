@@ -26,6 +26,8 @@ const maxQuestionsInfo = document.getElementById("max-questions-info");
 const player1NameInput = document.getElementById("player1-name");
 const player2NameInput = document.getElementById("player2-name");
 const playerDisplay = document.getElementById("player-display");
+const timePowerupBtn = document.getElementById("time-powerup-btn");
+const timePowerupCountEl = document.getElementById("time-powerup-count");
 
 const bgMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
 const bgMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
@@ -527,6 +529,10 @@ if (startQuizBtn) {
     localStorage.removeItem("p2Correct");
     localStorage.removeItem("p2Wrong");
     localStorage.removeItem("p2Percentage");
+    localStorage.removeItem("p1TimePowerups");
+    localStorage.removeItem("p2TimePowerups");
+    localStorage.removeItem("p1CorrectStreak");
+    localStorage.removeItem("p2CorrectStreak");
 
     if (isMultiplayer) {
       localStorage.setItem("currentPlayer", "1");
@@ -545,7 +551,83 @@ let wrongAnswers = 0;
 let quizQuestions = [];
 let timerInterval = null;
 let timeLeft = 15;
+let isQuestionActive = false;
 const QUESTION_TIME = 11;
+const TIME_POWERUP_SECONDS = 5;
+const TIME_POWERUP_STREAK_GOAL = 2;
+
+function getPowerupPlayerKey() {
+  const gameMode = localStorage.getItem("gameMode") || "single";
+  const currentPlayer = gameMode === "multi" ? (localStorage.getItem("currentPlayer") || "1") : "1";
+  return `p${currentPlayer}`;
+}
+
+function getPowerupCountKey() {
+  return `${getPowerupPlayerKey()}TimePowerups`;
+}
+
+function getPowerupStreakKey() {
+  return `${getPowerupPlayerKey()}CorrectStreak`;
+}
+
+function getTimePowerupCount() {
+  return Number(localStorage.getItem(getPowerupCountKey())) || 0;
+}
+
+function setTimePowerupCount(count) {
+  localStorage.setItem(getPowerupCountKey(), String(Math.max(0, count)));
+  updateTimePowerupDisplay();
+}
+
+function getCorrectStreak() {
+  return Number(localStorage.getItem(getPowerupStreakKey())) || 0;
+}
+
+function setCorrectStreak(streak) {
+  localStorage.setItem(getPowerupStreakKey(), String(Math.max(0, streak)));
+}
+
+function handlePowerupProgress(answerWasCorrect) {
+  if (answerWasCorrect) {
+    const nextStreak = getCorrectStreak() + 1;
+
+    if (nextStreak >= TIME_POWERUP_STREAK_GOAL) {
+      setTimePowerupCount(getTimePowerupCount() + 1);
+      setCorrectStreak(0);
+      return;
+    }
+
+    setCorrectStreak(nextStreak);
+    return;
+  }
+
+  setCorrectStreak(0);
+}
+
+function updateTimePowerupDisplay() {
+  if (!timePowerupBtn || !timePowerupCountEl) return;
+
+  const count = getTimePowerupCount();
+  timePowerupCountEl.textContent = count;
+  timePowerupBtn.disabled = count <= 0 || !isQuestionActive;
+  timePowerupBtn.classList.toggle("timePowerup--available", count > 0);
+}
+
+function useTimePowerup() {
+  if (!isQuestionActive || getTimePowerupCount() <= 0) return;
+
+  timeLeft += TIME_POWERUP_SECONDS;
+
+  if (timeValue) {
+    timeValue.textContent = timeLeft;
+  }
+
+  setTimePowerupCount(getTimePowerupCount() - 1);
+}
+
+if (timePowerupBtn) {
+  timePowerupBtn.addEventListener("click", useTimePowerup);
+}
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -656,6 +738,7 @@ if (gameMode === "multi") {
     wrongAnswers = 0;
 
     updatePlayerDisplay();
+    updateTimePowerupDisplay();
     showQuestion();
 
 
@@ -692,6 +775,9 @@ function updatePlayerDisplay() {
 function showQuestion() {
   if (!questionFrame || !answersEl || currentQuestionIndex >= quizQuestions.length) return;
 
+  isQuestionActive = false;
+  updateTimePowerupDisplay();
+
   const currentQuestion = quizQuestions[currentQuestionIndex];
   questionFrame.textContent = currentQuestion.question;
   answersEl.innerHTML = "";
@@ -727,6 +813,7 @@ function showQuestion() {
 
     button.addEventListener("click", () => {
       stopTimer();
+      isQuestionActive = false;
 
       const allButtons = Array.from(answersEl.children);
       const correctIndex = currentQuestion.correctAnswerIndex;
@@ -734,12 +821,14 @@ function showQuestion() {
       if (index === correctIndex) {
         button.classList.add("correct");
         correctAnswers++;
+        handlePowerupProgress(true);
         // if (resultText) {
         //   resultText.textContent = "Richtig!";
         // }
       } else {
         button.classList.add("wrong");
         wrongAnswers++;
+        handlePowerupProgress(false);
         // if (resultText) {
         //   resultText.textContent = "Falsch!";
         // }
@@ -753,6 +842,8 @@ function showQuestion() {
       allButtons.forEach(btn => {
         btn.disabled = true;
       });
+
+      updateTimePowerupDisplay();
 
       if (nextBtn) {
         nextBtn.classList.remove("hidden");
@@ -920,6 +1011,7 @@ if (window.location.pathname.includes("fragen.html")) {
   currentQuestionIndex = 0;
   correctAnswers = 0;
   wrongAnswers = 0;
+  updateTimePowerupDisplay();
 
   if (nextBtn) {
     nextBtn.classList.add("hidden");
@@ -931,10 +1023,13 @@ if (window.location.pathname.includes("fragen.html")) {
 function startTimer() {
   clearInterval(timerInterval);
   timeLeft = QUESTION_TIME;
+  isQuestionActive = true;
 
   if (timeValue) {
     timeValue.textContent = timeLeft;
   }
+
+  updateTimePowerupDisplay();
 
   timerInterval = setInterval(() => {
     timeLeft--;
@@ -955,6 +1050,10 @@ function stopTimer() {
 }
 
 function handleTimeUp() {
+  isQuestionActive = false;
+  updateTimePowerupDisplay();
+  handlePowerupProgress(false);
+
   const currentQuestion = quizQuestions[currentQuestionIndex];
   const allButtons = Array.from(answersEl.children);
 
