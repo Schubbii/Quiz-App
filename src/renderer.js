@@ -18,6 +18,7 @@ const restartBtn = document.getElementById("restart-btn");
 
 const startQuizBtn = document.getElementById("start-quiz-btn");
 const questionCountInput = document.getElementById("question-count");
+const roundCountInput = document.getElementById("round-count");
 
 const categorySelect = document.getElementById("category-select");
 const maxQuestionsInfo = document.getElementById("max-questions-info");
@@ -490,6 +491,7 @@ if (startQuizBtn) {
   startQuizBtn.addEventListener("click", async () => {
     const count = Number(questionCountInput.value);
     const selectedCategory = categorySelect ? categorySelect.value : "all";
+    const roundCount = Number(roundCountInput?.value) || 1;
 
     const player1Name = player1NameInput ? player1NameInput.value.trim() : "";
     const player2Name = player2NameInput ? player2NameInput.value.trim() : "";
@@ -499,16 +501,25 @@ if (startQuizBtn) {
       return;
     }
 
+    if (!roundCount || roundCount < 1) {
+      alert("Bitte eine gültige Rundenanzahl eingeben.");
+      return;
+    }
+
     const isMultiplayer = window.location.pathname.includes("multiplayer.html");
 
     localStorage.setItem("questionCount", count);
+    localStorage.setItem("roundCount", roundCount);
     localStorage.setItem("selectedCategory", selectedCategory);
     localStorage.setItem("gameMode", isMultiplayer ? "multi" : "single");
+
+    localStorage.setItem("currentRound", "0");
 
     localStorage.setItem("player1Name", player1Name || "Player 1");
     localStorage.setItem("player2Name", player2Name || "Player 2");
 
     localStorage.removeItem("multiQuestions");
+    localStorage.removeItem("roundQuestions");
     localStorage.removeItem("currentPlayer");
     localStorage.removeItem("p1Correct");
     localStorage.removeItem("p1Wrong");
@@ -519,6 +530,7 @@ if (startQuizBtn) {
 
     if (isMultiplayer) {
       localStorage.setItem("currentPlayer", "1");
+      localStorage.setItem("currentRound", "0");
     }
 
     window.location.href = "./fragen.html";
@@ -571,16 +583,62 @@ async function loadQuestions() {
 
     }
 
-    if (gameMode === "multi" && currentPlayer === "2") {
-      quizQuestions = JSON.parse(localStorage.getItem("multiQuestions") || "[]");
-    } else {
-      shuffleArray(questions);
-      quizQuestions = questions.slice(0, count);
+   const roundCount = Number(localStorage.getItem("roundCount")) || 1;
+const currentRound = Number(localStorage.getItem("currentRound")) || 0;
 
-      if (gameMode === "multi") {
-        localStorage.setItem("multiQuestions", JSON.stringify(quizQuestions));
+if (gameMode === "multi") {
+  if (currentPlayer === "2") {
+    const savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
+    quizQuestions = savedRounds[currentRound] || [];
+  } else {
+    let savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
+
+    if (savedRounds.length === 0) {
+      const rounds = [];
+
+      for (let round = 0; round < roundCount; round++) {
+        let roundQuestions = [];
+
+        if (selectedCategory === "Geografie") {
+          for (let i = 0; i < count; i++) {
+            roundQuestions.push(fetchGeoQuestion()[0]);
+          }
+        } else {
+          const questionsCopy = [...questions];
+          shuffleArray(questionsCopy);
+          roundQuestions = questionsCopy.slice(0, count);
+        }
+
+        rounds.push(roundQuestions);
       }
+
+      localStorage.setItem("roundQuestions", JSON.stringify(rounds));
+      savedRounds = rounds;
     }
+
+    quizQuestions = savedRounds[currentRound] || [];
+  }
+} else {
+  const rounds = [];
+
+  for (let round = 0; round < roundCount; round++) {
+    let roundQuestions = [];
+
+    if (selectedCategory === "Geografie") {
+      for (let i = 0; i < count; i++) {
+        roundQuestions.push(fetchGeoQuestion()[0]);
+      }
+    } else {
+      const questionsCopy = [...questions];
+      shuffleArray(questionsCopy);
+      roundQuestions = questionsCopy.slice(0, count);
+    }
+
+    rounds.push(roundQuestions);
+  }
+
+  quizQuestions = rounds.flat();
+}
 
     if (quizQuestions.length === 0) {
       if (questionFrame) {
@@ -639,7 +697,19 @@ function showQuestion() {
   answersEl.innerHTML = "";
 
   if (fragenText) {
-    fragenText.textContent = `Frage ${currentQuestionIndex + 1} von ${quizQuestions.length}`;
+    const questionsPerRound = Number(localStorage.getItem("questionCount")) || quizQuestions.length;
+    const roundCount = Number(localStorage.getItem("roundCount")) || 1;
+    const storedRound = Number(localStorage.getItem("currentRound")) || 0;
+
+    const questionInRound = currentQuestionIndex + 1;
+
+    const shownRound =
+      localStorage.getItem("gameMode") === "multi"
+        ? storedRound + 1
+        : Math.floor(currentQuestionIndex / questionsPerRound) + 1;
+
+    fragenText.textContent =
+      `Runde ${shownRound} von ${roundCount} | Frage ${questionInRound} von ${questionsPerRound}`;
   }
 
   if (resultText) {
@@ -747,7 +817,18 @@ if (nextBtn) {
     resetMusic();
     currentQuestionIndex++;
 
-    if (currentQuestionIndex < quizQuestions.length) {
+        if (currentQuestionIndex < quizQuestions.length) {
+      const gameMode = localStorage.getItem("gameMode") || "single";
+      const questionsPerRound = Number(localStorage.getItem("questionCount")) || quizQuestions.length;
+
+      if (
+        gameMode === "single" &&
+        currentQuestionIndex % questionsPerRound === 0
+      ) {
+        const nextRound = Math.floor(currentQuestionIndex / questionsPerRound) + 1;
+        alert(`Runde ${nextRound} startet!`);
+      }
+
       if (resultText) {
         resultText.textContent = "";
       }
@@ -760,24 +841,57 @@ if (nextBtn) {
 
       const gameMode = localStorage.getItem("gameMode") || "single";
       const currentPlayer = localStorage.getItem("currentPlayer") || "1";
-
+      
+      
       if (gameMode === "multi") {
+        let currentRound = Number(localStorage.getItem("currentRound")) || 0;
+        const roundCount = Number(localStorage.getItem("roundCount")) || 1;
+
+        const oldP1Correct = Number(localStorage.getItem("p1Correct")) || 0;
+        const oldP1Wrong = Number(localStorage.getItem("p1Wrong")) || 0;
+
+        const oldP2Correct = Number(localStorage.getItem("p2Correct")) || 0;
+        const oldP2Wrong = Number(localStorage.getItem("p2Wrong")) || 0;
+
         if (currentPlayer === "1") {
-          localStorage.setItem("p1Correct", correctAnswers);
-          localStorage.setItem("p1Wrong", wrongAnswers);
-          localStorage.setItem("p1Percentage", percentage);
+          localStorage.setItem("p1Correct", oldP1Correct + correctAnswers);
+          localStorage.setItem("p1Wrong", oldP1Wrong + wrongAnswers);
 
           localStorage.setItem("currentPlayer", "2");
 
-          alert(`${localStorage.getItem("player1Name") || "Player 1"} ist fertig. Jetzt spielt ${localStorage.getItem("player2Name") || "Player 2"} mit den gleichen Fragen.`);
+          alert(`${localStorage.getItem("player1Name") || "Player 1"} ist mit Runde ${currentRound + 1} fertig. Jetzt spielt ${localStorage.getItem("player2Name") || "Player 2"} dieselbe Runde.`);
 
           window.location.href = "./fragen.html";
         } else {
-          localStorage.setItem("p2Correct", correctAnswers);
-          localStorage.setItem("p2Wrong", wrongAnswers);
-          localStorage.setItem("p2Percentage", percentage);
+          localStorage.setItem("p2Correct", oldP2Correct + correctAnswers);
+          localStorage.setItem("p2Wrong", oldP2Wrong + wrongAnswers);
 
-          window.location.href = "./multi-scoreboard.html";
+          currentRound++;
+
+          if (currentRound < roundCount) {
+            localStorage.setItem("currentRound", currentRound);
+            localStorage.setItem("currentPlayer", "1");
+
+            alert(`Runde ${currentRound + 1} startet. ${localStorage.getItem("player1Name") || "Player 1"} beginnt.`);
+
+            window.location.href = "./fragen.html";
+          } else {
+            const p1CorrectTotal = Number(localStorage.getItem("p1Correct")) || 0;
+            const p1WrongTotal = Number(localStorage.getItem("p1Wrong")) || 0;
+            const p2CorrectTotal = Number(localStorage.getItem("p2Correct")) || 0;
+            const p2WrongTotal = Number(localStorage.getItem("p2Wrong")) || 0;
+
+            const p1Total = p1CorrectTotal + p1WrongTotal;
+            const p2Total = p2CorrectTotal + p2WrongTotal;
+
+            const p1Percentage = p1Total > 0 ? Math.round((p1CorrectTotal / p1Total) * 100) : 0;
+            const p2Percentage = p2Total > 0 ? Math.round((p2CorrectTotal / p2Total) * 100) : 0;
+
+            localStorage.setItem("p1Percentage", p1Percentage);
+            localStorage.setItem("p2Percentage", p2Percentage);
+
+            window.location.href = "./multi-scoreboard.html";
+          }
         }
 
         return;
@@ -922,8 +1036,11 @@ if (restartBtn) {
 
     if (gameMode === "multi") {
       localStorage.setItem("currentPlayer", "1");
+      localStorage.setItem("currentRound", "0");
 
       localStorage.removeItem("multiQuestions");
+      localStorage.removeItem("roundQuestions");
+      localStorage.removeItem("currentRound");
       localStorage.removeItem("p1Correct");
       localStorage.removeItem("p1Wrong");
       localStorage.removeItem("p1Percentage");
