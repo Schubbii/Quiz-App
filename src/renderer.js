@@ -30,15 +30,45 @@ const playerDisplay = document.getElementById("player-display");
 const bgMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
 const bgMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
 const bgMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
+const bgMusicLoopImpact = new Audio("./audio-window/sounds/buttonClick.mp3");
+const bgMusicLoopLobby  = new Audio("./audio/Timer_Variant-3.mp3");
+bgMusicLoopLobby.loop = true;
+
+if ((window.location.pathname.includes("menu.html")) || (window.location.pathname.includes("multiplay.html"))) {
+  bgMusicLoopLobby.play()
+}
 
 
-function resetMusic () {
+document.getElementById("musicToggle").onchange = event => {
+  console.log("Musik stumm: " + document.getElementById("musicToggle").checked);
+
+  if (document.getElementById("musicToggle").checked == true) {
+    bgMusic1.volume = 0;
+    bgMusic2.volume = 0;
+    bgMusic3.volume = 0;
+
+    bgMusicLoopLobby.pause();
+    bgMusicLoopLobby.currentTime = 0;
+    bgMusicLoopLobby.volume = 1;
+  }
+
+  if (document.getElementById("musicToggle").checked == false) {
+    bgMusic1.volume = 1;
+    bgMusic2.volume = 1;
+    bgMusic3.volume = 1;
+
+    bgMusicLoopLobby.volume = 1;
+    bgMusicLoopLobby.play()
+  }
+};
+
+function resetMusic() {
   bgMusic1.pause();         //laufende Audios pausieren und zurück and den Anfang setzen
-        bgMusic1.currentTime = 0;
-        bgMusic2.pause();
-        bgMusic2.currentTime = 0;
-        bgMusic3.pause();
-        bgMusic3.currentTime = 0;
+  bgMusic1.currentTime = 0;
+  bgMusic2.pause();
+  bgMusic2.currentTime = 0;
+  bgMusic3.pause();
+  bgMusic3.currentTime = 0;
 }
 
 document.querySelectorAll("button").forEach(btn => {
@@ -816,6 +846,8 @@ if (window.location.pathname.includes("start.html")) {
     if (hauptmenue) {
       hauptmenue.classList.remove("hidden");
     }
+    bgMusicLoopLobby.play();
+
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
       logoAnimation.addEventListener("loadedmetadata", () => {
@@ -827,6 +859,7 @@ if (window.location.pathname.includes("start.html")) {
         startAnimation.style.display = "none";
         hauptmenue.classList.remove("hidden");
         sessionStorage.setItem("animationPlayed", "true");
+        bgMusicLoopLobby.play();
       });
     }
   }

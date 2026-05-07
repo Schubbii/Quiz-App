@@ -10,7 +10,7 @@ const SOUND_CONFIG = {
   buttonRelease: {
     src: "./sounds/buttonRelease.mp3",
     volume: 0,
-  },
+  }
 };
 
 const pools = new Map();
