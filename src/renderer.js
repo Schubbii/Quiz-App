@@ -41,6 +41,20 @@ function resetMusic () {
         bgMusic3.currentTime = 0;
 }
 
+document.querySelectorAll("button").forEach(btn => {
+  btn.onmouseover = event => {
+    window.uiSound.play("buttonHover");
+  }
+
+  btn.onmousedown = event => {
+    window.uiSound.play("buttonClick");
+  }
+
+  btn.onmouseup = event => {
+    window.uiSound.play("buttonRelease");
+  }
+});
+
 //////////////////////////////////////////////////////////////////
 /// Setup für API-Generierte Fragen bei Kategorie "Geographie" ///
 //////////////////////////////////////////////////////////////////
@@ -725,6 +739,22 @@ function showQuestion() {
     button.textContent = answer;
     button.classList.add("buttonAnswers");
 
+    document.querySelectorAll("button").forEach(btn => {
+
+      button.onmouseover = event => {
+        window.uiSound.play("buttonHover");
+      }
+
+      button.onmousedown = event => {
+        window.uiSound.play("buttonClick");
+      }
+
+      button.onmouseup = event => {
+        window.uiSound.play("buttonRelease");
+      }
+    });
+
+
     button.addEventListener("click", () => {
       stopTimer();
 
@@ -757,6 +787,7 @@ function showQuestion() {
       if (nextBtn) {
         nextBtn.classList.remove("hidden");
         resetMusic();
+        //questionDone.play();
       }
     });
 
@@ -788,7 +819,7 @@ if (window.location.pathname.includes("start.html")) {
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
       logoAnimation.addEventListener("loadedmetadata", () => {
-        const targetDuration = 0; // gewünschte Dauer in Sekunden
+        const targetDuration = 2; // gewünschte Dauer in Sekunden
         logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
       });
 

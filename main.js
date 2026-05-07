@@ -1,5 +1,9 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
+
+let audioWindow;
+let audioReady = false;
+const pendingSounds = [];
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -21,10 +25,74 @@ function createWindow() {
   // win.webContents.openDevTools(); // Variante mit Konsole im Spielfenster
   // win.webContents.openDevTools({ mode: 'detach' }); // Variante mit Konsle als seperates Fenster
 
+
+  win.on("closed", () => {
+
+  if (audioWindow && !audioWindow.isDestroyed()) {
+    audioWindow.destroy();
+  }
+
+});
+
 }
+
+function createAudioWindow() {
+  audioWindow = new BrowserWindow({
+    width: 1,
+    height: 1,
+    show: false,
+    frame: false,
+    skipTaskbar: true,
+    focusable: false,
+    webPreferences: {
+      preload: path.join(__dirname, "src", "audio-window", "audio-preload.js"),
+      contextIsolation: true,
+      nodeIntegration: false,
+
+      // Electron defaults to this, but being explicit is fine for a sound host.
+      autoplayPolicy: "no-user-gesture-required",
+    },
+  });
+
+  audioWindow.loadFile(path.join(__dirname, "src", "audio-window", "audio.html"));
+
+  audioWindow.webContents.once("did-finish-load", () => {
+    audioReady = true;
+
+    for (const soundName of pendingSounds) {
+      audioWindow.webContents.send("ui-sound:play", soundName);
+    }
+
+    pendingSounds.length = 0;
+  });
+
+  audioWindow.on("closed", () => {
+    audioWindow = null;
+    audioReady = false;
+  });
+}
+
+function playUiSound(soundName) {
+  if (!audioWindow || audioWindow.isDestroyed()) {
+    createAudioWindow();
+  }
+
+  if (!audioReady) {
+    pendingSounds.push(soundName);
+    return;
+  }
+
+  audioWindow.webContents.send("ui-sound:play", soundName);
+}
+
+ipcMain.on("ui-sound:play", (_event, soundName) => {
+  playUiSound(soundName);
+});
+
 
 app.whenReady().then(() => {
   createWindow();
+  createAudioWindow();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
