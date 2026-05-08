@@ -27,7 +27,6 @@ function createWindow() {
 
 
   win.on("closed", () => {
-
   if (audioWindow && !audioWindow.isDestroyed()) {
     audioWindow.destroy();
   }
@@ -85,8 +84,26 @@ function playUiSound(soundName) {
   audioWindow.webContents.send("ui-sound:play", soundName);
 }
 
-ipcMain.on("ui-sound:play", (_event, soundName) => {
-  playUiSound(soundName);
+function sendToAudioWindow(channel, value) {
+  if (!audioWindow || audioWindow.isDestroyed()) return;
+
+  audioWindow.webContents.send(channel, value);
+}
+
+ipcMain.on("sound:play", (_event, soundName) => {
+  sendToAudioWindow("sound:play", soundName);
+});
+
+ipcMain.on("music:play", (_event, musicName) => {
+  sendToAudioWindow("music:play", musicName);
+});
+
+ipcMain.on("music:stop", (_event, musicName) => {
+  sendToAudioWindow("music:stop", musicName);
+});
+
+ipcMain.on("music:pause", (_event, musicName) => {
+  sendToAudioWindow("music:pause", musicName);
 });
 
 
