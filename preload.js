@@ -1,7 +1,9 @@
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 const API_BASE_URL = "https://quiz-api-server-production-bdfd.up.railway.app";
 const ADMIN_TOKEN = 'Schubbii';
+
+const allowedSounds = new Set(["buttonHover", "buttonClick", "buttonRelease"]);
 
 async function apiRequest(path, options = {}) {
   const headers = {
@@ -56,4 +58,11 @@ contextBridge.exposeInMainWorld('quizAPI', {
         'x-admin-token': ADMIN_TOKEN,
       },
     }),
+});
+
+contextBridge.exposeInMainWorld("uiSound", {
+  play(soundName) {
+    if (!allowedSounds.has(soundName)) return;
+    ipcRenderer.send("ui-sound:play", soundName);
+  },
 });
