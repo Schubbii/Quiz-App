@@ -18,17 +18,487 @@ const restartBtn = document.getElementById("restart-btn");
 
 const startQuizBtn = document.getElementById("start-quiz-btn");
 const questionCountInput = document.getElementById("question-count");
-const playerCountInput = document.getElementById("player-count");
-
-
-// Fragenanzahl setzen
+const roundCountInput = document.getElementById("round-count");
 
 const categorySelect = document.getElementById("category-select");
 const maxQuestionsInfo = document.getElementById("max-questions-info");
 
-async function setQuizSettings() {
-const categorySelect = document.getElementById("category-select");
-const maxQuestionsInfo = document.getElementById("max-questions-info");
+const player1NameInput = document.getElementById("player1-name");
+const player2NameInput = document.getElementById("player2-name");
+const playerDisplay = document.getElementById("player-display");
+
+const bgTimerMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
+const bgTimerMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
+const bgTimerMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
+
+
+// console.log("localStorage.getItem('firstOpen'): " + localStorage.getItem("firstOpen"));
+// console.log(localStorage.getItem("firstOpen"));
+
+// if (localStorage.getItem("firstOpen") == null) {
+//   localStorage.setItem("firstOpen", false);
+//   localStorage.setItem("musicMuted", false);
+// }
+
+// console.log("localStorage.getItem('musicMuted'): " + localStorage.getItem("musicMuted"))
+
+// if ((localStorage.getItem("musicMuted")) == "true") {
+//   console.log("trotzdem ausgefuehrt");
+//   bgTimerMusic1.volume = 0;
+//   bgTimerMusic2.volume = 0;
+//   bgTimerMusic3.volume = 0;
+
+//   window.audio.stopMusic("lobbyBackground");  
+
+//   document.getElementById("musicToggle").checked = true;
+//   console.log("hacken wurde gesetzt");
+// }
+
+// console.log("Musik stumm: " + document.getElementById("musicToggle").checked);
+
+// if (document.getElementById("musicToggle")) {
+//   document.getElementById("musicToggle").onchange = event => {
+
+//     if (document.getElementById("musicToggle").checked == true) {
+//       bgTimerMusic1.volume = 0;
+//       bgTimerMusic2.volume = 0;
+//       bgTimerMusic3.volume = 0;
+
+//       window.audio.stopMusic("lobbyBackground");
+//       localStorage.setItem("musicMuted", "true");
+//     }
+
+//     if (document.getElementById("musicToggle").checked == false) {
+//       bgTimerMusic1.volume = 1;
+//       bgTimerMusic2.volume = 1;
+//       bgTimerMusic3.volume = 1;
+
+//       window.audio.playMusic("lobbyBackground");
+//       localStorage.setItem("musicMuted", "false");
+//     }
+//   };
+// };
+
+if (localStorage.getItem("musicMuted") == "true") {
+  bgTimerMusic1.volume = 0;
+  bgTimerMusic2.volume = 0;
+  bgTimerMusic3.volume = 0;
+
+  window.audio.stopMusic("lobbyBackground");
+
+  localStorage.setItem("musicMuted", "true");
+
+  if (document.getElementById("musicToggle")) {
+    document.getElementById("musicToggle").checked = true;
+  }
+}
+
+if (document.getElementById("musicToggle")) {
+  document.getElementById("musicToggle").onchange = event => {
+    if (document.getElementById("musicToggle").checked == true) {
+      bgTimerMusic1.volume = 0;
+      bgTimerMusic2.volume = 0;
+      bgTimerMusic3.volume = 0;
+
+      window.audio.stopMusic("lobbyBackground");
+
+      localStorage.setItem("musicMuted", "true");
+    }
+
+    if (document.getElementById("musicToggle").checked == false) {
+      bgTimerMusic1.volume = 1;
+      bgTimerMusic2.volume = 1;
+      bgTimerMusic3.volume = 1;
+
+      window.audio.playMusic("lobbyBackground");
+
+      localStorage.setItem("musicMuted", "false");
+    }
+  }
+}
+
+
+
+function resetTimerMusic() {
+  bgTimerMusic1.pause();         //laufende Audios pausieren und zurück and den Anfang setzen
+  bgTimerMusic1.currentTime = 0;
+  bgTimerMusic2.pause();
+  bgTimerMusic2.currentTime = 0;
+  bgTimerMusic3.pause();
+  bgTimerMusic3.currentTime = 0;
+}
+
+if (!(window.location.pathname.includes("menu.html") || window.location.pathname.includes("multiplayer.html") || window.location.pathname.includes("start.html"))) {
+  window.audio.stopMusic("lobbyBackground");
+}
+
+document.querySelectorAll("button").forEach(btn => {
+  btn.onmouseover = event => {
+    window.audio.playSound("buttonHover");
+  }
+
+  btn.onmousedown = event => {
+    window.audio.playSound("buttonClick");
+  }
+
+  btn.onmouseup = event => {
+    window.audio.playSound("buttonRelease");
+  }
+});
+
+//////////////////////////////////////////////////////////////////
+/// Setup für API-Generierte Fragen bei Kategorie "Geographie" ///
+//////////////////////////////////////////////////////////////////
+
+/*
+0: Welches dieser Länder ist Teil der UN
+1: Welches dieser Länder ist nicht Teil der UN
+2: Welches dieser Länder gehört zur Region {region}
+3: Welches dieser Länder gehört nicht zur Region {region}
+4: Welches dieser Länder grenzt an {land}
+5: Welches dieser Länder grenzt nicht an {land}
+6: Was ist die Hauptstadt von {land}
+
+
+250 Länder
+
+
+name.common = string Name
+cca3 = Ländercode im cca3 Format
+unMember = boolean ist eine UN mitglied
+region = Region bsp. Europa
+border[] = Angrenzende Länder (im "cca3" Format)
+cca3 = Land im cca3 Format
+
+
+*/
+
+let response;
+let countryDataJson;
+let regions = ["Asia", "Europe", "Oceania", "Americas", "Africa"];
+
+async function fetchCountries() {
+  response = await fetch("https://restcountries.com/v3.1/all?fields=name,capital,borders,unMember,region,cca3");
+  countryDataJson = await response.json();
+  await output(countryDataJson);
+  await output("fetched Country Data")
+}
+
+
+let geoQuestions = ["Welches dieser Länder ist Teil der UN?",
+  "Welches dieser Länder ist nicht Teil der UN?",
+  "Welches dieser Länder gehört zur Region {region}?",
+  "Welches dieser Länder gehört nicht zur Region {region}?",
+  "Welches dieser Länder grenzt an {land}?",
+  "Welches dieser Länder grenzt nicht an {land}?",
+  "Was ist die Hauptstadt von {land}?"
+];
+
+function output(input) {
+  console.log(input);
+}
+
+function rndCountry() {
+  let countryIndex = Math.floor(Math.random() * countryDataJson.length);
+  output("got new country");
+  // output("countryDataJson[countryIndex].name.common: " + countryDataJson[countryIndex].name.common);
+  return countryDataJson[countryIndex];
+}
+
+function fetchGeoQuestion() {
+  let randomQuestion = Math.floor(Math.random() * 7);
+  let questionString = "";
+  let answerArray = [];
+  let testCountry;
+  let breakOutIteration = 0;
+  let correctAnswerIndex;
+  let selectedRegion;
+  let iteration;
+  let selectedCountry;
+  let bordersOfSelectedCountry;
+  let borderOfSelectedCountry;
+  let falseAnswers;
+  let falseAnswer;
+  let cca3AnswerArray = [];
+
+  output("randomQuestion: " + randomQuestion);
+
+  ///////////////////////////////////////////////////
+  /// Fragengenerierung für API-Geographie-Fragen ///
+  ///////////////////////////////////////////////////
+
+  switch (randomQuestion) {
+
+    case 0:
+
+      questionString = geoQuestions[0];
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+      while (answerArray.length < 4) {
+        testCountry = rndCountry();
+        if (answerArray.length == correctAnswerIndex) {
+          if (testCountry.unMember == true) {
+            answerArray.push(testCountry.name.common);
+          }
+        } else {
+          if (testCountry.unMember == false) {
+            answerArray.push(testCountry.name.common);
+          }
+        }
+
+      }
+
+
+      breakOutIteration += 1;
+      if (breakOutIteration > 500) { answerArray = ["1", "2", "3", "4", "5", "6", "7"] }
+      break;
+
+
+    case 1:
+
+      questionString = geoQuestions[1];
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+      while (answerArray.length < 4) {
+        testCountry = rndCountry();
+        if (answerArray.length == correctAnswerIndex) {
+          if (testCountry.unMember == false) {
+            answerArray.push(testCountry.name.common);
+          }
+        } else {
+          if (testCountry.unMember == true) {
+            answerArray.push(testCountry.name.common);
+          }
+        }
+
+      }
+
+
+      breakOutIteration += 1;
+      if (breakOutIteration > 500) { answerArray = ["1", "2", "3", "4", "5", "6", "7"] }
+      break;
+
+
+    case 2:
+      selectedRegion = regions[Math.floor(Math.random() * 5)]
+      questionString = geoQuestions[2].replace("{region}", selectedRegion);
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+
+      while (answerArray.length < 4) {
+        testCountry = rndCountry();
+        if (answerArray.length == correctAnswerIndex) {
+          if (testCountry.region == selectedRegion) {
+            answerArray.push(testCountry.name.common);
+          } else { output("badcountry1")}
+        } else {
+          if (testCountry.region != selectedRegion) {
+            answerArray.push(testCountry.name.common);
+          }
+        }
+
+      }
+
+      breakOutIteration += 1;
+      if (breakOutIteration > 500) { answerArray = ["1", "2", "3", "4", "5", "6", "7"] }
+      break;
+
+    case 3:
+      selectedRegion = regions[Math.floor(Math.random() * 5)]
+      questionString = geoQuestions[3].replace("{region}", selectedRegion);
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+
+      while (answerArray.length < 4) {
+        testCountry = rndCountry();
+        if (answerArray.length == correctAnswerIndex) {
+          if (testCountry.region != selectedRegion) {
+            answerArray.push(testCountry.name.common);
+          }
+        } else {
+          if (testCountry.region == selectedRegion) {
+            answerArray.push(testCountry.name.common);
+          }
+        }
+
+      }
+
+      breakOutIteration += 1;
+      if (breakOutIteration > 500) { answerArray = ["1", "2", "3", "4", "5", "6", "7"] }
+      break;
+
+
+
+
+    case 4: //Welches dieser Länder grenz an {land}
+      selectedCountry = null;
+      while (selectedCountry == null) {
+        testCountry = rndCountry();
+        if (testCountry.borders.length >= 1) {
+          selectedCountry = testCountry;
+        } else { output("bad country") }
+      }
+
+      questionString = geoQuestions[4].replace("{land}", selectedCountry.name.common);
+
+      borderOfSelectedCountry = selectedCountry.borders[Math.floor(Math.random() * selectedCountry.borders.length)];
+
+      falseAnswers = [];
+      iteration = 0;
+      while (falseAnswers.length < 3) {
+        testCountry = rndCountry();
+        if (!(selectedCountry.borders.includes(testCountry.cca3)) && !(falseAnswers.includes(testCountry.cca3))) {
+          falseAnswers.push(testCountry.cca3);
+        }
+        iteration += 1;
+        if (iteration > 500) break;
+      }
+
+
+
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+      iteration = 0;
+      while (cca3AnswerArray.length < 4) {
+        if (cca3AnswerArray.length == correctAnswerIndex) {
+          cca3AnswerArray.push(borderOfSelectedCountry);
+        } else {
+          cca3AnswerArray.push(falseAnswers[iteration]);
+          iteration += 1;
+        }
+
+        breakOutIteration += 1;
+        if (breakOutIteration > 500) {
+          cca3AnswerArray = ["1", "2", "3", "4", "5", "6", "7"]
+        }
+      }
+
+
+
+      cca3AnswerArray.forEach(a => {
+        const country = countryDataJson.find(countryDataJson => countryDataJson.cca3 === a);
+        answerArray.push(country.name.common);
+      })
+
+      break;
+
+
+
+
+    case 5: //Welches dieser Länder grenzt nicht an {land}
+
+      selectedCountry = null;
+      bordersOfSelectedCountry = [];
+      while (selectedCountry == null) {
+        testCountry = rndCountry();
+        if (testCountry.borders.length >= 3) {
+          selectedCountry = testCountry;
+        } else { output("bad country") }
+      }
+
+      questionString = geoQuestions[5].replace("{land}", selectedCountry.name.common);
+
+      bordersOfSelectedCountry[0] = selectedCountry.borders[Math.floor(Math.random() * selectedCountry.borders.length)];
+      bordersOfSelectedCountry[1] = bordersOfSelectedCountry[0];
+
+      while (bordersOfSelectedCountry[1] == bordersOfSelectedCountry[0]) {
+        bordersOfSelectedCountry[1] = selectedCountry.borders[Math.floor(Math.random() * selectedCountry.borders.length)];
+      }
+
+      bordersOfSelectedCountry[2] = bordersOfSelectedCountry[0];
+      while ((bordersOfSelectedCountry[2] == bordersOfSelectedCountry[0]) || (bordersOfSelectedCountry[2] == bordersOfSelectedCountry[1])) {
+        bordersOfSelectedCountry[2] = selectedCountry.borders[Math.floor(Math.random() * selectedCountry.borders.length)];
+      }
+
+      falseAnswer = "";
+
+      while ((falseAnswer == "") || (bordersOfSelectedCountry.includes(falseAnswer))) {
+        testCountry = rndCountry();
+        if (!(selectedCountry.borders.includes(testCountry.cca3))) { falseAnswer = testCountry.cca3 }
+      }
+
+
+      cca3AnswerArray = []
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+      iteration = 0;
+      while (cca3AnswerArray.length < 4) {
+        if (cca3AnswerArray.length == correctAnswerIndex) {
+          cca3AnswerArray.push(falseAnswer);
+        } else {
+          cca3AnswerArray.push(bordersOfSelectedCountry[iteration]);
+          iteration += 1;
+        }
+
+        breakOutIteration += 1;
+        if (breakOutIteration > 500) {
+          cca3AnswerArray = ["1", "2", "3", "4", "5", "6", "7"]
+        }
+      }
+
+
+      cca3AnswerArray.forEach(a => {
+        const country = countryDataJson.find(countryDataJson => countryDataJson.cca3 === a);
+        answerArray.push(country.name.common);
+      })
+
+      break;
+
+    case 6: //Was ist die Hauptstadt von {land}
+      selectedCountry = rndCountry();
+      falseAnswers = [];
+
+      questionString = geoQuestions[6].replace("{land}", selectedCountry.name.common);
+
+      while (falseAnswers.length < 3) {
+        testCountry = rndCountry();
+
+        if (!(falseAnswers.includes(testCountry.capital[0]))) {
+          if (testCountry.capital[0] == undefined) {
+          } else {
+            falseAnswers.push(testCountry.capital[0]);
+          }
+
+        }
+      }
+
+
+      answerArray = [];
+      correctAnswerIndex = Math.floor(Math.random() * 4);
+
+      iteration = 0;
+      while (answerArray.length < 4) {
+        if (answerArray.length == correctAnswerIndex) {
+          answerArray.push(selectedCountry.capital[0]);
+        } else {
+          answerArray.push(falseAnswers[iteration]);
+          iteration += 1;
+        }
+
+        breakOutIteration += 1;
+        if (breakOutIteration > 500) {
+          answerArray = ["1", "2", "3", "4", "5", "6", "7"]
+        }
+
+      }
+
+      break;
+  }
+  output("questionString: " + questionString);
+  output("answerArray: " + answerArray);
+  output("correctAnswerIndex: " + correctAnswerIndex);
+
+  let questionObject = [];
+  questionObject.push({
+    question: questionString,
+    answers: answerArray,
+    correctAnswerIndex: correctAnswerIndex
+  })
+
+  return questionObject;
+
+}
+
+
+//////////////////////////////////////////////////////////
+/// ENDE - Fragengenerierung für API-Geographie-Fragen ///
+//////////////////////////////////////////////////////////
+
+
 
 async function setQuizSettings() {
   try {
@@ -54,41 +524,119 @@ async function setQuizSettings() {
     }
 
     // Maximalwert für Fragenanzahl setzen
-    const maxCount = questions.length;
-    questionCountInput.max = maxCount;
+    function updateMaxQuestions() {
+      const selectedCategory = categorySelect ? categorySelect.value : "all";
 
-    if (Number(questionCountInput.value) > maxCount) {
-      questionCountInput.value = maxCount;
+      const filteredQuestions =
+        selectedCategory === "all"
+          ? questions
+          : questions.filter(
+            (question) =>
+              String(question.category || "").trim() === selectedCategory
+          );
+
+
+      let maxCount = filteredQuestions.length;
+
+      if (selectedCategory == "Geografie") {
+        // Da beim erstmaligen Auswählen von der Kategorie "Geographie" die Fragen geladen werden müssen, wird das Starten kurz blockiert, damit das Quiz nicht ohne Fragen startet
+        console.log("countryDataJson: " + countryDataJson);
+        console.log("Boolean(countryDataJson): " + Boolean(countryDataJson));
+        if (!(countryDataJson)) {
+          fetchCountries();
+          document.getElementById("start-quiz-btn").innerText = "Daten werden heruntergeladen";
+          document.getElementById("start-quiz-btn").style.background = "rgba(125, 125, 125, 0.73)";
+          startQuizBtn.disabled = true;
+          const hasDataLoaded = setInterval(() => {
+            if (Boolean(countryDataJson)) {
+              console.log("daten haben geladen")
+              startQuizBtn.disabled = false;
+              document.getElementById("start-quiz-btn").innerText = "Quiz starten";
+              document.getElementById("start-quiz-btn").style.background = " rgba(255, 100.53, 249.85, 0.73)";
+              clearInterval(hasDataLoaded);
+            }
+          }, 50)
+
+        }
+
+        maxCount = 30;
+      }
+
+      if (questionCountInput) {
+        questionCountInput.max = maxCount;
+
+        if (Number(questionCountInput.value) > maxCount) {
+          questionCountInput.value = maxCount;
+        }
+      }
+
+      if (maxQuestionsInfo) {
+        maxQuestionsInfo.textContent = `Maximal ${maxCount} Fragen verfügbar`;
+      }
     }
 
-    if (maxQuestionsInfo) {
-      maxQuestionsInfo.textContent = `Maximal ${maxCount} Fragen verfügbar`;
+    updateMaxQuestions();
+
+    if (categorySelect) {
+      categorySelect.addEventListener("change", updateMaxQuestions);
     }
   } catch (error) {
     console.error("Fehler beim Laden der Fragen:", error);
   }
 }
 
-if (window.location.pathname.includes("menu.html")) {
+if (
+  window.location.pathname.includes("menu.html") ||
+  window.location.pathname.includes("multiplayer.html")
+) {
   setQuizSettings();
 }
-
-
-// Quiz starten und alles was dazugehört
 
 if (startQuizBtn) {
   startQuizBtn.addEventListener("click", async () => {
     const count = Number(questionCountInput.value);
     const selectedCategory = categorySelect ? categorySelect.value : "all";
+    const roundCount = Number(roundCountInput?.value) || 1;
+
+    const player1Name = player1NameInput ? player1NameInput.value.trim() : "";
+    const player2Name = player2NameInput ? player2NameInput.value.trim() : "";
 
     if (!count || count < 1) {
       alert("Bitte eine gültige Anzahl eingeben.");
       return;
     }
 
+    if (!roundCount || roundCount < 1) {
+      alert("Bitte eine gültige Rundenanzahl eingeben.");
+      return;
+    }
+
+    const isMultiplayer = window.location.pathname.includes("multiplayer.html");
+
     localStorage.setItem("questionCount", count);
-    localStorage.setItem("playerCount", playerCountInput.value)
+    localStorage.setItem("roundCount", roundCount);
     localStorage.setItem("selectedCategory", selectedCategory);
+    localStorage.setItem("gameMode", isMultiplayer ? "multi" : "single");
+
+    localStorage.setItem("currentRound", "0");
+
+    localStorage.setItem("player1Name", player1Name || "Player 1");
+    localStorage.setItem("player2Name", player2Name || "Player 2");
+
+    localStorage.removeItem("multiQuestions");
+    localStorage.removeItem("roundQuestions");
+    localStorage.removeItem("currentPlayer");
+    localStorage.removeItem("p1Correct");
+    localStorage.removeItem("p1Wrong");
+    localStorage.removeItem("p1Percentage");
+    localStorage.removeItem("p2Correct");
+    localStorage.removeItem("p2Wrong");
+    localStorage.removeItem("p2Percentage");
+
+    if (isMultiplayer) {
+      localStorage.setItem("currentPlayer", "1");
+      localStorage.setItem("currentRound", "0");
+    }
 
     window.location.href = "./fragen.html";
   });
@@ -96,18 +644,13 @@ if (startQuizBtn) {
 
 
 // fragen von quizzes.json laden
-
-// Quiz-Laufzeit-Variablen
 let currentQuestionIndex = 0;
 let correctAnswers = 0;
 let wrongAnswers = 0;
 let quizQuestions = [];
 let timerInterval = null;
 let timeLeft = 15;
-const QUESTION_TIME = 15;
-
-
-// Mischt irgendwie arrays
+const QUESTION_TIME = 11;
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -116,27 +659,91 @@ function shuffleArray(array) {
   }
 }
 
-
-// fragen Laden ig
-
 async function loadQuestions() {
   try {
-   let questions = await window.quizAPI.getQuestions();
+    let questions = await window.quizAPI.getQuestions();
 
-const count = Number(localStorage.getItem("questionCount")) || questions.length;
-const selectedCategory = localStorage.getItem("selectedCategory") || "all";
+    const count = Number(localStorage.getItem("questionCount")) || questions.length;
+    const selectedCategory = localStorage.getItem("selectedCategory") || "all";
+    const gameMode = localStorage.getItem("gameMode") || "single";
+    const currentPlayer = localStorage.getItem("currentPlayer") || "1";
 
-if (selectedCategory !== "all") {
-  questions = questions.filter(
-    (question) => String(question.category || "").trim() === selectedCategory
-  );
+    if (selectedCategory !== "all") {
+      if (selectedCategory === "Geografie") {
+        if (!countryDataJson) {
+          await fetchCountries();
+        }
+
+        questions = [];
+
+        for (let i = 0; i < count; i++) {
+          const geoQuestion = await fetchGeoQuestion()[0];
+          await questions.push(geoQuestion);
+        }
+      } else {
+        questions = questions.filter((question) => {
+          return String(question.category || "").trim() === selectedCategory;
+        });
+      }
+
+    }
+
+   const roundCount = Number(localStorage.getItem("roundCount")) || 1;
+const currentRound = Number(localStorage.getItem("currentRound")) || 0;
+
+if (gameMode === "multi") {
+  if (currentPlayer === "2") {
+    const savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
+    quizQuestions = savedRounds[currentRound] || [];
+  } else {
+    let savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
+
+    if (savedRounds.length === 0) {
+      const rounds = [];
+
+      for (let round = 0; round < roundCount; round++) {
+        let roundQuestions = [];
+
+        if (selectedCategory === "Geografie") {
+          for (let i = 0; i < count; i++) {
+            roundQuestions.push(fetchGeoQuestion()[0]);
+          }
+        } else {
+          const questionsCopy = [...questions];
+          shuffleArray(questionsCopy);
+          roundQuestions = questionsCopy.slice(0, count);
+        }
+
+        rounds.push(roundQuestions);
+      }
+
+      localStorage.setItem("roundQuestions", JSON.stringify(rounds));
+      savedRounds = rounds;
+    }
+
+    quizQuestions = savedRounds[currentRound] || [];
+  }
+} else {
+  const rounds = [];
+
+  for (let round = 0; round < roundCount; round++) {
+    let roundQuestions = [];
+
+    if (selectedCategory === "Geografie") {
+      for (let i = 0; i < count; i++) {
+        roundQuestions.push(fetchGeoQuestion()[0]);
+      }
+    } else {
+      const questionsCopy = [...questions];
+      shuffleArray(questionsCopy);
+      roundQuestions = questionsCopy.slice(0, count);
+    }
+
+    rounds.push(roundQuestions);
+  }
+
+  quizQuestions = rounds.flat();
 }
-
-// Fragen mischen
-shuffleArray(questions);
-
-// nur gewünschte Anzahl nehmen
-quizQuestions = questions.slice(0, count);
 
     if (quizQuestions.length === 0) {
       if (questionFrame) {
@@ -153,15 +760,38 @@ quizQuestions = questions.slice(0, count);
     correctAnswers = 0;
     wrongAnswers = 0;
 
+    updatePlayerDisplay();
     showQuestion();
+
+
   } catch (error) {
     console.error("Fehler beim Laden der Fragen:", error);
+
     if (questionFrame) {
       questionFrame.textContent = "Fragen konnten nicht geladen werden.";
     }
   }
 }
 
+
+function updatePlayerDisplay() {
+  if (!playerDisplay) return;
+
+  const gameMode = localStorage.getItem("gameMode") || "single";
+
+  if (gameMode !== "multi") {
+    playerDisplay.classList.add("hidden");
+    return;
+  }
+
+  const player1Name = localStorage.getItem("player1Name") || "Player 1";
+  const player2Name = localStorage.getItem("player2Name") || "Player 2";
+  const currentPlayer = localStorage.getItem("currentPlayer") || "1";
+
+  playerDisplay.classList.remove("hidden");
+  playerDisplay.textContent =
+    `Aktuell: ${currentPlayer === "1" ? player1Name : player2Name} | ${player1Name} vs. ${player2Name}`;
+}
 
 //fragen werden angezeigt
 function showQuestion() {
@@ -172,7 +802,19 @@ function showQuestion() {
   answersEl.innerHTML = "";
 
   if (fragenText) {
-    fragenText.textContent = `Frage ${currentQuestionIndex + 1} von ${quizQuestions.length}`;
+    const questionsPerRound = Number(localStorage.getItem("questionCount")) || quizQuestions.length;
+    const roundCount = Number(localStorage.getItem("roundCount")) || 1;
+    const storedRound = Number(localStorage.getItem("currentRound")) || 0;
+
+    const questionInRound = currentQuestionIndex + 1;
+
+    const shownRound =
+      localStorage.getItem("gameMode") === "multi"
+        ? storedRound + 1
+        : Math.floor(currentQuestionIndex / questionsPerRound) + 1;
+
+    fragenText.textContent =
+      `Runde ${shownRound} von ${roundCount} | Frage ${questionInRound} von ${questionsPerRound}`;
   }
 
   if (resultText) {
@@ -187,6 +829,22 @@ function showQuestion() {
     const button = document.createElement("button");
     button.textContent = answer;
     button.classList.add("buttonAnswers");
+
+    document.querySelectorAll("button").forEach(btn => {
+
+      button.onmouseover = event => {
+        window.audio.playSound("buttonHover");
+      }
+
+      button.onmousedown = event => {
+        window.audio.playSound("buttonClick");
+      }
+
+      button.onmouseup = event => {
+        window.audio.playSound("buttonRelease");
+      }
+    });
+
 
     button.addEventListener("click", () => {
       stopTimer();
@@ -219,6 +877,8 @@ function showQuestion() {
 
       if (nextBtn) {
         nextBtn.classList.remove("hidden");
+        resetTimerMusic();
+        //questionDone.play();
       }
     });
 
@@ -226,11 +886,18 @@ function showQuestion() {
   });
 
   startTimer();
+  // output("questionCount: " + questionCount);
+  if(localStorage.getItem("questionCount") >= (0.6 * questionCountInput)) {bgTimerMusic3.play()} else {
+    if (localStorage.getItem("questionCount") >= (0.3 * questionCountInput)) {bgTimerMusic2.play()} else {  
+      bgTimerMusic1.play();
+    }
+  }
 }
+
 
 // MENU.HTML
 // Überprüft, ob Animation bereits abgespielt wurde
-if (window.location.pathname.includes("menu.html")) {
+if (window.location.pathname.includes("start.html")) {
   const animationPlayed = sessionStorage.getItem("animationPlayed");
 
   if (animationPlayed === "true") {
@@ -240,12 +907,28 @@ if (window.location.pathname.includes("menu.html")) {
     if (hauptmenue) {
       hauptmenue.classList.remove("hidden");
     }
+
+
+    if (localStorage.getItem("musicMuted") == "false") {
+      window.audio.playMusic("lobbyBackground");
+    }
+
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
+      logoAnimation.addEventListener("loadedmetadata", () => {
+        const targetDuration = 0; // gewünschte Dauer in Sekunden
+        logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
+      });
+
       logoAnimation.addEventListener("ended", () => {
         startAnimation.style.display = "none";
         hauptmenue.classList.remove("hidden");
         sessionStorage.setItem("animationPlayed", "true");
+
+        if (localStorage.getItem("musicMuted") == "false") {
+          window.audio.playMusic("lobbyBackground");
+        }
+        
       });
     }
   }
@@ -256,6 +939,7 @@ if (window.location.pathname.includes("menu.html")) {
 if (playButton) {
   playButton.addEventListener("click", () => {
     window.location.href = "./fragen.html";
+    resetTimerMusic();
   });
 }
 
@@ -263,9 +947,21 @@ if (playButton) {
 if (nextBtn) {
   nextBtn.addEventListener("click", () => {
     stopTimer();
+    resetTimerMusic();
     currentQuestionIndex++;
 
-    if (currentQuestionIndex < quizQuestions.length) {
+        if (currentQuestionIndex < quizQuestions.length) {
+      const gameMode = localStorage.getItem("gameMode") || "single";
+      const questionsPerRound = Number(localStorage.getItem("questionCount")) || quizQuestions.length;
+
+      if (
+        gameMode === "single" &&
+        currentQuestionIndex % questionsPerRound === 0
+      ) {
+        const nextRound = Math.floor(currentQuestionIndex / questionsPerRound) + 1;
+        alert(`Runde ${nextRound} startet!`);
+      }
+
       if (resultText) {
         resultText.textContent = "";
       }
@@ -276,6 +972,64 @@ if (nextBtn) {
       const total = correctAnswers + wrongAnswers;
       const percentage = total > 0 ? Math.round((correctAnswers / total) * 100) : 0;
 
+      const gameMode = localStorage.getItem("gameMode") || "single";
+      const currentPlayer = localStorage.getItem("currentPlayer") || "1";
+      
+      
+      if (gameMode === "multi") {
+        let currentRound = Number(localStorage.getItem("currentRound")) || 0;
+        const roundCount = Number(localStorage.getItem("roundCount")) || 1;
+
+        const oldP1Correct = Number(localStorage.getItem("p1Correct")) || 0;
+        const oldP1Wrong = Number(localStorage.getItem("p1Wrong")) || 0;
+
+        const oldP2Correct = Number(localStorage.getItem("p2Correct")) || 0;
+        const oldP2Wrong = Number(localStorage.getItem("p2Wrong")) || 0;
+
+        if (currentPlayer === "1") {
+          localStorage.setItem("p1Correct", oldP1Correct + correctAnswers);
+          localStorage.setItem("p1Wrong", oldP1Wrong + wrongAnswers);
+
+          localStorage.setItem("currentPlayer", "2");
+
+          alert(`${localStorage.getItem("player1Name") || "Player 1"} ist mit Runde ${currentRound + 1} fertig. Jetzt spielt ${localStorage.getItem("player2Name") || "Player 2"} dieselbe Runde.`);
+
+          window.location.href = "./fragen.html";
+        } else {
+          localStorage.setItem("p2Correct", oldP2Correct + correctAnswers);
+          localStorage.setItem("p2Wrong", oldP2Wrong + wrongAnswers);
+
+          currentRound++;
+
+          if (currentRound < roundCount) {
+            localStorage.setItem("currentRound", currentRound);
+            localStorage.setItem("currentPlayer", "1");
+
+            alert(`Runde ${currentRound + 1} startet. ${localStorage.getItem("player1Name") || "Player 1"} beginnt.`);
+
+            window.location.href = "./fragen.html";
+          } else {
+            const p1CorrectTotal = Number(localStorage.getItem("p1Correct")) || 0;
+            const p1WrongTotal = Number(localStorage.getItem("p1Wrong")) || 0;
+            const p2CorrectTotal = Number(localStorage.getItem("p2Correct")) || 0;
+            const p2WrongTotal = Number(localStorage.getItem("p2Wrong")) || 0;
+
+            const p1Total = p1CorrectTotal + p1WrongTotal;
+            const p2Total = p2CorrectTotal + p2WrongTotal;
+
+            const p1Percentage = p1Total > 0 ? Math.round((p1CorrectTotal / p1Total) * 100) : 0;
+            const p2Percentage = p2Total > 0 ? Math.round((p2CorrectTotal / p2Total) * 100) : 0;
+
+            localStorage.setItem("p1Percentage", p1Percentage);
+            localStorage.setItem("p2Percentage", p2Percentage);
+
+            window.location.href = "./multi-scoreboard.html";
+          }
+        }
+
+        return;
+      }
+
       localStorage.setItem("c", correctAnswers);
       localStorage.setItem("w", wrongAnswers);
       localStorage.setItem("p", percentage);
@@ -285,12 +1039,15 @@ if (nextBtn) {
   });
 }
 
+
+
 // Zurück zum Menü
 if (menuBtn) {
   menuBtn.addEventListener("click", () => {
-    window.location.href = "./menu.html";
+    window.location.href = "./start.html";
   });
 }
+
 // Überprüft, ob aktuelle Fragen-Seite sind und zeigt die erste Frage an
 if (window.location.pathname.includes("fragen.html")) {
   currentQuestionIndex = 0;
@@ -352,16 +1109,52 @@ function handleTimeUp() {
   }
 }
 
-// SCOREBOARD.HTML
-if (window.location.pathname.includes("scoreboard.html")) {
+
+// SCOREBOARD.HTML nur im Singleplayer
+if (
+  window.location.pathname.includes("scoreboard.html") &&
+  !window.location.pathname.includes("multi-scoreboard.html")
+) {
   document.getElementById("score-correct").textContent =
-    localStorage.getItem("c");
+    localStorage.getItem("c") || 0;
 
   document.getElementById("score-wrong").textContent =
-    localStorage.getItem("w");
+    localStorage.getItem("w") || 0;
 
   document.getElementById("score-percentage").textContent =
-    localStorage.getItem("p") + "%";
+    (localStorage.getItem("p") || 0) + "%";
+}
+
+// MULTI-SCOREBOARD.HTML
+if (window.location.pathname.includes("multi-scoreboard.html")) {
+  const player1Name = localStorage.getItem("player1Name") || "Player 1";
+  const player2Name = localStorage.getItem("player2Name") || "Player 2";
+  const selectedCategory = localStorage.getItem("selectedCategory") || "all";
+
+  const p1Title = document.getElementById("player1-title");
+  const p2Title = document.getElementById("player2-title");
+
+  if (p1Title) p1Title.textContent = player1Name;
+  if (p2Title) p2Title.textContent = player2Name;
+
+  document.getElementById("p1-correct").textContent = localStorage.getItem("p1Correct") || 0;
+  document.getElementById("p1-wrong").textContent = localStorage.getItem("p1Wrong") || 0;
+  document.getElementById("p1-percentage").textContent = (localStorage.getItem("p1Percentage") || 0) + "%";
+
+  document.getElementById("p2-correct").textContent = localStorage.getItem("p2Correct") || 0;
+  document.getElementById("p2-wrong").textContent = localStorage.getItem("p2Wrong") || 0;
+  document.getElementById("p2-percentage").textContent = (localStorage.getItem("p2Percentage") || 0) + "%";
+
+  const categoryEl = document.getElementById("multi-category");
+
+  if (categoryEl) {
+    const categoryText =
+      selectedCategory === "all" || !selectedCategory
+        ? "Alle Kategorien"
+        : selectedCategory;
+
+    categoryEl.textContent = "Kategorie: " + categoryText;
+  }
 }
 
 if (adminBtn) {
@@ -372,8 +1165,87 @@ if (adminBtn) {
 
 if (restartBtn) {
   restartBtn.addEventListener("click", () => {
+    const gameMode = localStorage.getItem("gameMode") || "single";
+
+    if (gameMode === "multi") {
+      localStorage.setItem("currentPlayer", "1");
+      localStorage.setItem("currentRound", "0");
+
+      localStorage.removeItem("multiQuestions");
+      localStorage.removeItem("roundQuestions");
+      localStorage.removeItem("currentRound");
+      localStorage.removeItem("p1Correct");
+      localStorage.removeItem("p1Wrong");
+      localStorage.removeItem("p1Percentage");
+      localStorage.removeItem("p2Correct");
+      localStorage.removeItem("p2Wrong");
+      localStorage.removeItem("p2Percentage");
+
+      window.location.href = "./fragen.html";
+      return;
+    }
+
     window.location.href = "./fragen.html";
   });
 }
 
+// Elemente holen
+const dialog = document.getElementById("popupDialog");
+const openBtn = document.getElementById("openBtn");
+const closeBtn = document.getElementById("closeBtn");
+
+// Öffnen
+if (openBtn && dialog) {
+  openBtn.addEventListener("click", () => {
+    dialog.showModal();
+  });
+}
+
+// Schließen
+if (closeBtn && dialog) {
+  closeBtn.addEventListener("click", () => {
+    dialog.close();
+  });
+}
+
+
+// Menü - Button zum Menü Singleplayer o. Multiplayer
+
+const singleplayerBtn = document.getElementById("singleplayerBtn");
+const multiplayerBtn = document.getElementById("multiplayerBtn");
+const backBtn = document.getElementById("backBtn");
+
+if (backBtn) {
+  backBtn.addEventListener("click", () => {
+    window.location.href = "./start.html";
+  });
+}
+if (singleplayerBtn) {
+  singleplayerBtn.addEventListener("click", () => {
+    window.location.href = "./menu.html";
+  });
+}
+if (multiplayerBtn) {
+  multiplayerBtn.addEventListener("click", () => {
+    window.location.href = "./multiplayer.html";
+  });
+}
+
+
+//Gewinner anzeige
+const p1Correct = Number(localStorage.getItem("p1Correct")) || 0;
+const p2Correct = Number(localStorage.getItem("p2Correct")) || 0;
+
+const player1Card = document.getElementById("player1-title")?.closest(".player-score");
+const player2Card = document.getElementById("player2-title")?.closest(".player-score");
+
+if (p1Correct > p2Correct) {
+  player1Card?.classList.add("winner-card");
+  document.getElementById("player1-title").textContent = player1Name + " 🏆";
+} else if (p2Correct > p1Correct) {
+  player2Card?.classList.add("winner-card");
+  document.getElementById("player2-title").textContent = player2Name + " 🏆";
+} else {
+  player1Card?.classList.add("draw-card");
+  player2Card?.classList.add("draw-card");
 }

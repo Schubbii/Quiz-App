@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multiplayer Ergebnis</title>
+  <link href="https://fonts.googleapis.com/css2?family=Radio+Canada+Big:wght@400;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="score.css" />
+</head>
+<body>
+  <div class="background"></div>
+
+  <main class="scoreboard-page">
+    <h1 class="scoreboard-title">MULTIPLAYER BEENDET</h1>
+
+    <section class="scoreboard-card">
+      <div class="scoreboard-meta">
+        <p class="scoreboard-category" id="multi-category"></p>
+      </div>
+
+      <div class="players-scoreboard">
+        <section class="player-score">
+          <h2 class="player-title" id="player1-title">Spieler 1</h2>
+
+          <div class="scoreboard-stats">
+            <article class="stat-card">
+              <h3 class="stat-label stat-label--correct">Richtig</h3>
+              <p class="stat-value stat-value--correct" id="p1-correct">0</p>
+            </article>
+
+            <article class="stat-card">
+              <h3 class="stat-label stat-label--wrong">Falsch</h3>
+              <p class="stat-value stat-value--wrong" id="p1-wrong">0</p>
+            </article>
+
+            <article class="stat-card">
+              <h3 class="stat-label stat-label--quote">Quote</h3>
+              <p class="stat-value stat-value--quote" id="p1-percentage">0%</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="player-score">
+          <h2 class="player-title" id="player2-title">Spieler 2</h2>
+
+          <div class="scoreboard-stats">
+            <article class="stat-card">
+              <h3 class="stat-label stat-label--correct">Richtig</h3>
+              <p class="stat-value stat-value--correct" id="p2-correct">0</p>
+            </article>
+
+            <article class="stat-card">
+              <h3 class="stat-label stat-label--wrong">Falsch</h3>
+              <p class="stat-value stat-value--wrong" id="p2-wrong">0</p>
+            </article>
+
+            <article class="stat-card">
+              <h3 class="stat-label stat-label--quote">Quote</h3>
+              <p class="stat-value stat-value--quote" id="p2-percentage">0%</p>
+            </article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <div class="scoreboard-actions">
+      <button class="action-btn action-btn--primary" id="restart-btn">PLAY AGAIN</button>
+      <button class="action-btn action-btn--primary" id="menu-btn">MAIN MENU</button>
+    </div>
+  </main>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

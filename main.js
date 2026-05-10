@@ -1,8 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const QuizzesHandler = require('./src/handlers/quizzesHandler');
 
-const quizzesHandler = new QuizzesHandler(path.join(__dirname, 'data', 'quizzes.json'));
+let audioWindow;
+let audioReady = false;
+const pendingSounds = [];
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -15,34 +16,107 @@ function createWindow() {
     },
   });
 
-  win.loadFile("src/menu.html");
-
+  win.loadFile('src/start.html');
   win.setMenuBarVisibility(false);
-  win.webContents.openDevTools({ mode: 'detach' });
-}
 
-app.whenReady().then(() => {
-  ipcMain.handle('questions:getAll', async () => quizzesHandler.getAllQuestions());
-  ipcMain.handle('questions:add', async (_event, questionData) => quizzesHandler.addQuestion(questionData));
-  ipcMain.handle('questions:update', async (_event, id, updates) => quizzesHandler.updateQuestion(id, updates));
-  ipcMain.handle('questions:delete', async (_event, id) => quizzesHandler.deleteQuestion(id));
-  ipcMain.handle('questions:getRound', async (_event, category, difficulty, count) => {
-  return quizzesHandler.getQuestionsForRound(category, difficulty, count);
+
+  // Fenster mit Konsole öffnet sich beim start, bitte bei zuküftigen Versionen ohne Fenster nur auskommentieren, dass man das easy wieder einschalten kann:
+  //                                        vvv
+  // win.webContents.openDevTools(); // Variante mit Konsole im Spielfenster
+  // win.webContents.openDevTools({ mode: 'detach' }); // Variante mit Konsle als seperates Fenster
+
+
+  win.on("closed", () => {
+  if (audioWindow && !audioWindow.isDestroyed()) {
+    audioWindow.destroy();
+  }
+
 });
 
+}
+
+function createAudioWindow() {
+  audioWindow = new BrowserWindow({
+    width: 1,
+    height: 1,
+    show: false,
+    frame: false,
+    skipTaskbar: true,
+    focusable: false,
+    webPreferences: {
+      preload: path.join(__dirname, "src", "audio-window", "audio-preload.js"),
+      contextIsolation: true,
+      nodeIntegration: false,
+
+      // Electron defaults to this, but being explicit is fine for a sound host.
+      autoplayPolicy: "no-user-gesture-required",
+    },
+  });
+
+  audioWindow.loadFile(path.join(__dirname, "src", "audio-window", "audio.html"));
+
+  audioWindow.webContents.once("did-finish-load", () => {
+    audioReady = true;
+
+    for (const soundName of pendingSounds) {
+      audioWindow.webContents.send("ui-sound:play", soundName);
+    }
+
+    pendingSounds.length = 0;
+  });
+
+  audioWindow.on("closed", () => {
+    audioWindow = null;
+    audioReady = false;
+  });
+}
+
+function playUiSound(soundName) {
+  if (!audioWindow || audioWindow.isDestroyed()) {
+    createAudioWindow();
+  }
+
+  if (!audioReady) {
+    pendingSounds.push(soundName);
+    return;
+  }
+
+  audioWindow.webContents.send("ui-sound:play", soundName);
+}
+
+function sendToAudioWindow(channel, value) {
+  if (!audioWindow || audioWindow.isDestroyed()) return;
+
+  audioWindow.webContents.send(channel, value);
+}
+
+ipcMain.on("sound:play", (_event, soundName) => {
+  sendToAudioWindow("sound:play", soundName);
+});
+
+ipcMain.on("music:play", (_event, musicName) => {
+  sendToAudioWindow("music:play", musicName);
+});
+
+ipcMain.on("music:stop", (_event, musicName) => {
+  sendToAudioWindow("music:stop", musicName);
+});
+
+ipcMain.on("music:pause", (_event, musicName) => {
+  sendToAudioWindow("music:pause", musicName);
+});
+
+
+app.whenReady().then(() => {
   createWindow();
+  createAudioWindow();
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  if (process.platform !== 'darwin') app.quit();
 });
-
 
