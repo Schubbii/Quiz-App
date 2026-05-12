@@ -494,11 +494,24 @@ function fetchGeoQuestion() {
 }
 
 
+
 //////////////////////////////////////////////////////////
 /// ENDE - Fragengenerierung für API-Geographie-Fragen ///
 //////////////////////////////////////////////////////////
 
 
+
+
+/////////////////////////////////////////////////////
+/// Fragengenerierung für Sänger und Schauspieler ///
+/////////////////////////////////////////////////////
+
+
+
+
+////////////////////////////////////////////////////////////
+/// ENDE - Fragengenerierung für Sänger und Schauspieler ///
+////////////////////////////////////////////////////////////
 
 async function setQuizSettings() {
   try {
@@ -670,6 +683,23 @@ async function loadQuestions() {
 
     if (selectedCategory !== "all") {
       if (selectedCategory === "Geografie") {
+        if (!countryDataJson) {
+          await fetchCountries();
+        }
+
+        questions = [];
+
+        for (let i = 0; i < count; i++) {
+          const geoQuestion = await fetchGeoQuestion()[0];
+          await questions.push(geoQuestion);
+        }
+      } else {
+        questions = questions.filter((question) => {
+          return String(question.category || "").trim() === selectedCategory;
+        });
+      }
+
+      if (selectedCategory === "Sänger") {
         if (!countryDataJson) {
           await fetchCountries();
         }
