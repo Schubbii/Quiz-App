@@ -287,7 +287,7 @@ function fetchGeoQuestion() {
         if (answerArray.length == correctAnswerIndex) {
           if (testCountry.region == selectedRegion) {
             answerArray.push(testCountry.name.common);
-          } else { output("badcountry1")}
+          } else { output("badcountry1") }
         } else {
           if (testCountry.region != selectedRegion) {
             answerArray.push(testCountry.name.common);
@@ -510,176 +510,181 @@ function fetchGeoQuestion() {
 let WikiMediaObject;
 
 let usedPersons = []
-usedPersons = JSON.parse(sessionStorage.getItem("usedWikiPersons") || []);
 
-document.getElementById("jsonFile").addEventListener("change", async (event) => {
+usedPersons = JSON.parse(sessionStorage.getItem("usedWikiPersons") ?? "[]");
+sessionStorage.setItem("usedWikiPersons", JSON.stringify(usedPersons))
+
+try {
+  document.getElementById("jsonFile").addEventListener("change", async (event) => {
     const inputFile = event.target.files[0];
     const fileText = await inputFile.text();
     WikiMediaObject = await JSON.parse(fileText);
-    getWikimediaQuestion();
-});
+    sessionStorage.setItem("WikiMediaObject", JSON.stringify(WikiMediaObject));
+  });
+} catch (error) {
+
+}
 
 
-async function fetchWikimedia(pageTitle) {
-    const pageData = await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + pageTitle);
-    const pageJson = await pageData.json();
-    const imageURL = await pageJson.thumbnail.source;
-    await console.log(pageJson.thumbnail.source);
+async function fetchWikimediaImage(pageTitle) {
+  const pageData = await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + pageTitle);
+  const pageJson = await pageData.json();
+  const imageURL = await pageJson.thumbnail.source;
+  await console.log(pageJson.thumbnail.source);
+
+  try {
     document.getElementById("wikiemediaQuestionImage").src = await pageJson.thumbnail.source;
+  } catch (error) {
+    console.log("Could not display Image: " + error);
+  }
 }
 
 function output(input) {
-    console.log(input);
+  console.log(input);
 }
 
-function getWikimediaQuestion() {
-    const typething = "actor";
+function getWikimediaQuestion(typething) {
 
-    output("sessionStorage.getItem('usedWikiPersons').length: " + JSON.parse(sessionStorage.getItem("usedWikiPersons")).length);
-    output("sessionStorage.getItem('usedWikiPersons'): " + JSON.parse(sessionStorage.getItem("usedWikiPersons")));
+  output("sessionStorage.getItem('usedWikiPersons').length: " + usedPersons.length);
+  output("sessionStorage.getItem('usedWikiPersons'): " + usedPersons);
 
-    output("WikiMediaObject.filter(obj => obj.type === typething).length: " + WikiMediaObject.filter(obj => obj.type === typething).length);
-    output("WikiMediaObject.filter(obj => obj.type === typething): " + WikiMediaObject.filter(obj => obj.type === typething));
+  WikiMediaObject = JSON.parse(sessionStorage.getItem("WikiMediaObject"));
 
-    if (JSON.parse(sessionStorage.getItem("usedWikiPersons")).length >= WikiMediaObject.filter(obj => obj.type === typething).length) {
-        clearPersons();
-    }
+  output("WikiMediaObject.filter(obj => obj.type === typething).length: " + WikiMediaObject.filter(obj => obj.type === typething).length);
+  output("WikiMediaObject.filter(obj => obj.type === typething): " + WikiMediaObject.filter(obj => obj.type === typething));
 
-    let correctPerson = generatePerson(typething);
-    while (usedPersons.includes(correctPerson.displayName)) {
-        correctPerson = generatePerson(typething);
-        output("already used");
-    }
+  if (usedPersons.length >= WikiMediaObject.filter(obj => obj.type === typething).length) {
+    clearPersons();
+  }
 
-    document.getElementById("correctAnswer").innerText = "test";
-    document.getElementById("falseAnswers").innerText = "test";
+  let correctPerson = generatePerson(typething);
+  while (usedPersons.includes(correctPerson.displayName)) {
+    correctPerson = generatePerson(typething);
+    output("already used");
+  }
 
-    usedPersons.push(correctPerson.displayName);
+  usedPersons.push(correctPerson.displayName);
 
-    console.log("used persons: " + usedPersons);
+  console.log("used persons: " + usedPersons);
 
 
-    sessionStorage.setItem("usedWikiPersons", JSON.stringify(usedPersons));
-    fetchWikimedia(correctPerson.wikiLink);
-
-    let falsePersons;
-    falsePersons = generateFalsePersons(correctPerson);
-    let answerPacket = generateAAAI(correctPerson, falsePersons);
-    console.log(answerPacket);
-    let questionString = "Was ist der Name der auf dem Bild dargestellten Person?"
-
-    for (let i = 0; i < answerPacket[1].length; i++) {
-        if (i == answerPacket[0]) {
-            document.getElementById("correctAnswer").innerText = answerPacket[1][i].displayName;
-        } else {
-            document.getElementById("falseAnswers").innerText = document.getElementById("falseAnswers").innerText + ", " + answerPacket[1][i].displayName;
-        }
-    }
+  sessionStorage.setItem("usedWikiPersons", JSON.stringify(usedPersons));
 
 
+  let falsePersons;
+  falsePersons = generateFalsePersons(correctPerson);
+  let answerPacket = generateAAAI(correctPerson, falsePersons);
+  let questionString = "Was ist der Name der auf dem Bild dargestellten Person?"
 
-    let questionObject = [];
-    questionObject.push({
-        question: questionString,
-        answers: answerPacket[1],
-        correctAnswerIndex: answerPacket[0]
-    })
 
-    return questionObject;
+  let questionObject = [];
+  questionObject.push({
+    question: questionString,
+    answers: answerPacket[1],
+    correctAnswerIndex: answerPacket[0],
+    imageWikiLink: correctPerson.wikiLink
+  })
+  return questionObject;
 }
 
 function generatePerson(type) {
 
-    // Questionstypes:
-    // 0: Male Musician
-    // 1: Female Musician
-    // 2: Male Actor
-    // 3: Female Actor
+  // Questionstypes:
+  // 0: Male Musician
+  // 1: Female Musician
+  // 2: Male Actor
+  // 3: Female Actor
 
-    let questionType = Math.floor(Math.random() * 4);
-    let testPerson;
+  let questionType = Math.floor(Math.random() * 4);
+  let testPerson;
 
-    testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)];
+  testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)];
 
-    if (type == "musician") {
-        while (questionType > 1) {
-            questionType = Math.floor(Math.random() * 4);
-        }
-    } else if (type == "actor") {
-        while (questionType < 2) {
-            questionType = Math.floor(Math.random() * 4);
-        }
+  if (type == "musician") {
+    while (questionType > 1) {
+      questionType = Math.floor(Math.random() * 4);
     }
-
-    switch (questionType) {
-        case 0:
-            while ((testPerson.gender != "male") || (testPerson.type != "musician")) {
-                testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
-            }
-            break;
-
-        case 1:
-            while ((testPerson.gender != "female") || (testPerson.type != "musician")) {
-                testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
-            }
-            break;
-
-        case 2:
-            while ((testPerson.gender != "male") || (testPerson.type != "actor")) {
-                testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
-            }
-            break;
-
-        case 3:
-            while ((testPerson.gender != "female") || (testPerson.type != "actor")) {
-                testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
-            }
-            break;
-        default:
-            console.log("error: you should never see this");
+  } else if (type == "actor") {
+    while (questionType < 2) {
+      questionType = Math.floor(Math.random() * 4);
     }
-    return testPerson;
+  }
+
+  switch (questionType) {
+    case 0:
+      while ((testPerson.gender != "male") || (testPerson.type != "musician")) {
+        testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
+      }
+      break;
+
+    case 1:
+      while ((testPerson.gender != "female") || (testPerson.type != "musician")) {
+        testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
+      }
+      break;
+
+    case 2:
+      while ((testPerson.gender != "male") || (testPerson.type != "actor")) {
+        testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
+      }
+      break;
+
+    case 3:
+      while ((testPerson.gender != "female") || (testPerson.type != "actor")) {
+        testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
+      }
+      break;
+    default:
+      console.log("error: you should never see this");
+  }
+  return testPerson;
 
 }
 
 
-
 function generateFalsePersons(inputPerson) {
-    let falsePersons = [];
-    let testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)];
+  let falsePersons = [];
+  let testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)];
+  let runawayint = 0;
+  while (falsePersons.length < 3) {
+    if ((testPerson.gender != inputPerson.gender) || (testPerson.type != inputPerson.type) || (falsePersons.includes(testPerson)) || (testPerson == inputPerson)) {
+      testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)];
 
-    while (falsePersons.length < 3) {
-        if ((testPerson.gender != inputPerson.gender) || (testPerson.type != inputPerson.type) || (falsePersons.includes(testPerson))) {
-            testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)];
-        } else if ((testPerson.gender == inputPerson.gender) && (testPerson.type == inputPerson.type)) {
-            falsePersons.push(testPerson);
-        }
+    } else if ((testPerson.gender == inputPerson.gender) && (testPerson.type == inputPerson.type) && !(falsePersons.includes(testPerson)) && !(testPerson == inputPerson)) {
+      falsePersons.push(testPerson);
+    } else {
+      console.log("das sollte nie passieren hoffentlich")
+      runawayint += 1;
+      if (runawayint >= 5000) {
+        throw new Error("programm war am weglaufen")
+      }
     }
+  }
 
-    return falsePersons;
+  return falsePersons;
 }
 
 function generateAAAI(correctPersonInput, falsePersonsInput) {
 
-    let answerIndex = Math.floor(Math.random() * 4);
-    let falsePersonsIndex = 0;
-    let answerArray = [];
+  let answerIndex = Math.floor(Math.random() * 4);
+  let falsePersonsIndex = 0;
+  let answerArray = [];
 
-    for (let i = 0; i < 4; i += 1) {
-        if (i == answerIndex) {
-            answerArray.push(correctPersonInput);
-        } else {
-            answerArray.push(falsePersonsInput[falsePersonsIndex]);
-            falsePersonsIndex += 1;
-        }
+  for (let i = 0; i < 4; i += 1) {
+    if (i == answerIndex) {
+      answerArray.push(correctPersonInput);
+    } else {
+      answerArray.push(falsePersonsInput[falsePersonsIndex]);
+      falsePersonsIndex += 1;
     }
-    return [answerIndex, answerArray];
+  }
+  return [answerIndex, answerArray];
 }
 
 function clearPersons() {
-    sessionStorage.setItem("usedWikiPersons", JSON.stringify([]));
-    usedPersons = []
-    output("cleared")
+  sessionStorage.setItem("usedWikiPersons", JSON.stringify([]));
+  usedPersons = []
+  output("cleared")
 }
 
 ////////////////////////////////////////////////////////////
@@ -699,7 +704,7 @@ async function setQuizSettings() {
 
     // Kategorie-Dropdown füllen
     if (categorySelect) {
-      categorySelect.innerHTML = '<option value="all">Alle Kategorien</option>';
+      categorySelect.innerHTML = '<option value="all">Alle Kategorien</option> <option value="musician">Sänger & Musiker</option> <option value="actor">Schauspieler</option>';
 
       categories.forEach((category) => {
         const option = document.createElement("option");
@@ -726,8 +731,7 @@ async function setQuizSettings() {
 
       if (selectedCategory == "Geografie") {
         // Da beim erstmaligen Auswählen von der Kategorie "Geographie" die Fragen geladen werden müssen, wird das Starten kurz blockiert, damit das Quiz nicht ohne Fragen startet
-        console.log("countryDataJson: " + countryDataJson);
-        console.log("Boolean(countryDataJson): " + Boolean(countryDataJson));
+
         if (!(countryDataJson)) {
           fetchCountries();
           document.getElementById("start-quiz-btn").innerText = "Daten werden heruntergeladen";
@@ -742,11 +746,32 @@ async function setQuizSettings() {
               clearInterval(hasDataLoaded);
             }
           }, 50)
-
         }
-
         maxCount = 30;
       }
+
+      if ((selectedCategory == "musician") || selectedCategory == "actor") {
+        // Da beim erstmaligen Auswählen von der Kategorie "musician" oder "actor" die Fragen geladen werden müssen, wird das Starten kurz blockiert, damit das Quiz nicht ohne Fragen startet
+
+        if (!(WikiMediaObject)) {
+          console.log("fragendaten noch nicht geladen")
+          document.getElementById("start-quiz-btn").innerText = "Daten werden heruntergeladen";
+          document.getElementById("start-quiz-btn").style.background = "rgba(125, 125, 125, 0.73)";
+          startQuizBtn.disabled = true;
+          const hasDataLoaded = setInterval(() => {
+            if (Boolean(WikiMediaObject)) {
+              console.log("daten haben geladen")
+              startQuizBtn.disabled = false;
+              document.getElementById("start-quiz-btn").innerText = "Quiz starten";
+              document.getElementById("start-quiz-btn").style.background = " rgba(255, 100.53, 249.85, 0.73)";
+              clearInterval(hasDataLoaded);
+            }
+          }, 50)
+        }
+        maxCount = 30;
+      }
+
+
 
       if (questionCountInput) {
         questionCountInput.max = maxCount;
@@ -824,7 +849,14 @@ if (startQuizBtn) {
       localStorage.setItem("currentRound", "0");
     }
 
-    window.location.href = "./fragen.html";
+    console.log("selectedCategory: " + selectedCategory);
+
+    if ((localStorage.getItem("selectedCategory") == "musician") || (localStorage.getItem("selectedCategory") == "actor")) {
+      window.location.href = "./fragenBild.html";
+    } else {
+      window.location.href = "./fragen.html"
+    };
+
   });
 }
 
@@ -846,6 +878,7 @@ function shuffleArray(array) {
 }
 
 async function loadQuestions() {
+  console.log("die function wurde ausgeführt");
   try {
     let questions = await window.quizAPI.getQuestions();
 
@@ -866,42 +899,90 @@ async function loadQuestions() {
           const geoQuestion = await fetchGeoQuestion()[0];
           await questions.push(geoQuestion);
         }
-      } else {
-        questions = questions.filter((question) => {
-          return String(question.category || "").trim() === selectedCategory;
-        });
-      }
-
-      if (selectedCategory === "Sänger") {
-        if (!countryDataJson) {
-          await fetchCountries();
+      } else if (selectedCategory === "musician") {
+        if (!WikiMediaObject) {
+          await WikiMediaObject;
         }
 
         questions = [];
 
         for (let i = 0; i < count; i++) {
-          const geoQuestion = await fetchGeoQuestion()[0];
-          await questions.push(geoQuestion);
+          const wikiMediaQuestion = await getWikimediaQuestion(selectedCategory)[0];
+          await questions.push(wikiMediaQuestion);
         }
-      } else {
+
+
+      } else if (selectedCategory === "actor") {
+        if (!WikiMediaObject) {
+          await WikiMediaObject;
+        }
+
+        questions = [];
+
+        for (let i = 0; i < count; i++) {
+          const wikiMediaQuestion = await getWikimediaQuestion(selectedCategory)[0];
+          await questions.push(wikiMediaQuestion);
+        }
+
+
+      } else{
         questions = questions.filter((question) => {
           return String(question.category || "").trim() === selectedCategory;
         });
       }
 
+      //  {
+      //   questions = questions.filter((question) => {
+      //     return String(question.category || "").trim() === selectedCategory;
+      //   });
+      // }
+
     }
 
-   const roundCount = Number(localStorage.getItem("roundCount")) || 1;
-const currentRound = Number(localStorage.getItem("currentRound")) || 0;
+    const roundCount = Number(localStorage.getItem("roundCount")) || 1;
+    const currentRound = Number(localStorage.getItem("currentRound")) || 0;
 
-if (gameMode === "multi") {
-  if (currentPlayer === "2") {
-    const savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
-    quizQuestions = savedRounds[currentRound] || [];
-  } else {
-    let savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
+    if (gameMode === "multi") {
+      if (currentPlayer === "2") {
+        const savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
+        quizQuestions = savedRounds[currentRound] || [];
+      } else {
+        let savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
 
-    if (savedRounds.length === 0) {
+        if (savedRounds.length === 0) {
+          const rounds = [];
+
+          for (let round = 0; round < roundCount; round++) {
+            let roundQuestions = [];
+
+            if (selectedCategory === "Geografie") {
+              for (let i = 0; i < count; i++) {
+                roundQuestions.push(fetchGeoQuestion()[0]);
+              }
+            } else if (selectedCategory === "musician") {
+              for (let i = 0; i < count; i++) {
+                roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
+              }
+            } else if (selectedCategory === "actor") {
+              for (let i = 0; i < count; i++) {
+                roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
+              }
+            } else{
+              const questionsCopy = [...questions];
+              shuffleArray(questionsCopy);
+              roundQuestions = questionsCopy.slice(0, count);
+            }
+
+            rounds.push(roundQuestions);
+          }
+
+          localStorage.setItem("roundQuestions", JSON.stringify(rounds));
+          savedRounds = rounds;
+        }
+
+        quizQuestions = savedRounds[currentRound] || [];
+      }
+    } else {
       const rounds = [];
 
       for (let round = 0; round < roundCount; round++) {
@@ -911,7 +992,15 @@ if (gameMode === "multi") {
           for (let i = 0; i < count; i++) {
             roundQuestions.push(fetchGeoQuestion()[0]);
           }
-        } else {
+        } else if (selectedCategory === "musician") {
+          for (let i = 0; i < count; i++) {
+            roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
+          }
+        } else if (selectedCategory === "actor") {
+          for (let i = 0; i < count; i++) {
+            roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
+          }
+        } else{
           const questionsCopy = [...questions];
           shuffleArray(questionsCopy);
           roundQuestions = questionsCopy.slice(0, count);
@@ -920,33 +1009,9 @@ if (gameMode === "multi") {
         rounds.push(roundQuestions);
       }
 
-      localStorage.setItem("roundQuestions", JSON.stringify(rounds));
-      savedRounds = rounds;
+      quizQuestions = rounds.flat();
     }
 
-    quizQuestions = savedRounds[currentRound] || [];
-  }
-} else {
-  const rounds = [];
-
-  for (let round = 0; round < roundCount; round++) {
-    let roundQuestions = [];
-
-    if (selectedCategory === "Geografie") {
-      for (let i = 0; i < count; i++) {
-        roundQuestions.push(fetchGeoQuestion()[0]);
-      }
-    } else {
-      const questionsCopy = [...questions];
-      shuffleArray(questionsCopy);
-      roundQuestions = questionsCopy.slice(0, count);
-    }
-
-    rounds.push(roundQuestions);
-  }
-
-  quizQuestions = rounds.flat();
-}
 
     if (quizQuestions.length === 0) {
       if (questionFrame) {
@@ -955,7 +1020,7 @@ if (gameMode === "multi") {
       return;
     }
 
-    if (count > questions.length) {
+    if (count > questions.length) { 
       alert(`Es gibt nur ${questions.length} Fragen.`);
     }
 
@@ -1001,6 +1066,15 @@ function showQuestion() {
   if (!questionFrame || !answersEl || currentQuestionIndex >= quizQuestions.length) return;
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
+
+  if (
+    window.location.pathname.includes("fragenBild.html") &&
+    currentQuestion.imageWikiLink
+  ) {
+    fetchWikimediaImage(currentQuestion.imageWikiLink);
+  }
+
+
   questionFrame.textContent = currentQuestion.question;
   answersEl.innerHTML = "";
 
@@ -1030,7 +1104,18 @@ function showQuestion() {
 
   currentQuestion.answers.forEach((answer, index) => {
     const button = document.createElement("button");
-    button.textContent = answer;
+
+
+    if (                                                              // Änderung der darstellung der fragen für die bilderfragen, weil die als objekt gespeichert werden
+      window.location.pathname.includes("fragenBild.html") && answer && typeof answer === "object"
+    ) {
+      button.textContent = answer.displayName;
+    } else {
+      button.textContent = answer;
+    }
+
+
+
     button.classList.add("buttonAnswers");
 
     document.querySelectorAll("button").forEach(btn => {
@@ -1090,8 +1175,8 @@ function showQuestion() {
 
   startTimer();
   // output("questionCount: " + questionCount);
-  if(localStorage.getItem("questionCount") >= (0.6 * questionCountInput)) {bgTimerMusic3.play()} else {
-    if (localStorage.getItem("questionCount") >= (0.3 * questionCountInput)) {bgTimerMusic2.play()} else {  
+  if (localStorage.getItem("questionCount") >= (0.6 * questionCountInput)) { bgTimerMusic3.play() } else {
+    if (localStorage.getItem("questionCount") >= (0.3 * questionCountInput)) { bgTimerMusic2.play() } else {
       bgTimerMusic1.play();
     }
   }
@@ -1119,7 +1204,7 @@ if (window.location.pathname.includes("start.html")) {
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
       logoAnimation.addEventListener("loadedmetadata", () => {
-        const targetDuration = 0; // gewünschte Dauer in Sekunden
+        const targetDuration = 1; // gewünschte Dauer in Sekunden
         logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
       });
 
@@ -1131,7 +1216,7 @@ if (window.location.pathname.includes("start.html")) {
         if (localStorage.getItem("musicMuted") == "false") {
           window.audio.playMusic("lobbyBackground");
         }
-        
+
       });
     }
   }
@@ -1141,7 +1226,11 @@ if (window.location.pathname.includes("start.html")) {
 // Startet Quiz
 if (playButton) {
   playButton.addEventListener("click", () => {
-    window.location.href = "./fragen.html";
+    if ((localStorage.getItem("selectedCategory") == "musician") || (localStorage.getItem("selectedCategory") == "actor")) {
+      window.location.href = "./fragenBild.html";
+    } else {
+      window.location.href = "./fragen.html"
+    };
     resetTimerMusic();
   });
 }
@@ -1153,7 +1242,7 @@ if (nextBtn) {
     resetTimerMusic();
     currentQuestionIndex++;
 
-        if (currentQuestionIndex < quizQuestions.length) {
+    if (currentQuestionIndex < quizQuestions.length) {
       const gameMode = localStorage.getItem("gameMode") || "single";
       const questionsPerRound = Number(localStorage.getItem("questionCount")) || quizQuestions.length;
 
@@ -1177,8 +1266,8 @@ if (nextBtn) {
 
       const gameMode = localStorage.getItem("gameMode") || "single";
       const currentPlayer = localStorage.getItem("currentPlayer") || "1";
-      
-      
+
+
       if (gameMode === "multi") {
         let currentRound = Number(localStorage.getItem("currentRound")) || 0;
         const roundCount = Number(localStorage.getItem("roundCount")) || 1;
@@ -1197,7 +1286,12 @@ if (nextBtn) {
 
           alert(`${localStorage.getItem("player1Name") || "Player 1"} ist mit Runde ${currentRound + 1} fertig. Jetzt spielt ${localStorage.getItem("player2Name") || "Player 2"} dieselbe Runde.`);
 
-          window.location.href = "./fragen.html";
+          if ((localStorage.getItem("selectedCategory") == "musician") || (localStorage.getItem("selectedCategory") == "actor")) {
+            window.location.href = "./fragenBild.html";
+          } else {
+            window.location.href = "./fragen.html";
+          }
+          
         } else {
           localStorage.setItem("p2Correct", oldP2Correct + correctAnswers);
           localStorage.setItem("p2Wrong", oldP2Wrong + wrongAnswers);
@@ -1210,7 +1304,12 @@ if (nextBtn) {
 
             alert(`Runde ${currentRound + 1} startet. ${localStorage.getItem("player1Name") || "Player 1"} beginnt.`);
 
-            window.location.href = "./fragen.html";
+            if ((localStorage.getItem("selectedCategory") == "musician") || (localStorage.getItem("selectedCategory") == "actor")) {
+              window.location.href = "./fragenBild.html";
+            } else {
+              window.location.href = "./fragen.html";
+            }
+            
           } else {
             const p1CorrectTotal = Number(localStorage.getItem("p1Correct")) || 0;
             const p1WrongTotal = Number(localStorage.getItem("p1Wrong")) || 0;
@@ -1252,7 +1351,7 @@ if (menuBtn) {
 }
 
 // Überprüft, ob aktuelle Fragen-Seite sind und zeigt die erste Frage an
-if (window.location.pathname.includes("fragen.html")) {
+if (window.location.pathname.includes("fragen.html") || window.location.pathname.includes("fragenBild.html")) {
   currentQuestionIndex = 0;
   correctAnswers = 0;
   wrongAnswers = 0;
@@ -1383,12 +1482,13 @@ if (restartBtn) {
       localStorage.removeItem("p2Correct");
       localStorage.removeItem("p2Wrong");
       localStorage.removeItem("p2Percentage");
+      }
 
-      window.location.href = "./fragen.html";
-      return;
-    }
-
-    window.location.href = "./fragen.html";
+      if ((localStorage.getItem("selectedCategory") == "musician") || (localStorage.getItem("selectedCategory") == "actor")) {
+        window.location.href = "./fragenBild.html";
+      } else {
+        window.location.href = "./fragen.html";
+      }
   });
 }
 
@@ -1452,3 +1552,5 @@ if (p1Correct > p2Correct) {
   player1Card?.classList.add("draw-card");
   player2Card?.classList.add("draw-card");
 }
+
+console.log("current site: " + window.location.pathname)

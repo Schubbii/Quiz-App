@@ -731,6 +731,13 @@ dialog {
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.12);
   position: static;
+  align-items: center;
+  justify-content: center;
+}
+
+#wikiemediaQuestionImage {
+  height: 90%;
+  max-width: 95%;
 }
 
 .layoutButtonsNeu {
@@ -793,3 +800,4 @@ dialog {
   justify-content: space-between;
   gap: 20px;
 }
+
