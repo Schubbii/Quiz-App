@@ -27,31 +27,122 @@ const player1NameInput = document.getElementById("player1-name");
 const player2NameInput = document.getElementById("player2-name");
 const playerDisplay = document.getElementById("player-display");
 
-const bgMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
-const bgMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
-const bgMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
+const bgTimerMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
+const bgTimerMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
+const bgTimerMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
 
 
-function resetMusic () {
-  bgMusic1.pause();         //laufende Audios pausieren und zurück and den Anfang setzen
-        bgMusic1.currentTime = 0;
-        bgMusic2.pause();
-        bgMusic2.currentTime = 0;
-        bgMusic3.pause();
-        bgMusic3.currentTime = 0;
+// console.log("localStorage.getItem('firstOpen'): " + localStorage.getItem("firstOpen"));
+// console.log(localStorage.getItem("firstOpen"));
+
+// if (localStorage.getItem("firstOpen") == null) {
+//   localStorage.setItem("firstOpen", false);
+//   localStorage.setItem("musicMuted", false);
+// }
+
+// console.log("localStorage.getItem('musicMuted'): " + localStorage.getItem("musicMuted"))
+
+// if ((localStorage.getItem("musicMuted")) == "true") {
+//   console.log("trotzdem ausgefuehrt");
+//   bgTimerMusic1.volume = 0;
+//   bgTimerMusic2.volume = 0;
+//   bgTimerMusic3.volume = 0;
+
+//   window.audio.stopMusic("lobbyBackground");  
+
+//   document.getElementById("musicToggle").checked = true;
+//   console.log("hacken wurde gesetzt");
+// }
+
+// console.log("Musik stumm: " + document.getElementById("musicToggle").checked);
+
+// if (document.getElementById("musicToggle")) {
+//   document.getElementById("musicToggle").onchange = event => {
+
+//     if (document.getElementById("musicToggle").checked == true) {
+//       bgTimerMusic1.volume = 0;
+//       bgTimerMusic2.volume = 0;
+//       bgTimerMusic3.volume = 0;
+
+//       window.audio.stopMusic("lobbyBackground");
+//       localStorage.setItem("musicMuted", "true");
+//     }
+
+//     if (document.getElementById("musicToggle").checked == false) {
+//       bgTimerMusic1.volume = 1;
+//       bgTimerMusic2.volume = 1;
+//       bgTimerMusic3.volume = 1;
+
+//       window.audio.playMusic("lobbyBackground");
+//       localStorage.setItem("musicMuted", "false");
+//     }
+//   };
+// };
+
+if (localStorage.getItem("musicMuted") == "true") {
+  bgTimerMusic1.volume = 0;
+  bgTimerMusic2.volume = 0;
+  bgTimerMusic3.volume = 0;
+
+  window.audio.stopMusic("lobbyBackground");
+
+  localStorage.setItem("musicMuted", "true");
+
+  if (document.getElementById("musicToggle")) {
+    document.getElementById("musicToggle").checked = true;
+  }
+}
+
+if (document.getElementById("musicToggle")) {
+  document.getElementById("musicToggle").onchange = event => {
+    if (document.getElementById("musicToggle").checked == true) {
+      bgTimerMusic1.volume = 0;
+      bgTimerMusic2.volume = 0;
+      bgTimerMusic3.volume = 0;
+
+      window.audio.stopMusic("lobbyBackground");
+
+      localStorage.setItem("musicMuted", "true");
+    }
+
+    if (document.getElementById("musicToggle").checked == false) {
+      bgTimerMusic1.volume = 1;
+      bgTimerMusic2.volume = 1;
+      bgTimerMusic3.volume = 1;
+
+      window.audio.playMusic("lobbyBackground");
+
+      localStorage.setItem("musicMuted", "false");
+    }
+  }
+}
+
+
+
+function resetTimerMusic() {
+  bgTimerMusic1.pause();         //laufende Audios pausieren und zurück and den Anfang setzen
+  bgTimerMusic1.currentTime = 0;
+  bgTimerMusic2.pause();
+  bgTimerMusic2.currentTime = 0;
+  bgTimerMusic3.pause();
+  bgTimerMusic3.currentTime = 0;
+}
+
+if (!(window.location.pathname.includes("menu.html") || window.location.pathname.includes("multiplayer.html") || window.location.pathname.includes("start.html"))) {
+  window.audio.stopMusic("lobbyBackground");
 }
 
 document.querySelectorAll("button").forEach(btn => {
   btn.onmouseover = event => {
-    window.uiSound.play("buttonHover");
+    window.audio.playSound("buttonHover");
   }
 
   btn.onmousedown = event => {
-    window.uiSound.play("buttonClick");
+    window.audio.playSound("buttonClick");
   }
 
   btn.onmouseup = event => {
-    window.uiSound.play("buttonRelease");
+    window.audio.playSound("buttonRelease");
   }
 });
 
@@ -742,15 +833,15 @@ function showQuestion() {
     document.querySelectorAll("button").forEach(btn => {
 
       button.onmouseover = event => {
-        window.uiSound.play("buttonHover");
+        window.audio.playSound("buttonHover");
       }
 
       button.onmousedown = event => {
-        window.uiSound.play("buttonClick");
+        window.audio.playSound("buttonClick");
       }
 
       button.onmouseup = event => {
-        window.uiSound.play("buttonRelease");
+        window.audio.playSound("buttonRelease");
       }
     });
 
@@ -786,7 +877,7 @@ function showQuestion() {
 
       if (nextBtn) {
         nextBtn.classList.remove("hidden");
-        resetMusic();
+        resetTimerMusic();
         //questionDone.play();
       }
     });
@@ -796,9 +887,9 @@ function showQuestion() {
 
   startTimer();
   // output("questionCount: " + questionCount);
-  if(localStorage.getItem("questionCount") >= (0.6 * questionCountInput)) {bgMusic3.play()} else {
-    if (localStorage.getItem("questionCount") >= (0.3 * questionCountInput)) {bgMusic2.play()} else {  
-      bgMusic1.play();
+  if(localStorage.getItem("questionCount") >= (0.6 * questionCountInput)) {bgTimerMusic3.play()} else {
+    if (localStorage.getItem("questionCount") >= (0.3 * questionCountInput)) {bgTimerMusic2.play()} else {  
+      bgTimerMusic1.play();
     }
   }
 }
@@ -816,10 +907,16 @@ if (window.location.pathname.includes("start.html")) {
     if (hauptmenue) {
       hauptmenue.classList.remove("hidden");
     }
+
+
+    if (localStorage.getItem("musicMuted") == "false") {
+      window.audio.playMusic("lobbyBackground");
+    }
+
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
       logoAnimation.addEventListener("loadedmetadata", () => {
-        const targetDuration = 2; // gewünschte Dauer in Sekunden
+        const targetDuration = 0; // gewünschte Dauer in Sekunden
         logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
       });
 
@@ -827,6 +924,11 @@ if (window.location.pathname.includes("start.html")) {
         startAnimation.style.display = "none";
         hauptmenue.classList.remove("hidden");
         sessionStorage.setItem("animationPlayed", "true");
+
+        if (localStorage.getItem("musicMuted") == "false") {
+          window.audio.playMusic("lobbyBackground");
+        }
+        
       });
     }
   }
@@ -836,8 +938,8 @@ if (window.location.pathname.includes("start.html")) {
 // Startet Quiz
 if (playButton) {
   playButton.addEventListener("click", () => {
-    window.location.href = "./fragenBild.html";
-    resetMusic();
+    window.location.href = "./fragen.html";
+    resetTimerMusic();
   });
 }
 
@@ -845,7 +947,7 @@ if (playButton) {
 if (nextBtn) {
   nextBtn.addEventListener("click", () => {
     stopTimer();
-    resetMusic();
+    resetTimerMusic();
     currentQuestionIndex++;
 
         if (currentQuestionIndex < quizQuestions.length) {

@@ -3,7 +3,15 @@ const { contextBridge, ipcRenderer } = require('electron');
 const API_BASE_URL = "https://quiz-api-server-production-bdfd.up.railway.app";
 const ADMIN_TOKEN = 'Schubbii';
 
-const allowedSounds = new Set(["buttonHover", "buttonClick", "buttonRelease"]);
+const allowedSounds = new Set([
+  "buttonHover",
+  "buttonClick",
+  "buttonRelease",
+]);
+
+const allowedMusic = new Set([
+  "lobbyBackground",
+]);
 
 async function apiRequest(path, options = {}) {
   const headers = {
@@ -60,9 +68,24 @@ contextBridge.exposeInMainWorld('quizAPI', {
     }),
 });
 
-contextBridge.exposeInMainWorld("uiSound", {
-  play(soundName) {
+contextBridge.exposeInMainWorld("audio", {
+  playSound(soundName) {
     if (!allowedSounds.has(soundName)) return;
-    ipcRenderer.send("ui-sound:play", soundName);
+    ipcRenderer.send("sound:play", soundName);
+  },
+
+  playMusic(musicName) {
+    if (!allowedMusic.has(musicName)) return;
+    ipcRenderer.send("music:play", musicName);
+  },
+
+  stopMusic(musicName) {
+    if (!allowedMusic.has(musicName)) return;
+    ipcRenderer.send("music:stop", musicName);
+  },
+
+  pauseMusic(musicName) {
+    if (!allowedMusic.has(musicName)) return;
+    ipcRenderer.send("music:pause", musicName);
   },
 });
