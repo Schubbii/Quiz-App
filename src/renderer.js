@@ -847,6 +847,8 @@ if (startQuizBtn) {
     if (isMultiplayer) {
       localStorage.setItem("currentPlayer", "1");
       localStorage.setItem("currentRound", "0");
+
+      alert("Im Multiplayer-Modus treten beide Spieler mit denselben Fragen gegeneinander an. Jede Runde startet zuerst Spieler 1, danach ist Spieler 2 an der Reihe.");
     }
 
     console.log("selectedCategory: " + selectedCategory);
