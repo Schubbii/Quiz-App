@@ -972,7 +972,7 @@ let wrongAnswers = 0;
 let quizQuestions = [];
 let timerInterval = null;
 let timeLeft = 15;
-const QUESTION_TIME = 11;
+const QUESTION_TIME = 10;
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
