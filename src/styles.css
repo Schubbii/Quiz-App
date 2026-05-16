@@ -742,7 +742,7 @@ dialog {
 
 .layoutButtonsNeu {
   max-width: 320px;
-  min-height: 45px;
+  min-height: 530px;
   display: flex;
   width: 100%;
   gap: 20px;
@@ -758,10 +758,39 @@ dialog {
   gap: 30px;
 }
 
-#answers {
+#answers.answersImage {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  min-height: 414px;
+}
+
+#answers.answersGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.layoutButtonsNeu #answers.answersGrid {
+  max-width: 900px;
+}
+
+.layoutNeu:has(.image.hidden) {
+  width: 100%;
+  justify-content: center;
+}
+
+.layoutNeu:has(.image.hidden) .layoutButtonsNeu {
+  max-width: 900px;
+  min-height: 260px;
+  align-items: center;
+}
+
+.layoutNeu:has(.image.hidden) #next-btn,
+.layoutNeu:has(.image.hidden) #menu-btn {
+  align-self: center;
 }
 
 .rectangleQuestionKleiner {

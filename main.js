@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
+const fs = require('fs/promises');
 const path = require('path');
 
 let audioWindow;
@@ -105,6 +106,12 @@ ipcMain.on("music:stop", (_event, musicName) => {
 
 ipcMain.on("music:pause", (_event, musicName) => {
   sendToAudioWindow("music:pause", musicName);
+});
+
+ipcMain.handle("mediawiki:getLinks", async () => {
+  const filePath = path.join(__dirname, "src", "database", "mediawikiLinks.json");
+  const fileContent = await fs.readFile(filePath, "utf-8");
+  return JSON.parse(fileContent);
 });
 
 

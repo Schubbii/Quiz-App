@@ -1,7 +1,8 @@
 let WikiMediaObject;
 
 let usedPersons = []
-usedPersons = JSON.parse(sessionStorage.getItem("usedWikiPersons") || []);
+usedPersons = JSON.parse(sessionStorage.getItem("usedWikiPersons") || "[]");
+sessionStorage.setItem("usedWikiPersons", JSON.stringify(usedPersons));
 
 document.getElementById("jsonFile").addEventListener("change", async (event) => {
     const inputFile = event.target.files[0];
@@ -10,11 +11,12 @@ document.getElementById("jsonFile").addEventListener("change", async (event) => 
 });
 
 async function fetchWikimedia(pageTitle) {
-    const pageData = await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + pageTitle);
+    const pageData = await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(pageTitle));
     const pageJson = await pageData.json();
-    const imageURL = await pageJson.thumbnail.source;
-    await console.log(pageJson.thumbnail.source);
-    document.getElementById("wikiemediaQuestionImage").src = await pageJson.thumbnail.source;
+    if (pageJson.thumbnail?.source) {
+        console.log(pageJson.thumbnail.source);
+        document.getElementById("wikiemediaQuestionImage").src = pageJson.thumbnail.source;
+    }
 }
 
 function output(input) {
@@ -23,6 +25,11 @@ function output(input) {
 
 function buttonPressed() {
     const typething = "actor";
+
+    if (!Array.isArray(WikiMediaObject)) {
+        alert("Bitte zuerst die mediawikiLinks.json laden.");
+        return;
+    }
 
     output("sessionStorage.getItem('usedWikiPersons').length: " + JSON.parse(sessionStorage.getItem("usedWikiPersons")).length);
     output("sessionStorage.getItem('usedWikiPersons'): " + JSON.parse(sessionStorage.getItem("usedWikiPersons")));
@@ -56,6 +63,7 @@ function buttonPressed() {
     let answerPacket = generateAAAI(correctPerson, falsePersons);
     console.log(answerPacket);
     let questionString = "Was ist der Name der auf dem Bild dargestellten Person?"
+    document.getElementById("questionString").innerText = questionString;
 
     for (let i = 0; i < answerPacket[1].length; i++) {
         if (i == answerPacket[0]) {
