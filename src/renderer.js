@@ -1206,7 +1206,7 @@ if (window.location.pathname.includes("start.html")) {
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
       logoAnimation.addEventListener("loadedmetadata", () => {
-        const targetDuration = 0; // gewünschte Dauer in Sekunden
+        const targetDuration = 1; // gewünschte Dauer in Sekunden
         logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
       });
 
@@ -1353,7 +1353,7 @@ if (menuBtn) {
 }
 
 // Überprüft, ob aktuelle Fragen-Seite sind und zeigt die erste Frage an
-if (window.location.pathname.includes("fragen.html") || window.location.pathname.includes("fragenBild.html")) {
+if (window.location.pathname.includes("fragen.html")) {
   currentQuestionIndex = 0;
   correctAnswers = 0;
   wrongAnswers = 0;
