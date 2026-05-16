@@ -4,11 +4,57 @@
     
 
     <body>
+        <label for="jsonFile">load external json file</label>
+        <input type="file" id="jsonFile" name="jsonFile">
+        <br><br>
         <button onclick="buttonPressed()">Fragen ausgeben</button>
-        <p id="tokenDisplay">test</p>
+        <button onclick="clearPersons()">clear session storage</button>
+        <p id="questionString">test</p>
+        <p id="correctAnswer" style="color:green">test</p>
+        <p id="falseAnswers" style="color:red">test</p>
+
+
+        <img id="wikiemediaQuestionImage" src="https://placehold.co/600x400/orange/white">
+        
+        
+        
+        
+        <br><br><br><br><br><br><br>
+        <label for="displayName">Display Name</label>
+        <input type="text" id="displayName" name="displayName">
+        <br>
+        <label for="wikiLink">wiki Link</label>
+        <input type="text" id="wikiLink" name="wikiLink">
+        <br>
+        <label for="female">female</label>
+        <input type="radio" name="gender" id="genderFemale" value="female">
+        <label for="male">male</label>
+        <input type="radio" name="gender" id="genderMale" value="male">
+        <br>
+        <label for="musician">Musician</label>
+        <input type="radio" name="type" id="typeMusician" value="musician">
+        <label for="actor">Actor</label>
+        <input type="radio" name="type" id="typeActor" value="actor">
+        <br>
+        <br>
+        <button id="pushData" onclick="pushData()">push Data</button>
+        <button onclick="setupData()">Setup Data</button>
+        <button onclick="loadData()">Load Data</button>
+        <!-- <button onclick="loadFileData()">Load Clipboard Data</button> -->
+        <br><br>
+        
+
+        <br><br><br><br>
+        <button id="copyButton" onclick="copyData()">Copy Data</button>
+        <button id="showData" onclick="showData()">Show Data</button>
+        <button id="clearData" onclick="clearData()">Clear Data</button>
+        <p id="dataPlaceholder">Data Placeholder</p>
+
     </body>
 
-    <script src="wikimediaTests.js"></script>
 
-    <img id="wikiemediaQuestionImage" src="https://placehold.co/600x400/orange/white">
+
+
+    <script src="wikimediaTests.js"></script>
+    <script src="handlers/mediawikiHandler.js"></script>
 </html>
