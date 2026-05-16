@@ -5,6 +5,16 @@ const startAnimation = document.getElementById("Startanimation");
 const logoAnimation = document.getElementById("Logoanimation");
 const hauptmenue = document.getElementById("Hauptmenue");
 
+if (window.location.pathname.includes("start.html") && startAnimation && hauptmenue) {
+  setTimeout(() => {
+    if (startAnimation.style.display !== "none") {
+      startAnimation.style.display = "none";
+      hauptmenue.classList.remove("hidden");
+      sessionStorage.setItem("animationPlayed", "true");
+    }
+  }, 5000);
+}
+
 const adminBtn = document.getElementById("admin-btn");
 const playButton = document.querySelector(".playBtn");
 const menuBtn = document.getElementById("menu-btn");
@@ -30,6 +40,37 @@ const playerDisplay = document.getElementById("player-display");
 const bgTimerMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
 const bgTimerMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
 const bgTimerMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
+
+const WIKIMEDIA_CATEGORIES = {
+  musician: "Sänger & Musiker",
+  actor: "Schauspieler",
+};
+
+function isWikimediaCategory(category) {
+  return Object.prototype.hasOwnProperty.call(WIKIMEDIA_CATEGORIES, category);
+}
+
+function getQuestionPageForCategory(category) {
+  return isWikimediaCategory(category) ? "./fragenBild.html" : "./fragen.html";
+}
+
+function getCategoryLabel(category) {
+  if (!category || category === "all") return "Alle Kategorien";
+
+  return WIKIMEDIA_CATEGORIES[category] || category;
+}
+
+function goToQuestionPage() {
+  window.location.href = getQuestionPageForCategory(localStorage.getItem("selectedCategory"));
+}
+
+function parseJsonOrFallback(value, fallback) {
+  try {
+    return value ? JSON.parse(value) : fallback;
+  } catch (error) {
+    return fallback;
+  }
+}
 
 
 // console.log("localStorage.getItem('firstOpen'): " + localStorage.getItem("firstOpen"));
@@ -84,7 +125,7 @@ if (localStorage.getItem("musicMuted") == "true") {
   bgTimerMusic2.volume = 0;
   bgTimerMusic3.volume = 0;
 
-  window.audio.stopMusic("lobbyBackground");
+  window.audio?.stopMusic("lobbyBackground");
 
   localStorage.setItem("musicMuted", "true");
 
@@ -100,7 +141,7 @@ if (document.getElementById("musicToggle")) {
       bgTimerMusic2.volume = 0;
       bgTimerMusic3.volume = 0;
 
-      window.audio.stopMusic("lobbyBackground");
+      window.audio?.stopMusic("lobbyBackground");
 
       localStorage.setItem("musicMuted", "true");
     }
@@ -110,7 +151,7 @@ if (document.getElementById("musicToggle")) {
       bgTimerMusic2.volume = 1;
       bgTimerMusic3.volume = 1;
 
-      window.audio.playMusic("lobbyBackground");
+      window.audio?.playMusic("lobbyBackground");
 
       localStorage.setItem("musicMuted", "false");
     }
@@ -129,20 +170,20 @@ function resetTimerMusic() {
 }
 
 if (!(window.location.pathname.includes("menu.html") || window.location.pathname.includes("multiplayer.html") || window.location.pathname.includes("start.html"))) {
-  window.audio.stopMusic("lobbyBackground");
+  window.audio?.stopMusic("lobbyBackground");
 }
 
 document.querySelectorAll("button").forEach(btn => {
   btn.onmouseover = event => {
-    window.audio.playSound("buttonHover");
+    window.audio?.playSound("buttonHover");
   }
 
   btn.onmousedown = event => {
-    window.audio.playSound("buttonClick");
+    window.audio?.playSound("buttonClick");
   }
 
   btn.onmouseup = event => {
-    window.audio.playSound("buttonRelease");
+    window.audio?.playSound("buttonRelease");
   }
 });
 
@@ -511,7 +552,7 @@ let WikiMediaObject;
 
 let usedPersons = []
 
-usedPersons = JSON.parse(sessionStorage.getItem("usedWikiPersons") ?? "[]");
+usedPersons = parseJsonOrFallback(sessionStorage.getItem("usedWikiPersons"), []);
 sessionStorage.setItem("usedWikiPersons", JSON.stringify(usedPersons))
 
 try {
@@ -525,15 +566,53 @@ try {
 
 }
 
+async function loadWikimediaData() {
+  if (Array.isArray(WikiMediaObject) && WikiMediaObject.length > 0) {
+    return WikiMediaObject;
+  }
+
+  const storedData = sessionStorage.getItem("WikiMediaObject");
+  if (storedData) {
+    WikiMediaObject = parseJsonOrFallback(storedData, []);
+    return WikiMediaObject;
+  }
+
+  if (window.mediawikiAPI?.getLinks) {
+    WikiMediaObject = await window.mediawikiAPI.getLinks();
+  } else {
+    const response = await fetch("./database/mediawikiLinks.json");
+    WikiMediaObject = await response.json();
+  }
+
+  if (!Array.isArray(WikiMediaObject)) {
+    throw new Error("Wikimedia-Daten konnten nicht geladen werden.");
+  }
+
+  sessionStorage.setItem("WikiMediaObject", JSON.stringify(WikiMediaObject));
+  return WikiMediaObject;
+}
+
+function getWikimediaCategoryCount(category) {
+  if (!Array.isArray(WikiMediaObject)) return 0;
+
+  return WikiMediaObject.filter((person) => person.type === category).length;
+}
+
 
 async function fetchWikimediaImage(pageTitle) {
-  const pageData = await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + pageTitle);
-  const pageJson = await pageData.json();
-  const imageURL = await pageJson.thumbnail.source;
-  await console.log(pageJson.thumbnail.source);
+  const imageElement = document.getElementById("wikiemediaQuestionImage");
+  if (!imageElement) return;
 
   try {
-    document.getElementById("wikiemediaQuestionImage").src = await pageJson.thumbnail.source;
+    const pageData = await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(pageTitle));
+    const pageJson = await pageData.json();
+
+    if (pageJson.thumbnail?.source) {
+      imageElement.src = pageJson.thumbnail.source;
+    } else {
+      imageElement.removeAttribute("src");
+      console.log("No Wikimedia thumbnail found for: " + pageTitle);
+    }
   } catch (error) {
     console.log("Could not display Image: " + error);
   }
@@ -548,12 +627,21 @@ function getWikimediaQuestion(typething) {
   output("sessionStorage.getItem('usedWikiPersons').length: " + usedPersons.length);
   output("sessionStorage.getItem('usedWikiPersons'): " + usedPersons);
 
-  WikiMediaObject = JSON.parse(sessionStorage.getItem("WikiMediaObject"));
+  if (!Array.isArray(WikiMediaObject)) {
+    const storedData = sessionStorage.getItem("WikiMediaObject");
+    WikiMediaObject = parseJsonOrFallback(storedData, []);
+  }
 
-  output("WikiMediaObject.filter(obj => obj.type === typething).length: " + WikiMediaObject.filter(obj => obj.type === typething).length);
-  output("WikiMediaObject.filter(obj => obj.type === typething): " + WikiMediaObject.filter(obj => obj.type === typething));
+  if (!Array.isArray(WikiMediaObject) || WikiMediaObject.length === 0) {
+    throw new Error("Wikimedia-Daten wurden noch nicht geladen.");
+  }
 
-  if (usedPersons.length >= WikiMediaObject.filter(obj => obj.type === typething).length) {
+  const peopleForType = WikiMediaObject.filter(obj => obj.type === typething);
+
+  output("WikiMediaObject.filter(obj => obj.type === typething).length: " + peopleForType.length);
+  output("WikiMediaObject.filter(obj => obj.type === typething): " + peopleForType);
+
+  if (usedPersons.length >= peopleForType.length) {
     clearPersons();
   }
 
@@ -582,86 +670,37 @@ function getWikimediaQuestion(typething) {
     question: questionString,
     answers: answerPacket[1],
     correctAnswerIndex: answerPacket[0],
+    category: typething,
+    difficulty: "Wikimedia",
     imageWikiLink: correctPerson.wikiLink
   })
   return questionObject;
 }
 
 function generatePerson(type) {
+  const peopleForType = WikiMediaObject.filter((person) => person.type === type);
 
-  // Questionstypes:
-  // 0: Male Musician
-  // 1: Female Musician
-  // 2: Male Actor
-  // 3: Female Actor
-
-  let questionType = Math.floor(Math.random() * 4);
-  let testPerson;
-
-  testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)];
-
-  if (type == "musician") {
-    while (questionType > 1) {
-      questionType = Math.floor(Math.random() * 4);
-    }
-  } else if (type == "actor") {
-    while (questionType < 2) {
-      questionType = Math.floor(Math.random() * 4);
-    }
+  if (peopleForType.length === 0) {
+    throw new Error(`Keine Wikimedia-Personen für Kategorie ${type} gefunden.`);
   }
 
-  switch (questionType) {
-    case 0:
-      while ((testPerson.gender != "male") || (testPerson.type != "musician")) {
-        testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
-      }
-      break;
-
-    case 1:
-      while ((testPerson.gender != "female") || (testPerson.type != "musician")) {
-        testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
-      }
-      break;
-
-    case 2:
-      while ((testPerson.gender != "male") || (testPerson.type != "actor")) {
-        testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
-      }
-      break;
-
-    case 3:
-      while ((testPerson.gender != "female") || (testPerson.type != "actor")) {
-        testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)]
-      }
-      break;
-    default:
-      console.log("error: you should never see this");
-  }
-  return testPerson;
-
+  return peopleForType[Math.floor(Math.random() * peopleForType.length)];
 }
 
 
 function generateFalsePersons(inputPerson) {
-  let falsePersons = [];
-  let testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)];
-  let runawayint = 0;
-  while (falsePersons.length < 3) {
-    if ((testPerson.gender != inputPerson.gender) || (testPerson.type != inputPerson.type) || (falsePersons.includes(testPerson)) || (testPerson == inputPerson)) {
-      testPerson = WikiMediaObject[Math.floor(Math.random() * WikiMediaObject.length)];
+  const possibleFalsePersons = WikiMediaObject.filter((person) =>
+    person.type === inputPerson.type &&
+    person.gender === inputPerson.gender &&
+    person.displayName !== inputPerson.displayName
+  );
 
-    } else if ((testPerson.gender == inputPerson.gender) && (testPerson.type == inputPerson.type) && !(falsePersons.includes(testPerson)) && !(testPerson == inputPerson)) {
-      falsePersons.push(testPerson);
-    } else {
-      console.log("das sollte nie passieren hoffentlich")
-      runawayint += 1;
-      if (runawayint >= 5000) {
-        throw new Error("programm war am weglaufen")
-      }
-    }
+  if (possibleFalsePersons.length < 3) {
+    throw new Error(`Zu wenige falsche Antworten für ${inputPerson.displayName} gefunden.`);
   }
 
-  return falsePersons;
+  shuffleArray(possibleFalsePersons);
+  return possibleFalsePersons.slice(0, 3);
 }
 
 function generateAAAI(correctPersonInput, falsePersonsInput) {
@@ -694,6 +733,7 @@ function clearPersons() {
 async function setQuizSettings() {
   try {
     const questions = await window.quizAPI.getQuestions();
+    await loadWikimediaData();
 
     // Kategorien automatisch aus allen Fragen holen
     const categories = [...new Set(
@@ -704,9 +744,18 @@ async function setQuizSettings() {
 
     // Kategorie-Dropdown füllen
     if (categorySelect) {
-      categorySelect.innerHTML = '<option value="all">Alle Kategorien</option> <option value="musician">Sänger & Musiker</option> <option value="actor">Schauspieler</option>';
+      categorySelect.innerHTML = '<option value="all">Alle Kategorien</option>';
+
+      Object.entries(WIKIMEDIA_CATEGORIES).forEach(([value, label]) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        categorySelect.appendChild(option);
+      });
 
       categories.forEach((category) => {
+        if (isWikimediaCategory(category)) return;
+
         const option = document.createElement("option");
         option.value = category;
         option.textContent = category;
@@ -715,7 +764,7 @@ async function setQuizSettings() {
     }
 
     // Maximalwert für Fragenanzahl setzen
-    function updateMaxQuestions() {
+    async function updateMaxQuestions() {
       const selectedCategory = categorySelect ? categorySelect.value : "all";
 
       const filteredQuestions =
@@ -750,7 +799,7 @@ async function setQuizSettings() {
         maxCount = 30;
       }
 
-      if ((selectedCategory == "musician") || selectedCategory == "actor") {
+      if (isWikimediaCategory(selectedCategory)) {
         // Da beim erstmaligen Auswählen von der Kategorie "musician" oder "actor" die Fragen geladen werden müssen, wird das Starten kurz blockiert, damit das Quiz nicht ohne Fragen startet
 
         if (!(WikiMediaObject)) {
@@ -768,7 +817,8 @@ async function setQuizSettings() {
             }
           }, 50)
         }
-        maxCount = 30;
+        await loadWikimediaData();
+        maxCount = getWikimediaCategoryCount(selectedCategory);
       }
 
 
@@ -786,7 +836,7 @@ async function setQuizSettings() {
       }
     }
 
-    updateMaxQuestions();
+    await updateMaxQuestions();
 
     if (categorySelect) {
       categorySelect.addEventListener("change", updateMaxQuestions);
@@ -851,11 +901,7 @@ if (startQuizBtn) {
 
     console.log("selectedCategory: " + selectedCategory);
 
-    if ((localStorage.getItem("selectedCategory") == "musician") || (localStorage.getItem("selectedCategory") == "actor")) {
-      window.location.href = "./fragenBild.html";
-    } else {
-      window.location.href = "./fragen.html"
-    };
+    goToQuestionPage();
 
   });
 }
@@ -886,6 +932,7 @@ async function loadQuestions() {
     const selectedCategory = localStorage.getItem("selectedCategory") || "all";
     const gameMode = localStorage.getItem("gameMode") || "single";
     const currentPlayer = localStorage.getItem("currentPlayer") || "1";
+    let availableQuestionCount = questions.length;
 
     if (selectedCategory !== "all") {
       if (selectedCategory === "Geografie") {
@@ -894,41 +941,17 @@ async function loadQuestions() {
         }
 
         questions = [];
-
-        for (let i = 0; i < count; i++) {
-          const geoQuestion = await fetchGeoQuestion()[0];
-          await questions.push(geoQuestion);
-        }
-      } else if (selectedCategory === "musician") {
-        if (!WikiMediaObject) {
-          await WikiMediaObject;
-        }
+        availableQuestionCount = 30;
+      } else if (isWikimediaCategory(selectedCategory)) {
+        await loadWikimediaData();
 
         questions = [];
-
-        for (let i = 0; i < count; i++) {
-          const wikiMediaQuestion = await getWikimediaQuestion(selectedCategory)[0];
-          await questions.push(wikiMediaQuestion);
-        }
-
-
-      } else if (selectedCategory === "actor") {
-        if (!WikiMediaObject) {
-          await WikiMediaObject;
-        }
-
-        questions = [];
-
-        for (let i = 0; i < count; i++) {
-          const wikiMediaQuestion = await getWikimediaQuestion(selectedCategory)[0];
-          await questions.push(wikiMediaQuestion);
-        }
-
-
+        availableQuestionCount = getWikimediaCategoryCount(selectedCategory);
       } else{
         questions = questions.filter((question) => {
           return String(question.category || "").trim() === selectedCategory;
         });
+        availableQuestionCount = questions.length;
       }
 
       //  {
@@ -959,11 +982,7 @@ async function loadQuestions() {
               for (let i = 0; i < count; i++) {
                 roundQuestions.push(fetchGeoQuestion()[0]);
               }
-            } else if (selectedCategory === "musician") {
-              for (let i = 0; i < count; i++) {
-                roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
-              }
-            } else if (selectedCategory === "actor") {
+            } else if (isWikimediaCategory(selectedCategory)) {
               for (let i = 0; i < count; i++) {
                 roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
               }
@@ -992,11 +1011,7 @@ async function loadQuestions() {
           for (let i = 0; i < count; i++) {
             roundQuestions.push(fetchGeoQuestion()[0]);
           }
-        } else if (selectedCategory === "musician") {
-          for (let i = 0; i < count; i++) {
-            roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
-          }
-        } else if (selectedCategory === "actor") {
+        } else if (isWikimediaCategory(selectedCategory)) {
           for (let i = 0; i < count; i++) {
             roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
           }
@@ -1020,8 +1035,8 @@ async function loadQuestions() {
       return;
     }
 
-    if (count > questions.length) { 
-      alert(`Es gibt nur ${questions.length} Fragen.`);
+    if (count > availableQuestionCount) { 
+      alert(`Es gibt nur ${availableQuestionCount} Fragen.`);
     }
 
     currentQuestionIndex = 0;
@@ -1066,10 +1081,14 @@ function showQuestion() {
   if (!questionFrame || !answersEl || currentQuestionIndex >= quizQuestions.length) return;
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
+  const isWikimediaQuestion = Boolean(currentQuestion.imageWikiLink);
+
+  answersEl.classList.toggle("answersImage", isWikimediaQuestion);
+  answersEl.classList.toggle("answersGrid", !isWikimediaQuestion);
 
   if (
     window.location.pathname.includes("fragenBild.html") &&
-    currentQuestion.imageWikiLink
+    isWikimediaQuestion
   ) {
     fetchWikimediaImage(currentQuestion.imageWikiLink);
   }
@@ -1121,15 +1140,15 @@ function showQuestion() {
     document.querySelectorAll("button").forEach(btn => {
 
       button.onmouseover = event => {
-        window.audio.playSound("buttonHover");
+        window.audio?.playSound("buttonHover");
       }
 
       button.onmousedown = event => {
-        window.audio.playSound("buttonClick");
+        window.audio?.playSound("buttonClick");
       }
 
       button.onmouseup = event => {
-        window.audio.playSound("buttonRelease");
+        window.audio?.playSound("buttonRelease");
       }
     });
 
@@ -1198,26 +1217,47 @@ if (window.location.pathname.includes("start.html")) {
 
 
     if (localStorage.getItem("musicMuted") == "false") {
-      window.audio.playMusic("lobbyBackground");
+      window.audio?.playMusic("lobbyBackground");
     }
 
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
-      logoAnimation.addEventListener("loadedmetadata", () => {
-        const targetDuration = 0; // gewünschte Dauer in Sekunden
-        logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
-      });
+      let introDone = false;
 
-      logoAnimation.addEventListener("ended", () => {
+      const showStartMenu = () => {
+        if (introDone) return;
+
+        introDone = true;
         startAnimation.style.display = "none";
         hauptmenue.classList.remove("hidden");
         sessionStorage.setItem("animationPlayed", "true");
 
         if (localStorage.getItem("musicMuted") == "false") {
-          window.audio.playMusic("lobbyBackground");
+          window.audio?.playMusic("lobbyBackground");
         }
+      };
 
-      });
+      const speedUpIntro = () => {
+        const targetDuration = 1; // gewünschte Dauer in Sekunden
+
+        if (Number.isFinite(logoAnimation.duration) && logoAnimation.duration > 0) {
+          logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
+        }
+      };
+
+      logoAnimation.addEventListener("loadedmetadata", speedUpIntro);
+      logoAnimation.addEventListener("ended", showStartMenu);
+      logoAnimation.addEventListener("error", showStartMenu);
+
+      if (logoAnimation.readyState >= 1) {
+        speedUpIntro();
+      }
+
+      if (logoAnimation.ended) {
+        showStartMenu();
+      }
+
+      setTimeout(showStartMenu, 5000);
     }
   }
 }
@@ -1226,11 +1266,7 @@ if (window.location.pathname.includes("start.html")) {
 // Startet Quiz
 if (playButton) {
   playButton.addEventListener("click", () => {
-    if ((localStorage.getItem("selectedCategory") == "musician") || (localStorage.getItem("selectedCategory") == "actor")) {
-      window.location.href = "./fragenBild.html";
-    } else {
-      window.location.href = "./fragen.html"
-    };
+    goToQuestionPage();
     resetTimerMusic();
   });
 }
@@ -1286,11 +1322,7 @@ if (nextBtn) {
 
           alert(`${localStorage.getItem("player1Name") || "Player 1"} ist mit Runde ${currentRound + 1} fertig. Jetzt spielt ${localStorage.getItem("player2Name") || "Player 2"} dieselbe Runde.`);
 
-          if ((localStorage.getItem("selectedCategory") == "musician") || (localStorage.getItem("selectedCategory") == "actor")) {
-            window.location.href = "./fragenBild.html";
-          } else {
-            window.location.href = "./fragen.html";
-          }
+          goToQuestionPage();
           
         } else {
           localStorage.setItem("p2Correct", oldP2Correct + correctAnswers);
@@ -1304,11 +1336,7 @@ if (nextBtn) {
 
             alert(`Runde ${currentRound + 1} startet. ${localStorage.getItem("player1Name") || "Player 1"} beginnt.`);
 
-            if ((localStorage.getItem("selectedCategory") == "musician") || (localStorage.getItem("selectedCategory") == "actor")) {
-              window.location.href = "./fragenBild.html";
-            } else {
-              window.location.href = "./fragen.html";
-            }
+            goToQuestionPage();
             
           } else {
             const p1CorrectTotal = Number(localStorage.getItem("p1Correct")) || 0;
@@ -1417,6 +1445,11 @@ if (
   window.location.pathname.includes("scoreboard.html") &&
   !window.location.pathname.includes("multi-scoreboard.html")
 ) {
+  const categoryEl = document.querySelector(".scoreboard-category");
+  if (categoryEl) {
+    categoryEl.textContent = "Kategorie: " + getCategoryLabel(localStorage.getItem("selectedCategory"));
+  }
+
   document.getElementById("score-correct").textContent =
     localStorage.getItem("c") || 0;
 
@@ -1450,12 +1483,7 @@ if (window.location.pathname.includes("multi-scoreboard.html")) {
   const categoryEl = document.getElementById("multi-category");
 
   if (categoryEl) {
-    const categoryText =
-      selectedCategory === "all" || !selectedCategory
-        ? "Alle Kategorien"
-        : selectedCategory;
-
-    categoryEl.textContent = "Kategorie: " + categoryText;
+    categoryEl.textContent = "Kategorie: " + getCategoryLabel(selectedCategory);
   }
 }
 
@@ -1484,11 +1512,7 @@ if (restartBtn) {
       localStorage.removeItem("p2Percentage");
       }
 
-      if ((localStorage.getItem("selectedCategory") == "musician") || (localStorage.getItem("selectedCategory") == "actor")) {
-        window.location.href = "./fragenBild.html";
-      } else {
-        window.location.href = "./fragen.html";
-      }
+      goToQuestionPage();
   });
 }
 
@@ -1536,6 +1560,9 @@ if (multiplayerBtn) {
 
 
 //Gewinner anzeige
+if (window.location.pathname.includes("multi-scoreboard.html")) {
+const player1Name = localStorage.getItem("player1Name") || "Player 1";
+const player2Name = localStorage.getItem("player2Name") || "Player 2";
 const p1Correct = Number(localStorage.getItem("p1Correct")) || 0;
 const p2Correct = Number(localStorage.getItem("p2Correct")) || 0;
 
@@ -1551,6 +1578,7 @@ if (p1Correct > p2Correct) {
 } else {
   player1Card?.classList.add("draw-card");
   player2Card?.classList.add("draw-card");
+}
 }
 
 console.log("current site: " + window.location.pathname)

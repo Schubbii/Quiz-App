@@ -758,10 +758,18 @@ dialog {
   gap: 30px;
 }
 
-#answers {
+#answers.answersImage {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+#answers.answersGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 20px;
+  justify-items: center;
 }
 
 .rectangleQuestionKleiner {
