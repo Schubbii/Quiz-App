@@ -51,7 +51,7 @@ function isWikimediaCategory(category) {
 }
 
 function getQuestionPageForCategory(category) {
-  return isWikimediaCategory(category) ? "./fragenBild.html" : "./fragen.html";
+  return category === "all" || isWikimediaCategory(category) ? "./fragenBild.html" : "./fragen.html";
 }
 
 function getCategoryLabel(category) {
@@ -70,6 +70,39 @@ function parseJsonOrFallback(value, fallback) {
   } catch (error) {
     return fallback;
   }
+}
+
+function getWikimediaPersonKey(person) {
+  return `${person.type}:${person.wikiLink || person.displayName}`;
+}
+
+function getMixedQuestionPool(serverQuestions) {
+  const mixedQuestions = [...serverQuestions];
+
+  Object.keys(WIKIMEDIA_CATEGORIES).forEach((category) => {
+    const count = getWikimediaCategoryCount(category);
+
+    for (let i = 0; i < count; i++) {
+      mixedQuestions.push({ category, isWikimediaPlaceholder: true });
+    }
+  });
+
+  return mixedQuestions;
+}
+
+function getTotalWikimediaQuestionCount() {
+  return Object.keys(WIKIMEDIA_CATEGORIES).reduce(
+    (total, category) => total + getWikimediaCategoryCount(category),
+    0
+  );
+}
+
+function buildQuestionFromPoolItem(poolItem) {
+  if (poolItem?.isWikimediaPlaceholder) {
+    return getWikimediaQuestion(poolItem.category)[0];
+  }
+
+  return poolItem;
 }
 
 
@@ -641,17 +674,20 @@ function getWikimediaQuestion(typething) {
   output("WikiMediaObject.filter(obj => obj.type === typething).length: " + peopleForType.length);
   output("WikiMediaObject.filter(obj => obj.type === typething): " + peopleForType);
 
-  if (usedPersons.length >= peopleForType.length) {
+  const usedPersonKeys = new Set(usedPersons);
+
+  if (usedPersonKeys.size >= peopleForType.length) {
     clearPersons();
+    usedPersonKeys.clear();
   }
 
   let correctPerson = generatePerson(typething);
-  while (usedPersons.includes(correctPerson.displayName)) {
+  while (usedPersonKeys.has(getWikimediaPersonKey(correctPerson))) {
     correctPerson = generatePerson(typething);
     output("already used");
   }
 
-  usedPersons.push(correctPerson.displayName);
+  usedPersons.push(getWikimediaPersonKey(correctPerson));
 
   console.log("used persons: " + usedPersons);
 
@@ -778,6 +814,11 @@ async function setQuizSettings() {
 
       let maxCount = filteredQuestions.length;
 
+      if (selectedCategory === "all") {
+        await loadWikimediaData();
+        maxCount = questions.length + getTotalWikimediaQuestionCount();
+      }
+
       if (selectedCategory == "Geografie") {
         // Da beim erstmaligen Auswählen von der Kategorie "Geographie" die Fragen geladen werden müssen, wird das Starten kurz blockiert, damit das Quiz nicht ohne Fragen startet
 
@@ -818,7 +859,8 @@ async function setQuizSettings() {
           }, 50)
         }
         await loadWikimediaData();
-        maxCount = getWikimediaCategoryCount(selectedCategory);
+        const roundCount = Number(roundCountInput?.value) || 1;
+        maxCount = Math.max(1, Math.floor(getWikimediaCategoryCount(selectedCategory) / roundCount));
       }
 
 
@@ -840,6 +882,10 @@ async function setQuizSettings() {
 
     if (categorySelect) {
       categorySelect.addEventListener("change", updateMaxQuestions);
+    }
+
+    if (roundCountInput) {
+      roundCountInput.addEventListener("input", updateMaxQuestions);
     }
   } catch (error) {
     console.error("Fehler beim Laden der Fragen:", error);
@@ -872,6 +918,17 @@ if (startQuizBtn) {
       return;
     }
 
+    if (isWikimediaCategory(selectedCategory)) {
+      await loadWikimediaData();
+      const availableWikimediaQuestions = getWikimediaCategoryCount(selectedCategory);
+      const neededWikimediaQuestions = count * roundCount;
+
+      if (neededWikimediaQuestions > availableWikimediaQuestions) {
+        alert(`Es gibt nur ${availableWikimediaQuestions} Bildfragen in dieser Kategorie. Bitte weniger Fragen oder weniger Runden wählen.`);
+        return;
+      }
+    }
+
     const isMultiplayer = window.location.pathname.includes("multiplayer.html");
 
     localStorage.setItem("questionCount", count);
@@ -893,6 +950,7 @@ if (startQuizBtn) {
     localStorage.removeItem("p2Correct");
     localStorage.removeItem("p2Wrong");
     localStorage.removeItem("p2Percentage");
+    clearPersons();
 
     if (isMultiplayer) {
       localStorage.setItem("currentPlayer", "1");
@@ -933,6 +991,13 @@ async function loadQuestions() {
     const gameMode = localStorage.getItem("gameMode") || "single";
     const currentPlayer = localStorage.getItem("currentPlayer") || "1";
     let availableQuestionCount = questions.length;
+    let mixedQuestionPool = [];
+
+    if (selectedCategory === "all") {
+      await loadWikimediaData();
+      mixedQuestionPool = getMixedQuestionPool(questions);
+      availableQuestionCount = mixedQuestionPool.length;
+    }
 
     if (selectedCategory !== "all") {
       if (selectedCategory === "Geografie") {
@@ -986,6 +1051,12 @@ async function loadQuestions() {
               for (let i = 0; i < count; i++) {
                 roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
               }
+            } else if (selectedCategory === "all") {
+              const questionsCopy = [...mixedQuestionPool];
+              shuffleArray(questionsCopy);
+              roundQuestions = questionsCopy
+                .slice(0, count)
+                .map(buildQuestionFromPoolItem);
             } else{
               const questionsCopy = [...questions];
               shuffleArray(questionsCopy);
@@ -1015,6 +1086,12 @@ async function loadQuestions() {
           for (let i = 0; i < count; i++) {
             roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
           }
+        } else if (selectedCategory === "all") {
+          const questionsCopy = [...mixedQuestionPool];
+          shuffleArray(questionsCopy);
+          roundQuestions = questionsCopy
+            .slice(0, count)
+            .map(buildQuestionFromPoolItem);
         } else{
           const questionsCopy = [...questions];
           shuffleArray(questionsCopy);
@@ -1082,9 +1159,14 @@ function showQuestion() {
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
   const isWikimediaQuestion = Boolean(currentQuestion.imageWikiLink);
+  const imageFrame = document.querySelector(".image");
 
   answersEl.classList.toggle("answersImage", isWikimediaQuestion);
   answersEl.classList.toggle("answersGrid", !isWikimediaQuestion);
+
+  if (imageFrame) {
+    imageFrame.classList.toggle("hidden", !isWikimediaQuestion);
+  }
 
   if (
     window.location.pathname.includes("fragenBild.html") &&
@@ -1102,7 +1184,10 @@ function showQuestion() {
     const roundCount = Number(localStorage.getItem("roundCount")) || 1;
     const storedRound = Number(localStorage.getItem("currentRound")) || 0;
 
-    const questionInRound = currentQuestionIndex + 1;
+    const questionInRound =
+      localStorage.getItem("gameMode") === "multi"
+        ? currentQuestionIndex + 1
+        : (currentQuestionIndex % questionsPerRound) + 1;
 
     const shownRound =
       localStorage.getItem("gameMode") === "multi"
