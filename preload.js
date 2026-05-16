@@ -68,6 +68,10 @@ contextBridge.exposeInMainWorld('quizAPI', {
     }),
 });
 
+contextBridge.exposeInMainWorld('mediawikiAPI', {
+  getLinks: () => ipcRenderer.invoke('mediawiki:getLinks'),
+});
+
 contextBridge.exposeInMainWorld("audio", {
   playSound(soundName) {
     if (!allowedSounds.has(soundName)) return;
