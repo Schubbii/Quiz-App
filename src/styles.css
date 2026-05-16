@@ -837,7 +837,7 @@ dialog {
   gap: 30px;
 }
 
-#answers {
+.layoutButtonsNeu #answers {
   display: flex;
   flex-direction: column;
   gap: 10px;
