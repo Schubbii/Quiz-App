@@ -3,8 +3,6 @@ const fs = require('fs/promises');
 const path = require('path');
 
 let audioWindow;
-let audioReady = false;
-const pendingSounds = [];
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -56,33 +54,9 @@ function createAudioWindow() {
 
   audioWindow.loadFile(path.join(__dirname, "src", "audio-window", "audio.html"));
 
-  audioWindow.webContents.once("did-finish-load", () => {
-    audioReady = true;
-
-    for (const soundName of pendingSounds) {
-      audioWindow.webContents.send("ui-sound:play", soundName);
-    }
-
-    pendingSounds.length = 0;
-  });
-
   audioWindow.on("closed", () => {
     audioWindow = null;
-    audioReady = false;
   });
-}
-
-function playUiSound(soundName) {
-  if (!audioWindow || audioWindow.isDestroyed()) {
-    createAudioWindow();
-  }
-
-  if (!audioReady) {
-    pendingSounds.push(soundName);
-    return;
-  }
-
-  audioWindow.webContents.send("ui-sound:play", soundName);
 }
 
 function sendToAudioWindow(channel, value) {

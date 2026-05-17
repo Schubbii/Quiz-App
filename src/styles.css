@@ -245,10 +245,13 @@ button {
 }
 
 .circleTimer {
-  flex-shrink: 0;
-  width: clamp(72px, 10vw, 110px);
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
+  position: absolute;
+  top: -16px;
+  right: 16px;
+  z-index: 2;
+  width: 110px;
+  height: 110px;
+  border-radius: 9999px;
   background: rgba(38, 39, 182, 0.80);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
@@ -372,49 +375,9 @@ button {
 /* Weiter-Button / extra Buttons */
 #next-btn,
 #menu-btn,
-#restart-btn,
-#back-menu-btn {
+#restart-btn {
   width: 100%;
   max-width: 420px;
-}
-
-/* Timer */
-
-.circleTimer {
-  position: absolute;
-  top: -16px;
-  right: 16px;
-  width: 110px;
-  height: 110px;
-  border-radius: 9999px;
-  background: rgba(38, 39, 182, 0.80);
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  z-index: 2;
-}
-
-/* Ergebnisbox */
-
-.resultBox {
-  width: min(520px, 100%);
-  padding: 28px;
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.24);
-  color: white;
-  text-align: center;
-  backdrop-filter: blur(8px);
-}
-
-.resultBox h2 {
-  margin-top: 0;
-  margin-bottom: 24px;
-  font-size: clamp(28px, 4vw, 44px);
-}
-
-.resultBox p {
-  margin: 12px 0;
-  font-size: clamp(18px, 2vw, 28px);
-  font-weight: 700;
 }
 
 /* Responsive */
@@ -438,8 +401,7 @@ button {
   .buttonAnswers,
   #next-btn,
   #menu-btn,
-  #restart-btn,
-  #back-menu-btn {
+  #restart-btn {
     max-width: 100%;
   }
 
@@ -459,6 +421,7 @@ button {
     top: 10px;
     right: 10px;
   }
+}
 
 @media (max-width: 600px) {
   .topBar {
@@ -469,7 +432,7 @@ button {
   .circleTimer {
     align-self: flex-end;
   }
-}}
+}
 
 @media (max-width: 600px) {
   body {
@@ -531,53 +494,6 @@ button {
   }
 }
 
-
-
-#popUp {                                                        /* Design zu dem CutOff-PopUp*/
-  width: 760px;
-  height: 442px;
-  fill: rgba(86, 76, 223, 0.50);
-  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 30px;
-  font-size: 28px;
-  color: white;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  background: linear-gradient(180deg, #5813D8 0%, #1A086D 100%);
-  backdrop-filter: blur(2px);
-  
-  flex-direction: column;                                       /* Inhalte in der div werden vertikal Positioniert */
-  justify-content: space-between;
-  padding: 30px;
-}
-
-#nextQuestionBtn {
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
-  width: 700px;
-  height: 100px;
-  background: rgba(255, 100.53, 249.85, 0.73); 
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); 
-  border-radius: 30px;
-  justify-items: center;
-  font-size: 30px;
-  display: flex;
-  justify-content: center;  /*horizontal zentriert*/
-  align-items: center;      /*vertikal zentriert*/
-}
-
-#nextQuestionBtn:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow:
-  0 16px 28px rgba(0, 0, 0, 0.28),
-  inset 0 1px 0 rgba(255, 255, 255, 0.22),
-  0 0 22px rgba(255, 255, 255, 0.1);
-  filter: brightness(1.06);
-}
-
-#nextQuestionBtn:active {
-  transform: translateY(1px) scale(0.98);
-}
 
 
 /* eingabe für maximale Fragen */
@@ -779,16 +695,6 @@ dialog {
   padding: 0;
   border-radius: 14px;
 }
-
-/*.layoutSettings {
-        position: relative;
-        width: min(1100px, 100%);
-        display: flex;
-        flex-direction: column;
-        align-items: left;
-        min-height: 60vh; 
-} */
-
 
 .playerDisplay {
   margin: 6px 0 0 0;
