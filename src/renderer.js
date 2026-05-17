@@ -33,6 +33,24 @@ const bgMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
 const bgMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
 const bgMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
 
+const endAnimation = document.getElementById("end-animation");
+const siegerAnimation = document.getElementById("Siegeranimation");
+
+function showEndAnimationAndRedirect(targetPage) {
+  if (endAnimation) {
+    endAnimation.classList.remove("hidden");
+  }
+
+  if (siegerAnimation) {
+    siegerAnimation.currentTime = 0;
+    siegerAnimation.play();
+  }
+
+  setTimeout(() => {
+    window.location.href = targetPage;
+  }, 4000);
+}
+
 
 function resetMusic () {
   bgMusic1.pause();         //laufende Audios pausieren und zurück and den Anfang setzen
@@ -981,7 +999,7 @@ if (nextBtn) {
             localStorage.setItem("p1Percentage", p1Percentage);
             localStorage.setItem("p2Percentage", p2Percentage);
 
-            window.location.href = "./multi-scoreboard.html";
+            showEndAnimationAndRedirect("./multi-scoreboard.html");
           }
         }
 
@@ -992,7 +1010,7 @@ if (nextBtn) {
       localStorage.setItem("w", wrongAnswers);
       localStorage.setItem("p", percentage);
 
-      window.location.href = "./scoreboard.html";
+      showEndAnimationAndRedirect("./scoreboard.html");
     }
   });
 }
