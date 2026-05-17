@@ -290,6 +290,85 @@ button {
   background: #FF383880 !important;
 }
 
+
+/* Zeit-Power-up */
+
+.timePowerup {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 5;
+  width: 82px;
+  height: 82px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 2px solid rgba(255, 255, 255, 0.34);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.timePowerup--available {
+  opacity: 1;
+  filter: none;
+  background: linear-gradient(180deg, rgba(255, 100, 250, 0.86), rgba(88, 19, 216, 0.86));
+}
+
+.timePowerup:disabled {
+  cursor: not-allowed;
+}
+
+.timePowerup:not(:disabled):hover {
+  transform: translateX(-50%) translateY(-3px) scale(1.04);
+  filter: brightness(1.08);
+}
+
+.timePowerup:not(:disabled):active {
+  transform: translateX(-50%) translateY(1px) scale(0.98);
+}
+
+.timePowerupIcon {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 22px;
+  font-weight: 900;
+  background: rgba(38, 39, 182, 0.72);
+  overflow: hidden;
+}
+
+.timePowerupIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.timePowerupCount {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: white;
+  color: #1A086D;
+  font-size: 16px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
+}
+
 /* Weiter-Button / extra Buttons */
 #next-btn,
 #menu-btn,
@@ -718,3 +797,115 @@ dialog {
   font-weight: 800;
   opacity: 0.95;
 }
+
+/* Fragen mit Bild */
+
+/* Bild Layout */
+
+.image {
+  display: flex;
+  width: 700px;
+  height: 400px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.12);
+  position: static;
+  align-items: center;
+  justify-content: center;
+}
+
+#wikiemediaQuestionImage {
+  height: 90%;
+  max-width: 95%;
+}
+
+.layoutButtonsNeu {
+  max-width: 320px;
+  min-height: 530px;
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  justify-items: end;   
+  margin-top: 10px;
+  flex-direction: column;
+  align-self: flex-start;
+}
+
+.layoutNeu {
+  display: flex;
+  align-items: flex-start; 
+  gap: 30px;
+}
+
+#answers.answersImage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 414px;
+}
+
+#answers.answersGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.layoutButtonsNeu #answers.answersGrid {
+  max-width: 900px;
+}
+
+.layoutNeu:has(.image.hidden) {
+  width: 100%;
+  justify-content: center;
+}
+
+.layoutNeu:has(.image.hidden) .layoutButtonsNeu {
+  max-width: 900px;
+  min-height: 260px;
+  align-items: center;
+}
+
+.layoutNeu:has(.image.hidden) #next-btn,
+.layoutNeu:has(.image.hidden) #menu-btn {
+  align-self: center;
+}
+
+.rectangleQuestionKleiner {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 70px;
+  padding: 10px;
+  background: rgba(255, 100.53, 249.85, 0.73);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  font-weight: 800;
+  font-size: clamp(15px, 1.4vw, 22px);
+  text-align: center;
+  line-height: 1.3;
+  border-radius: 20px;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.topBarKleiner {
+  width: 100%;
+  max-width: 1100px;
+  max-height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
