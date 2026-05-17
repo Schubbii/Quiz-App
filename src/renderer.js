@@ -35,8 +35,36 @@ const bgMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
 
 const endAnimation = document.getElementById("end-animation");
 const siegerAnimation = document.getElementById("Siegeranimation");
+const winnerAnimationText = document.getElementById("winner-animation-text");
+
+function getWinnerAnimationText() {
+  const gameMode = localStorage.getItem("gameMode") || "single";
+
+  if (gameMode !== "multi") {
+    return "Quiz beendet!";
+  }
+
+  const player1Name = localStorage.getItem("player1Name") || "Player 1";
+  const player2Name = localStorage.getItem("player2Name") || "Player 2";
+  const p1CorrectTotal = Number(localStorage.getItem("p1Correct")) || 0;
+  const p2CorrectTotal = Number(localStorage.getItem("p2Correct")) || 0;
+
+  if (p1CorrectTotal > p2CorrectTotal) {
+    return `${player1Name} hat gewonnen!`;
+  }
+
+  if (p2CorrectTotal > p1CorrectTotal) {
+    return `${player2Name} hat gewonnen!`;
+  }
+
+  return "Unentschieden!";
+}
 
 function showEndAnimationAndRedirect(targetPage) {
+  if (winnerAnimationText) {
+    winnerAnimationText.textContent = getWinnerAnimationText();
+  }
+
   if (endAnimation) {
     endAnimation.classList.remove("hidden");
   }
@@ -897,7 +925,7 @@ if (window.location.pathname.includes("start.html")) {
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
       logoAnimation.addEventListener("loadedmetadata", () => {
-        const targetDuration = 1; // gewünschte Dauer in Sekunden
+        const targetDuration = 0; // gewünschte Dauer in Sekunden
         logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
       });
 
