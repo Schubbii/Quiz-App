@@ -1503,7 +1503,9 @@ if (nextBtn) {
     nextBtn.disabled = true;
     stopTimer();
     resetTimerMusic();
-    imageElement.src = "";
+    if (imageElement) {
+      imageElement.src = "";
+    }
     currentQuestionIndex++;
 
     if (currentQuestionIndex < quizQuestions.length) {
