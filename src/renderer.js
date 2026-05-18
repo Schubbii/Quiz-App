@@ -36,7 +36,7 @@ const bgTimerMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
 const bgTimerMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
 const bgTimerMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
 const bgTimerMusic5sec = new Audio("./audio/Timer+5sec.mp3");
-bgTimerMusic5sec.volume = 0;
+bgTimerMusic5sec.volume = 0; // wird nur angeschalten, wenn das Powerup aktiviert wird
 
 const sfxMuteBtn = document.getElementById("ButtonsToggle");
 
@@ -119,7 +119,7 @@ function getNextButtonLabel() {
   return gameMode === "single" || isFinalMultiplayerTurn ? "Auswertung" : "Weiter";
 }
 
-// --Silas Ciupke--
+// --Vincent Rothweiler + Silas Ciupke--
 const WIKIMEDIA_CATEGORIES = {
   musician: "Sänger & Musiker",
   actor: "Schauspieler",
@@ -302,7 +302,34 @@ function attachButtonAudioHandlers(button) {
 
 document.querySelectorAll("button").forEach(attachButtonAudioHandlers);
 
-// --Silas Ciupke--
+//////////////////////////////////////////////////////////////////
+/// Setup für API-Generierte Fragen bei Kategorie "Geographie" ///
+//////////////////////////////////////////////////////////////////
+
+/*
+0: Welches dieser Länder ist Teil der UN
+1: Welches dieser Länder ist nicht Teil der UN
+2: Welches dieser Länder gehört zur Region {region}
+3: Welches dieser Länder gehört nicht zur Region {region}
+4: Welches dieser Länder grenzt an {land}
+5: Welches dieser Länder grenzt nicht an {land}
+6: Was ist die Hauptstadt von {land}
+
+
+250 Länder
+
+
+name.common = string Name
+cca3 = Ländercode im cca3 Format
+unMember = boolean ist eine UN mitglied
+region = Region bsp. Europa
+border[] = Angrenzende Länder (im "cca3" Format)
+cca3 = Land im cca3 Format
+
+
+*/
+
+// --Vincent Rothweiler--
 let response;
 let countryDataJson;
 let regions = ["Asia", "Europe", "Oceania", "Americas", "Africa"];
@@ -331,6 +358,7 @@ function output(input) {
 function rndCountry() {
   let countryIndex = Math.floor(Math.random() * countryDataJson.length);
   output("got new country");
+  // output("countryDataJson[countryIndex].name.common: " + countryDataJson[countryIndex].name.common);
   return countryDataJson[countryIndex];
 }
 
@@ -351,6 +379,10 @@ function fetchGeoQuestion() {
   let cca3AnswerArray = [];
 
   output("randomQuestion: " + randomQuestion);
+
+  ///////////////////////////////////////////////////
+  /// Fragengenerierung für API-Geographie-Fragen ///
+  ///////////////////////////////////////////////////
 
   switch (randomQuestion) {
 
@@ -451,7 +483,7 @@ function fetchGeoQuestion() {
 
 
 
-    case 4:
+    case 4: //Welches dieser Länder grenz an {land}
       selectedCountry = null;
       while (selectedCountry == null) {
         testCountry = rndCountry();
@@ -505,7 +537,7 @@ function fetchGeoQuestion() {
 
 
 
-    case 5:
+    case 5: //Welches dieser Länder grenzt nicht an {land}
 
       selectedCountry = null;
       bordersOfSelectedCountry = [];
@@ -563,7 +595,7 @@ function fetchGeoQuestion() {
 
       break;
 
-    case 6:
+    case 6: //Was ist die Hauptstadt von {land}
       selectedCountry = rndCountry();
       falseAnswers = [];
 
@@ -618,7 +650,21 @@ function fetchGeoQuestion() {
 
 }
 
-// --Silas Ciupke--
+
+
+//////////////////////////////////////////////////////////
+/// ENDE - Fragengenerierung für API-Geographie-Fragen ///
+//////////////////////////////////////////////////////////
+
+
+
+
+/////////////////////////////////////////////////////
+/// Fragengenerierung für Sänger und Schauspieler ///
+/////////////////////////////////////////////////////
+
+
+// --Vincent Rothweiler + Silas Ciupke--
 let WikiMediaObject;
 
 let usedPersons = []
@@ -795,18 +841,24 @@ function clearPersons() {
   output("cleared")
 }
 
-// --Silas Ciupke--
+////////////////////////////////////////////////////////////
+/// ENDE - Fragengenerierung für Sänger und Schauspieler ///
+////////////////////////////////////////////////////////////
+
+// --Vincent Rothweiler + Silas Ciupke--
 async function setQuizSettings() {
   try {
     const questions = await window.quizAPI.getQuestions();
     await loadWikimediaData();
 
+    // Kategorien automatisch aus allen Fragen holen
     const categories = [...new Set(
       questions
         .map((q) => String(q.category || "").trim())
         .filter(Boolean)
     )].sort((a, b) => a.localeCompare(b, "de"));
 
+    // Kategorie-Dropdown füllen
     if (categorySelect) {
       categorySelect.innerHTML = '<option value="all">Alle Kategorien</option>';
 
@@ -827,6 +879,7 @@ async function setQuizSettings() {
       });
     }
 
+    // Maximalwert für Fragenanzahl setzen
     async function updateMaxQuestions() {
       const selectedCategory = categorySelect ? categorySelect.value : "all";
 
@@ -847,6 +900,8 @@ async function setQuizSettings() {
       }
 
       if (selectedCategory == "Geografie") {
+        // Da beim erstmaligen Auswählen von der Kategorie "Geographie" die Fragen geladen werden müssen, wird das Starten kurz blockiert, damit das Quiz nicht ohne Fragen startet
+
         if (!(countryDataJson)) {
           fetchCountries();
           document.getElementById("start-quiz-btn").innerText = "Daten werden heruntergeladen";
@@ -866,6 +921,8 @@ async function setQuizSettings() {
       }
 
       if (isWikimediaCategory(selectedCategory)) {
+        // Da beim erstmaligen Auswählen von der Kategorie "musician" oder "actor" die Fragen geladen werden müssen, wird das Starten kurz blockiert, damit das Quiz nicht ohne Fragen startet
+
         if (!(WikiMediaObject)) {
           console.log("fragendaten noch nicht geladen")
           document.getElementById("start-quiz-btn").innerText = "Daten werden heruntergeladen";
@@ -994,6 +1051,7 @@ if (startQuizBtn) {
 }
 
 
+// fragen von quizzes.json laden
 // --Silas Ciupke--
 let currentQuestionIndex = 0;
 let correctAnswers = 0;
@@ -1085,8 +1143,7 @@ if (timePowerupBtn) {
   timePowerupBtn.addEventListener("click", useTimePowerup);
 }
 
-// --Kira Grauf--
-// --Silas Ciupke--
+// --Kira Grauf + Silas Ciupke--
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -1094,8 +1151,8 @@ function shuffleArray(array) {
   }
 }
 
-// --Linett Biliczki--
-// --Silas Ciupke--
+// --Linett Biliczki + Silas Ciupke--
+
 async function loadQuestions() {
   console.log("die function wurde ausgeführt");
   try {
@@ -1134,6 +1191,11 @@ async function loadQuestions() {
         availableQuestionCount = questions.length;
       }
 
+      //  {
+      //   questions = questions.filter((question) => {
+      //     return String(question.category || "").trim() === selectedCategory;
+      //   });
+      // }
 
     }
 
@@ -1245,7 +1307,7 @@ async function loadQuestions() {
 }
 
 
-// --Linett Biliczki--
+// --Linett Biliczki + Philipp Rostock--
 function updatePlayerDisplay() {
   if (!playerDisplay) return;
 
@@ -1266,8 +1328,7 @@ function updatePlayerDisplay() {
 }
 
 //fragen werden angezeigt
-// --Kira Grauf--
-// --Silas Ciupke--
+// --Kira Grauf + Silas Ciupke-
 function showQuestion() {
   if (!questionFrame || !answersEl || currentQuestionIndex >= quizQuestions.length) return;
 
@@ -1332,7 +1393,7 @@ function showQuestion() {
     const button = document.createElement("button");
 
 
-    if (
+    if (                                                              // Änderung der darstellung der fragen für die bilderfragen, weil die als objekt gespeichert werden
       window.location.pathname.includes("fragenBild.html") && answer && typeof answer === "object"
     ) {
       button.textContent = answer.displayName;
@@ -1358,10 +1419,16 @@ function showQuestion() {
         button.classList.add("correct");
         correctAnswers++;
         handlePowerupProgress(true);
+        // if (resultText) {
+        //   resultText.textContent = "Richtig!";
+        // }
       } else {
         button.classList.add("wrong");
         wrongAnswers++;
         handlePowerupProgress(false);
+        // if (resultText) {
+        //   resultText.textContent = "Falsch!";
+        // }
 
         const correctButton = allButtons[correctIndex];
         if (correctButton) {
@@ -1450,6 +1517,7 @@ function setupIntroAnimation() {
 
 setupIntroAnimation();
 
+// Nächste Frage oder Quiz beenden
 // --Silas Ciupke--
 if (nextBtn) {
   nextBtn.addEventListener("click", () => {
@@ -1554,12 +1622,14 @@ if (nextBtn) {
 
 
 
+// Zurück zum Menü
 if (menuBtn) {
   menuBtn.addEventListener("click", () => {
     window.location.href = "./start.html";
   });
 }
 
+// Überprüft, ob aktuelle Fragen-Seite sind und zeigt die erste Frage an
 if (window.location.pathname.includes("fragen.html") || window.location.pathname.includes("fragenBild.html")) {
   currentQuestionIndex = 0;
   correctAnswers = 0;
@@ -1575,7 +1645,7 @@ if (window.location.pathname.includes("fragen.html") || window.location.pathname
   loadQuestions();
 }
 
-// --Silas Ciupke--
+// --Vincent Rothweiler--
 function startTimer() {
   clearInterval(timerInterval);
   timeLeft = QUESTION_TIME;
@@ -1585,6 +1655,7 @@ function startTimer() {
     timeValue.textContent = timeLeft;
   }
 
+  // --Silas Ciupke--
   updateTimePowerupDisplay();
 
   timerInterval = setInterval(() => {
@@ -1638,6 +1709,7 @@ function handleTimeUp() {
 }
 
 
+// SCOREBOARD.HTML nur im Singleplayer
 // --Linett Biliczki--
 if (
   window.location.pathname.includes("scoreboard.html") &&
@@ -1658,6 +1730,7 @@ if (
     (localStorage.getItem("p") || 0) + "%";
 }
 
+// MULTI-SCOREBOARD.HTML
 // --Linett Biliczki--
 if (window.location.pathname.includes("multi-scoreboard.html")) {
   const player1Name = localStorage.getItem("player1Name") || "Player 1";
@@ -1697,7 +1770,7 @@ if (restartBtn) {
 
     if (gameMode === "multi") {
       localStorage.setItem("currentPlayer", "1");
-      localStorage.setItem("currentRound", "0");
+      localStorage.setItem("currenRoundt", "0");
 
       localStorage.removeItem("roundQuestions");
       localStorage.removeItem("currentRound");
@@ -1713,23 +1786,28 @@ if (restartBtn) {
   });
 }
 
-// --Vincent Rothweiler--
+// Elemente holen
+// --Kira Grauf + Vincent Rothweiler--
 const dialog = document.getElementById("popupDialog");
 const openBtn = document.getElementById("openBtn");
 const closeBtn = document.getElementById("closeBtn");
 
+// Öffnen
 if (openBtn && dialog) {
   openBtn.addEventListener("click", () => {
     dialog.showModal();
   });
 }
 
+// Schließen
 if (closeBtn && dialog) {
   closeBtn.addEventListener("click", () => {
     dialog.close();
   });
 }
 
+
+// Menü - Button zum Menü Singleplayer o. Multiplayer
 
 // --Kira Grauf--
 const singleplayerBtn = document.getElementById("singleplayerBtn");
@@ -1754,7 +1832,7 @@ if (multiplayerBtn) {
 
 
 //Gewinner anzeige
-// --Linett Biliczki--
+// --Linett Biliczki + Philipp Rostock--
 if (window.location.pathname.includes("multi-scoreboard.html")) {
   const player1Name = localStorage.getItem("player1Name") || "Player 1";
   const player2Name = localStorage.getItem("player2Name") || "Player 2";
