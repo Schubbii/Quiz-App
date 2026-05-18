@@ -218,10 +218,11 @@ if (document.getElementById("musicToggle")) {
   }
 }
 
-if (localStorage.getItem("sfxMuted")) {
-  if (localStorage.getItem("sfxMuted") == "true") {
-    sfxMuteBtn.checked = true;
-  }
+const isSfxMuted = localStorage.getItem("sfxMuted") == "true";
+window.audio?.setSfxMuted(isSfxMuted);
+
+if (sfxMuteBtn) {
+  sfxMuteBtn.checked = isSfxMuted;
 }
 
 if (sfxMuteBtn) {
