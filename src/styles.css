@@ -290,6 +290,85 @@ button {
   background: #FF383880 !important;
 }
 
+
+/* Zeit-Power-up */
+
+.timePowerup {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 5;
+  width: 82px;
+  height: 82px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 2px solid rgba(255, 255, 255, 0.34);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.timePowerup--available {
+  opacity: 1;
+  filter: none;
+  background: linear-gradient(180deg, rgba(255, 100, 250, 0.86), rgba(88, 19, 216, 0.86));
+}
+
+.timePowerup:disabled {
+  cursor: not-allowed;
+}
+
+.timePowerup:not(:disabled):hover {
+  transform: translateX(-50%) translateY(-3px) scale(1.04);
+  filter: brightness(1.08);
+}
+
+.timePowerup:not(:disabled):active {
+  transform: translateX(-50%) translateY(1px) scale(0.98);
+}
+
+.timePowerupIcon {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 22px;
+  font-weight: 900;
+  background: rgba(38, 39, 182, 0.72);
+  overflow: hidden;
+}
+
+.timePowerupIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.timePowerupCount {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: white;
+  color: #1A086D;
+  font-size: 16px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
+}
+
 /* Weiter-Button / extra Buttons */
 #next-btn,
 #menu-btn,
