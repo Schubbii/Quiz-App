@@ -1003,6 +1003,11 @@ function useTimePowerup() {
   if (!isQuestionActive || getTimePowerupCount() <= 0) return;
 
   timeLeft += TIME_POWERUP_SECONDS;
+  
+  if (localStorage.getItem("musicMuted") == "false") {
+    bgTimerMusic5sec.volume = 1;
+  }
+  
 
   if (timeValue) {
     timeValue.textContent = timeLeft;
@@ -1334,6 +1339,8 @@ function showQuestion() {
       bgTimerMusic1.play();
     }
   }
+  bgTimerMusic5sec.volume = 0;
+  bgTimerMusic5sec.play();
 }
 
 
