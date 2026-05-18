@@ -16,7 +16,6 @@ if (window.location.pathname.includes("start.html") && startAnimation && hauptme
 }
 
 const adminBtn = document.getElementById("admin-btn");
-const playButton = document.querySelector(".playBtn");
 const menuBtn = document.getElementById("menu-btn");
 
 const questionFrame = document.getElementById("question2");
@@ -161,23 +160,39 @@ function resetTimerMusic() {
 
 }
 
+function playTimerMusicForCurrentQuestion() {
+  const totalQuestions = quizQuestions.length || 1;
+  const progress = (currentQuestionIndex + 1) / totalQuestions;
+  const selectedTrack =
+    progress >= 0.6 ? bgTimerMusic3 :
+    progress >= 0.3 ? bgTimerMusic2 :
+    bgTimerMusic1;
+
+  resetTimerMusic();
+  selectedTrack.play().catch((error) => {
+    console.warn("Timer-Musik konnte nicht abgespielt werden:", error);
+  });
+}
+
 if (!(window.location.pathname.includes("menu.html") || window.location.pathname.includes("multiplayer.html") || window.location.pathname.includes("start.html"))) {
   window.audio?.stopMusic("lobbyBackground");
 }
 
-document.querySelectorAll("button").forEach(btn => {
-  btn.onmouseover = event => {
+function attachButtonAudioHandlers(button) {
+  button.onmouseover = event => {
     window.audio?.playSound("buttonHover");
   }
 
-  btn.onmousedown = event => {
+  button.onmousedown = event => {
     window.audio?.playSound("buttonClick");
   }
 
-  btn.onmouseup = event => {
+  button.onmouseup = event => {
     window.audio?.playSound("buttonRelease");
   }
-});
+}
+
+document.querySelectorAll("button").forEach(attachButtonAudioHandlers);
 
 //////////////////////////////////////////////////////////////////
 /// Setup für API-Generierte Fragen bei Kategorie "Geographie" ///
@@ -610,10 +625,6 @@ async function fetchWikimediaImage(pageTitle) {
   }
 }
 
-function output(input) {
-  console.log(input);
-}
-
 function getWikimediaQuestion(typething) {
 
   output("sessionStorage.getItem('usedWikiPersons').length: " + usedPersons.length);
@@ -900,7 +911,6 @@ if (startQuizBtn) {
     localStorage.setItem("player1Name", player1Name || "Player 1");
     localStorage.setItem("player2Name", player2Name || "Player 2");
 
-    localStorage.removeItem("multiQuestions");
     localStorage.removeItem("roundQuestions");
     localStorage.removeItem("currentPlayer");
     localStorage.removeItem("p1Correct");
@@ -1267,20 +1277,7 @@ function showQuestion() {
 
     button.classList.add("buttonAnswers");
 
-    document.querySelectorAll("button").forEach(btn => {
-
-      button.onmouseover = event => {
-        window.audio?.playSound("buttonHover");
-      }
-
-      button.onmousedown = event => {
-        window.audio?.playSound("buttonClick");
-      }
-
-      button.onmouseup = event => {
-        window.audio?.playSound("buttonRelease");
-      }
-    });
+    attachButtonAudioHandlers(button);
 
 
     button.addEventListener("click", () => {
@@ -1328,12 +1325,7 @@ function showQuestion() {
   });
 
   startTimer();
-  // output("questionCount: " + questionCount);
-  if (localStorage.getItem("questionCount") >= (0.6 * questionCountInput)) { bgTimerMusic3.play() } else {
-    if (localStorage.getItem("questionCount") >= (0.3 * questionCountInput)) { bgTimerMusic2.play() } else {
-      bgTimerMusic1.play();
-    }
-  }
+  playTimerMusicForCurrentQuestion();
 }
 
 
@@ -1399,15 +1391,6 @@ if (window.location.pathname.includes("start.html")) {
       setTimeout(showStartMenu, 5000);
     }
   }
-}
-
-// FRAGEN.HTML 
-// Startet Quiz
-if (playButton) {
-  playButton.addEventListener("click", () => {
-    goToQuestionPage();
-    resetTimerMusic();
-  });
 }
 
 // Nächste Frage oder Quiz beenden
@@ -1648,7 +1631,6 @@ if (restartBtn) {
       localStorage.setItem("currentPlayer", "1");
       localStorage.setItem("currentRound", "0");
 
-      localStorage.removeItem("multiQuestions");
       localStorage.removeItem("roundQuestions");
       localStorage.removeItem("currentRound");
       localStorage.removeItem("p1Correct");
