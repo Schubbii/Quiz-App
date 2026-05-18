@@ -30,9 +30,15 @@ const playerDisplay = document.getElementById("player-display");
 const timePowerupBtn = document.getElementById("time-powerup-btn");
 const timePowerupCountEl = document.getElementById("time-powerup-count");
 
+const imageElement = document.getElementById("wikiemediaQuestionImage");
+
 const bgTimerMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
 const bgTimerMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
 const bgTimerMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
+const bgTimerMusic5sec = new Audio("./audio/Timer+5sec.mp3");
+bgTimerMusic5sec.volume = 0; // wird nur angeschalten, wenn das Powerup aktiviert wird
+
+const sfxMuteBtn = document.getElementById("ButtonsToggle");
 
 const endAnimation = document.getElementById("end-animation");
 const siegerAnimation = document.getElementById("Siegeranimation");
@@ -212,6 +218,27 @@ if (document.getElementById("musicToggle")) {
   }
 }
 
+if (localStorage.getItem("sfxMuted")) {
+  if (localStorage.getItem("sfxMuted") == "true") {
+    sfxMuteBtn.checked = true;
+  }
+}
+
+if (sfxMuteBtn) {
+  sfxMuteBtn.onchange = event => {
+    if (sfxMuteBtn.checked == true) {
+      window.audio?.setSfxMuted(true);
+
+      localStorage.setItem("sfxMuted", "true");
+    }
+    if (sfxMuteBtn.checked == false) {
+      window.audio?.setSfxMuted(false);
+
+      localStorage.setItem("sfxMuted", "false");
+    }
+  }
+}
+
 
 
 function resetTimerMusic() {
@@ -228,13 +255,23 @@ function playTimerMusicForCurrentQuestion() {
   const progress = (currentQuestionIndex + 1) / totalQuestions;
   const selectedTrack =
     progress >= 0.6 ? bgTimerMusic3 :
-    progress >= 0.3 ? bgTimerMusic2 :
-    bgTimerMusic1;
+      progress >= 0.3 ? bgTimerMusic2 :
+        bgTimerMusic1;
 
   resetTimerMusic();
   selectedTrack.play().catch((error) => {
     console.warn("Timer-Musik konnte nicht abgespielt werden:", error);
   });
+
+  try {
+    bgTimerMusic5sec.pause();
+    bgTimerMusic5sec.currentTime = 0;
+    bgTimerMusic5sec.volume = 0;
+    bgTimerMusic5sec.play();
+  } catch (error) {
+    console.log(error);
+  }
+
 }
 
 if (!(window.location.pathname.includes("menu.html") || window.location.pathname.includes("multiplayer.html") || window.location.pathname.includes("start.html"))) {
@@ -670,7 +707,6 @@ function getWikimediaCategoryCount(category) {
 
 
 async function fetchWikimediaImage(pageTitle) {
-  const imageElement = document.getElementById("wikiemediaQuestionImage");
   if (!imageElement) return;
 
   try {
@@ -1077,6 +1113,11 @@ function useTimePowerup() {
 
   timeLeft += TIME_POWERUP_SECONDS;
 
+  if (localStorage.getItem("musicMuted") == "false") {
+    bgTimerMusic5sec.volume = 1;
+  }
+
+
   if (timeValue) {
     timeValue.textContent = timeLeft;
   }
@@ -1126,7 +1167,7 @@ async function loadQuestions() {
 
         questions = [];
         availableQuestionCount = getWikimediaCategoryCount(selectedCategory);
-      } else{
+      } else {
         questions = questions.filter((question) => {
           return String(question.category || "").trim() === selectedCategory;
         });
@@ -1171,7 +1212,7 @@ async function loadQuestions() {
               roundQuestions = questionsCopy
                 .slice(0, count)
                 .map(buildQuestionFromPoolItem);
-            } else{
+            } else {
               const questionsCopy = [...questions];
               shuffleArray(questionsCopy);
               roundQuestions = questionsCopy.slice(0, count);
@@ -1206,7 +1247,7 @@ async function loadQuestions() {
           roundQuestions = questionsCopy
             .slice(0, count)
             .map(buildQuestionFromPoolItem);
-        } else{
+        } else {
           const questionsCopy = [...questions];
           shuffleArray(questionsCopy);
           roundQuestions = questionsCopy.slice(0, count);
@@ -1226,7 +1267,7 @@ async function loadQuestions() {
       return;
     }
 
-    if (count > availableQuestionCount) { 
+    if (count > availableQuestionCount) {
       alert(`Es gibt nur ${availableQuestionCount} Fragen.`);
     }
 
@@ -1461,6 +1502,7 @@ if (nextBtn) {
     nextBtn.disabled = true;
     stopTimer();
     resetTimerMusic();
+    imageElement.src = "";
     currentQuestionIndex++;
 
     if (currentQuestionIndex < quizQuestions.length) {
@@ -1508,7 +1550,7 @@ if (nextBtn) {
           alert(`${localStorage.getItem("player1Name") || "Player 1"} ist mit Runde ${currentRound + 1} fertig. Jetzt spielt ${localStorage.getItem("player2Name") || "Player 2"} dieselbe Runde.`);
 
           goToQuestionPage();
-          
+
         } else {
           localStorage.setItem("p2Correct", oldP2Correct + correctAnswers);
           localStorage.setItem("p2Wrong", oldP2Wrong + wrongAnswers);
@@ -1522,7 +1564,7 @@ if (nextBtn) {
             alert(`Runde ${currentRound + 1} startet. ${localStorage.getItem("player1Name") || "Player 1"} beginnt.`);
 
             goToQuestionPage();
-            
+
           } else {
             const p1CorrectTotal = Number(localStorage.getItem("p1Correct")) || 0;
             const p1WrongTotal = Number(localStorage.getItem("p1Wrong")) || 0;
@@ -1710,9 +1752,9 @@ if (restartBtn) {
       localStorage.removeItem("p2Correct");
       localStorage.removeItem("p2Wrong");
       localStorage.removeItem("p2Percentage");
-      }
+    }
 
-      goToQuestionPage();
+    goToQuestionPage();
   });
 }
 
@@ -1761,24 +1803,24 @@ if (multiplayerBtn) {
 
 //Gewinner anzeige
 if (window.location.pathname.includes("multi-scoreboard.html")) {
-const player1Name = localStorage.getItem("player1Name") || "Player 1";
-const player2Name = localStorage.getItem("player2Name") || "Player 2";
-const p1Correct = Number(localStorage.getItem("p1Correct")) || 0;
-const p2Correct = Number(localStorage.getItem("p2Correct")) || 0;
+  const player1Name = localStorage.getItem("player1Name") || "Player 1";
+  const player2Name = localStorage.getItem("player2Name") || "Player 2";
+  const p1Correct = Number(localStorage.getItem("p1Correct")) || 0;
+  const p2Correct = Number(localStorage.getItem("p2Correct")) || 0;
 
-const player1Card = document.getElementById("player1-title")?.closest(".player-score");
-const player2Card = document.getElementById("player2-title")?.closest(".player-score");
+  const player1Card = document.getElementById("player1-title")?.closest(".player-score");
+  const player2Card = document.getElementById("player2-title")?.closest(".player-score");
 
-if (p1Correct > p2Correct) {
-  player1Card?.classList.add("winner-card");
-  document.getElementById("player1-title").textContent = player1Name + " 🏆";
-} else if (p2Correct > p1Correct) {
-  player2Card?.classList.add("winner-card");
-  document.getElementById("player2-title").textContent = player2Name + " 🏆";
-} else {
-  player1Card?.classList.add("draw-card");
-  player2Card?.classList.add("draw-card");
-}
+  if (p1Correct > p2Correct) {
+    player1Card?.classList.add("winner-card");
+    document.getElementById("player1-title").textContent = player1Name + " 🏆";
+  } else if (p2Correct > p1Correct) {
+    player2Card?.classList.add("winner-card");
+    document.getElementById("player2-title").textContent = player2Name + " 🏆";
+  } else {
+    player1Card?.classList.add("draw-card");
+    player2Card?.classList.add("draw-card");
+  }
 }
 
 console.log("current site: " + window.location.pathname)

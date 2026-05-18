@@ -24,4 +24,10 @@ contextBridge.exposeInMainWorld("audioHost", {
       callback(musicName);
     });
   },
+
+  onSetSfxMuted(callback) {
+    ipcRenderer.on("sfx:set-muted", (_event, isMuted) => {
+      callback(isMuted);
+    });
+  },
 });

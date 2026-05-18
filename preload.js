@@ -92,4 +92,10 @@ contextBridge.exposeInMainWorld("audio", {
     if (!allowedMusic.has(musicName)) return;
     ipcRenderer.send("music:pause", musicName);
   },
+
+  setSfxMuted(isMuted) {
+    if (typeof isMuted !== "boolean") return;
+    ipcRenderer.send("sfx:set-muted", isMuted);
+  },
+  
 });
