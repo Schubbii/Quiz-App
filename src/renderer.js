@@ -37,6 +37,7 @@ const bgTimerMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
 const endAnimation = document.getElementById("end-animation");
 const siegerAnimation = document.getElementById("Siegeranimation");
 const winnerAnimationText = document.getElementById("winner-animation-text");
+const END_ANIMATION_DURATION_MS = 4000;
 
 function getWinnerAnimationText() {
   const gameMode = localStorage.getItem("gameMode") || "single";
@@ -62,6 +63,14 @@ function getWinnerAnimationText() {
 }
 
 function showEndAnimationAndRedirect(targetPage) {
+  if (nextBtn) {
+    nextBtn.disabled = true;
+  }
+
+  if (timePowerupBtn) {
+    timePowerupBtn.classList.add("hidden");
+  }
+
   if (winnerAnimationText) {
     winnerAnimationText.textContent = getWinnerAnimationText();
   }
@@ -72,12 +81,33 @@ function showEndAnimationAndRedirect(targetPage) {
 
   if (siegerAnimation) {
     siegerAnimation.currentTime = 0;
-    siegerAnimation.play();
+    siegerAnimation.play().catch((error) => {
+      console.warn("Endanimation konnte nicht abgespielt werden:", error);
+    });
   }
 
   setTimeout(() => {
     window.location.href = targetPage;
-  }, 4000);
+  }, END_ANIMATION_DURATION_MS);
+}
+
+function getNextButtonLabel() {
+  const isLastQuestion = currentQuestionIndex >= quizQuestions.length - 1;
+
+  if (!isLastQuestion) {
+    return "Weiter";
+  }
+
+  const gameMode = localStorage.getItem("gameMode") || "single";
+  const currentPlayer = localStorage.getItem("currentPlayer") || "1";
+  const currentRound = Number(localStorage.getItem("currentRound")) || 0;
+  const roundCount = Number(localStorage.getItem("roundCount")) || 1;
+  const isFinalMultiplayerTurn =
+    gameMode === "multi" &&
+    currentPlayer === "2" &&
+    currentRound >= roundCount - 1;
+
+  return gameMode === "single" || isFinalMultiplayerTurn ? "Auswertung" : "Weiter";
 }
 
 const WIKIMEDIA_CATEGORIES = {
@@ -1245,6 +1275,10 @@ function showQuestion() {
   isQuestionActive = false;
   updateTimePowerupDisplay();
 
+  if (timePowerupBtn) {
+    timePowerupBtn.classList.remove("hidden");
+  }
+
   const currentQuestion = quizQuestions[currentQuestionIndex];
   const isWikimediaQuestion = Boolean(currentQuestion.imageWikiLink);
   const imageFrame = document.querySelector(".image");
@@ -1291,6 +1325,7 @@ function showQuestion() {
   }
 
   if (nextBtn) {
+    nextBtn.textContent = "Weiter";
     nextBtn.classList.add("hidden");
   }
 
@@ -1348,9 +1383,15 @@ function showQuestion() {
       updateTimePowerupDisplay();
 
       if (nextBtn) {
+        nextBtn.disabled = false;
+        nextBtn.textContent = getNextButtonLabel();
         nextBtn.classList.remove("hidden");
         resetTimerMusic();
         //questionDone.play();
+      }
+
+      if (timePowerupBtn) {
+        timePowerupBtn.classList.add("hidden");
       }
     });
 
@@ -1417,6 +1458,7 @@ setupIntroAnimation();
 // Nächste Frage oder Quiz beenden
 if (nextBtn) {
   nextBtn.addEventListener("click", () => {
+    nextBtn.disabled = true;
     stopTimer();
     resetTimerMusic();
     currentQuestionIndex++;
@@ -1529,6 +1571,8 @@ if (window.location.pathname.includes("fragen.html") || window.location.pathname
   updateTimePowerupDisplay();
 
   if (nextBtn) {
+    nextBtn.disabled = false;
+    nextBtn.textContent = "Weiter";
     nextBtn.classList.add("hidden");
   }
 
@@ -1586,7 +1630,13 @@ function handleTimeUp() {
   }
 
   if (nextBtn) {
+    nextBtn.disabled = false;
+    nextBtn.textContent = getNextButtonLabel();
     nextBtn.classList.remove("hidden");
+  }
+
+  if (timePowerupBtn) {
+    timePowerupBtn.classList.add("hidden");
   }
 }
 
