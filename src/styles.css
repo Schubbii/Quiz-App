@@ -245,10 +245,13 @@ button {
 }
 
 .circleTimer {
-  flex-shrink: 0;
-  width: clamp(72px, 10vw, 110px);
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
+  position: absolute;
+  top: -16px;
+  right: 16px;
+  z-index: 2;
+  width: 110px;
+  height: 110px;
+  border-radius: 9999px;
   background: rgba(38, 39, 182, 0.80);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   display: flex;
@@ -290,52 +293,86 @@ button {
   background: #FF383880 !important;
 }
 
+
+/* Zeit-Power-up */
+
+.timePowerup {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 5;
+  width: 82px;
+  height: 82px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 2px solid rgba(255, 255, 255, 0.34);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.timePowerup--available {
+  opacity: 1;
+  filter: none;
+  background: linear-gradient(180deg, rgba(255, 100, 250, 0.86), rgba(88, 19, 216, 0.86));
+}
+
+.timePowerup:disabled {
+  cursor: not-allowed;
+}
+
+.timePowerup:not(:disabled):hover {
+  transform: translateX(-50%) translateY(-3px) scale(1.04);
+  filter: brightness(1.08);
+}
+
+.timePowerup:not(:disabled):active {
+  transform: translateX(-50%) translateY(1px) scale(0.98);
+}
+
+.timePowerupIcon {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.timePowerupIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.timePowerupCount {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: white;
+  color: #1A086D;
+  font-size: 16px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
+}
+
 /* Weiter-Button / extra Buttons */
 #next-btn,
 #menu-btn,
-#restart-btn,
-#back-menu-btn {
+#restart-btn {
   width: 100%;
   max-width: 420px;
-}
-
-/* Timer */
-
-.circleTimer {
-  position: absolute;
-  top: -16px;
-  right: 16px;
-  width: 110px;
-  height: 110px;
-  border-radius: 9999px;
-  background: rgba(38, 39, 182, 0.80);
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  z-index: 2;
-}
-
-/* Ergebnisbox */
-
-.resultBox {
-  width: min(520px, 100%);
-  padding: 28px;
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.24);
-  color: white;
-  text-align: center;
-  backdrop-filter: blur(8px);
-}
-
-.resultBox h2 {
-  margin-top: 0;
-  margin-bottom: 24px;
-  font-size: clamp(28px, 4vw, 44px);
-}
-
-.resultBox p {
-  margin: 12px 0;
-  font-size: clamp(18px, 2vw, 28px);
-  font-weight: 700;
 }
 
 /* Responsive */
@@ -359,8 +396,7 @@ button {
   .buttonAnswers,
   #next-btn,
   #menu-btn,
-  #restart-btn,
-  #back-menu-btn {
+  #restart-btn {
     max-width: 100%;
   }
 
@@ -380,6 +416,7 @@ button {
     top: 10px;
     right: 10px;
   }
+}
 
 @media (max-width: 600px) {
   .topBar {
@@ -390,7 +427,7 @@ button {
   .circleTimer {
     align-self: flex-end;
   }
-}}
+}
 
 @media (max-width: 600px) {
   body {
@@ -452,53 +489,6 @@ button {
   }
 }
 
-
-
-#popUp {                                                        /* Design zu dem CutOff-PopUp*/
-  width: 760px;
-  height: 442px;
-  fill: rgba(86, 76, 223, 0.50);
-  filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.25));
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  border-radius: 30px;
-  font-size: 28px;
-  color: white;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  background: linear-gradient(180deg, #5813D8 0%, #1A086D 100%);
-  backdrop-filter: blur(2px);
-  
-  flex-direction: column;                                       /* Inhalte in der div werden vertikal Positioniert */
-  justify-content: space-between;
-  padding: 30px;
-}
-
-#nextQuestionBtn {
-  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
-  width: 700px;
-  height: 100px;
-  background: rgba(255, 100.53, 249.85, 0.73); 
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); 
-  border-radius: 30px;
-  justify-items: center;
-  font-size: 30px;
-  display: flex;
-  justify-content: center;  /*horizontal zentriert*/
-  align-items: center;      /*vertikal zentriert*/
-}
-
-#nextQuestionBtn:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow:
-  0 16px 28px rgba(0, 0, 0, 0.28),
-  inset 0 1px 0 rgba(255, 255, 255, 0.22),
-  0 0 22px rgba(255, 255, 255, 0.1);
-  filter: brightness(1.06);
-}
-
-#nextQuestionBtn:active {
-  transform: translateY(1px) scale(0.98);
-}
 
 
 /* eingabe für maximale Fragen */
@@ -701,20 +691,163 @@ dialog {
   border-radius: 14px;
 }
 
-/*.layoutSettings {
-        position: relative;
-        width: min(1100px, 100%);
-        display: flex;
-        flex-direction: column;
-        align-items: left;
-        min-height: 60vh; 
-} */
-
-
 .playerDisplay {
   margin: 6px 0 0 0;
   color: white;
   font-size: clamp(14px, 1.4vw, 18px);
   font-weight: 800;
   opacity: 0.95;
+}
+
+/* Fragen mit Bild */
+
+/* Bild Layout */
+
+.image {
+  display: flex;
+  width: 700px;
+  height: 400px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 30px;
+  background-color: rgba(255, 255, 255, 0.12);
+  position: static;
+  align-items: center;
+  justify-content: center;
+}
+
+#wikiemediaQuestionImage {
+  height: 90%;
+  max-width: 95%;
+}
+
+.layoutButtonsNeu {
+  max-width: 320px;
+  min-height: 530px;
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  justify-items: end;   
+  margin-top: 10px;
+  flex-direction: column;
+  align-self: flex-start;
+}
+
+.layoutNeu {
+  display: flex;
+  align-items: flex-start; 
+  gap: 30px;
+}
+
+#answers.answersImage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 414px;
+}
+
+#answers.answersGrid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.layoutButtonsNeu #answers.answersGrid {
+  max-width: 900px;
+}
+
+.layoutNeu:has(.image.hidden) {
+  width: 100%;
+  justify-content: center;
+}
+
+.layoutNeu:has(.image.hidden) .layoutButtonsNeu {
+  max-width: 900px;
+  min-height: 260px;
+  align-items: center;
+}
+
+.layoutNeu:has(.image.hidden) #next-btn,
+.layoutNeu:has(.image.hidden) #menu-btn {
+  align-self: center;
+}
+
+.rectangleQuestionKleiner {
+  width: 100%;
+  max-width: 1100px;
+  min-height: 70px;
+  padding: 10px;
+  background: rgba(255, 100.53, 249.85, 0.73);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  font-weight: 800;
+  font-size: clamp(15px, 1.4vw, 22px);
+  text-align: center;
+  line-height: 1.3;
+  border-radius: 20px;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.topBarKleiner {
+  width: 100%;
+  max-width: 1100px;
+  max-height: 85px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+
+
+#end-animation {
+  position: fixed;
+  inset: 0;
+
+  background: black;
+
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+}
+
+#end-animation:not(.hidden) {
+  display: flex;
+}
+
+#Siegeranimation {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#winner-animation-text {
+  position: absolute;
+  left: 50%;
+  bottom: 72px;
+  transform: translateX(-50%);
+  z-index: 1;
+  margin: 0;
+  width: min(900px, calc(100% - 32px));
+  padding: 16px 24px;
+  color: white;
+  font-size: clamp(28px, 4vw, 56px);
+  font-weight: 900;
+  text-align: center;
+  text-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.85),
+    0 0 24px rgba(255, 100, 250, 0.72);
 }

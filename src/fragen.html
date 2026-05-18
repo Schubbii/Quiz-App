@@ -1,7 +1,7 @@
 <!-- Fragenseiten -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>Fragen</title>
@@ -32,6 +32,22 @@
             <!-- Antwort-Buttons werden hier dynamisch hinzugefügt -->
         </div>
         <button id="next-btn" class="buttonAnswers hidden">Weiter</button>
+
+        <button id="time-powerup-btn" class="timePowerup" type="button" aria-label="Zeit-Power-up verwenden">
+            <span class="timePowerupIcon" aria-hidden="true">
+                <img src="./assets/time-powerup.svg" alt="">
+            </span>
+            <span id="time-powerup-count" class="timePowerupCount">0</span>
+        </button>
+
+        <div id="end-animation" class="hidden">
+            <video id="Siegeranimation" muted playsinline>
+                <source src="../Siegeranimation/Siegeranimation.mp4" type="video/mp4">
+                Dein Browser unterstützt kein Video.
+            </video>
+            <p id="winner-animation-text"></p>
+        </div>
+
         <button id="menu-btn" class="buttonAnswers hidden">Zum Menü</button>
     </main>
     <script src="renderer.js"></script>

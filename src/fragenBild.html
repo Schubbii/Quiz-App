@@ -1,0 +1,68 @@
+<!-- Fragenseiten -->
+
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fragen</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="background"></div>
+
+    <main class="menu">
+        <div class="topBarKleiner">
+            <div class="rectangle">
+                <div>
+                    <p class="FragenText">Frage 1 von 10</p>
+                    <p id="player-display" class="playerDisplay hidden"></p>
+                </div>
+            </div>
+
+            <div class="circleTimer">
+                <p id="timeValue">10</p>
+            </div>
+        </div>
+        <div class="rectangleQuestionKleiner">
+            <h2 id="question2">Hier steht die Frage</h2>
+        </div>
+        <p id="result-text" class="resultText"></p>
+
+        <div class="layoutNeu">
+            <div class="image">
+                <img id="wikiemediaQuestionImage">
+            </div>
+
+            <div class="layoutButtonsNeu">
+
+                <div id="answers">
+                    <!-- Antwort-Buttons werden hier dynamisch hinzugefügt -->
+                </div>
+                <button id="next-btn" class="buttonAnswers hidden">Weiter</button>
+
+                <button id="time-powerup-btn" class="timePowerup" type="button" aria-label="Zeit-Power-up verwenden">
+                    <span class="timePowerupIcon" aria-hidden="true">
+                        <img src="./assets/time-powerup.svg" alt="">
+                    </span>
+                    <span id="time-powerup-count" class="timePowerupCount">0</span>
+                </button>
+                <button id="menu-btn" class="buttonAnswers hidden">Zum Menü</button>
+            </div>
+
+        </div>
+
+        <div id="end-animation" class="hidden">
+            <video id="Siegeranimation" muted playsinline>
+                <source src="../Siegeranimation/Siegeranimation.mp4" type="video/mp4">
+                Dein Browser unterstÃ¼tzt kein Video.
+            </video>
+            <p id="winner-animation-text"></p>
+        </div>
+    </main>
+    <script src="renderer.js"></script>
+</body>
+
+
+</html>

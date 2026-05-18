@@ -1,0 +1,530 @@
+[
+  {
+    "displayName": "Beyoncé",
+    "wikiLink": "Beyoncé",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Dua Lipa",
+    "wikiLink": "Dua_Lipa",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Shakira",
+    "wikiLink": "Shakira",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Bebe Rexha",
+    "wikiLink": "Bebe_Rexha",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Zara Larsson",
+    "wikiLink": "Zara_Larsson",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Rihanna",
+    "wikiLink": "Rihanna",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Taylor Swift",
+    "wikiLink": "Taylor_Swift",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Katy Perry",
+    "wikiLink": "Katy_Perry",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Billie Eilish",
+    "wikiLink": "Billie_Eilish",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Jennifer Lopez",
+    "wikiLink": "Jennifer_Lopez",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Selena Gomez",
+    "wikiLink": "Selena_Gomez",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Adele",
+    "wikiLink": "Adele",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Sia",
+    "wikiLink": "Sia",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Ellie Goulding",
+    "wikiLink": "Ellie_Goulding",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Nicki Minaj",
+    "wikiLink": "Nicki_Minaj",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Ariana Grande",
+    "wikiLink": "Ariana_Grande",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Tate McRae",
+    "wikiLink": "Tate_McRae",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Lana Del Rey",
+    "wikiLink": "Lana_Del_Rey",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Gracie Abrams",
+    "wikiLink": "Gracie_Abrams",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Nina Chuba",
+    "wikiLink": "Nina_Chuba",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Shirin David",
+    "wikiLink": "Shirin_David",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Chappell Roan",
+    "wikiLink": "Chappell_Roan",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Camila Cabello",
+    "wikiLink": "Camila_Cabello",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Sabrina Carpenter",
+    "wikiLink": "Sabrina_Carpenter",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Nena",
+    "wikiLink": "Nena",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Olivia Rodrigo",
+    "wikiLink": "Olivia_Rodrigo",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Halsey",
+    "wikiLink": "Halsey_(singer)",
+    "gender": "female",
+    "type": "musician"
+  },
+  {
+    "displayName": "Calvin Harris",
+    "wikiLink": "Calvin_Harris",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Martin Garrix",
+    "wikiLink": "Martin_Garrix",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Tiësto",
+    "wikiLink": "Tiësto",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Shawn Mendes",
+    "wikiLink": "Shawn_Mendes",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "The Weeknd",
+    "wikiLink": "The_Weeknd",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Kendrick Lamar",
+    "wikiLink": "Kendrick_Lamar",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Skrillex",
+    "wikiLink": "Skrillex",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Marshmello",
+    "wikiLink": "Marshmello",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Alan Walker",
+    "wikiLink": "Alan_Walker",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Flo Rida",
+    "wikiLink": "Flo_Rida",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Justin Bieber",
+    "wikiLink": "Justin_Bieber",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Robin Schulz",
+    "wikiLink": "Robin_Schulz",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Charlie Puth",
+    "wikiLink": "Charlie_Puth",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Drake",
+    "wikiLink": "Drake_(musician)",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "ASAP Rocky",
+    "wikiLink": "ASAP_Rocky",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Tyler, the Creator",
+    "wikiLink": "Tyler,_the_Creator",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "50 Cent",
+    "wikiLink": "50_Cent",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Snoop Dogg",
+    "wikiLink": "Snoop_Dogg",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Bruno Mars",
+    "wikiLink": "Bruno_Mars",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Ed Sheeran",
+    "wikiLink": "Ed_Sheeran",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Cro",
+    "wikiLink": "Cro_(musician)",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Noah Kahan",
+    "wikiLink": "Noah_Kahan",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Ski Aggu",
+    "wikiLink": "Ski_Aggu",
+    "gender": "male",
+    "type": "musician"
+  },
+  {
+    "displayName": "Anne Hathaway",
+    "wikiLink": "Anne_Hathaway",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Angelina Jolie",
+    "wikiLink": "Angelina_Jolie",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Jenna Ortega",
+    "wikiLink": "Jenna_Ortega",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Zendaya",
+    "wikiLink": "Zendaya",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Dakota Johnson",
+    "wikiLink": "Dakota_Johnson",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Lili Reinhart",
+    "wikiLink": "Lili_Reinhart",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Sydney Sweeney",
+    "wikiLink": "Sydney_Sweeney",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Amanda Seyfried",
+    "wikiLink": "Amanda_Seyfried",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Millie Bobby Brown",
+    "wikiLink": "Millie_Bobby_Brown",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Margot Robbie",
+    "wikiLink": "Margot_Robbie",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Meryl Streep",
+    "wikiLink": "Meryl_Streep",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Madelyn Cline",
+    "wikiLink": "Madelyn_Cline",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Jennifer Aniston",
+    "wikiLink": "Jennifer_Aniston",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Drew Barrymore",
+    "wikiLink": "Drew_Barrymore",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Kate Hudson",
+    "wikiLink": "Kate_Hudson",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Reese Witherspoon",
+    "wikiLink": "Reese_Witherspoon",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Jennifer Lawrence",
+    "wikiLink": "Jennifer_Lawrence",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Amanda Bynes",
+    "wikiLink": "Amanda_Bynes",
+    "gender": "female",
+    "type": "actor"
+  },
+  {
+    "displayName": "Brad Pitt",
+    "wikiLink": "Brad_Pitt",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Leonardo DiCaprio",
+    "wikiLink": "Leonardo_DiCaprio",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Clint Eastwood",
+    "wikiLink": "Clint_Eastwood",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Tom Holland",
+    "wikiLink": "Tom_Holland",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Dwayne Johnson",
+    "wikiLink": "Dwayne_Johnson",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Tom Hanks",
+    "wikiLink": "Tom_Hanks",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Chris Hemsworth",
+    "wikiLink": "Chris_Hemsworth",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Austin Butler",
+    "wikiLink": "Austin_Butler",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Tom Blyth",
+    "wikiLink": "Tom_Blyth",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Robert Pattinson",
+    "wikiLink": "Robert_Pattinson",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Adam Sandler",
+    "wikiLink": "Adam_Sandler",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Jack Black",
+    "wikiLink": "Jack_Black",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Chris Evans",
+    "wikiLink": "Chris_Evans_(actor)",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Pedro Pascal",
+    "wikiLink": "Pedro_Pascal",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Ryan Reynolds",
+    "wikiLink": "Ryan_Reynolds",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Aaron Taylor-Johnson",
+    "wikiLink": "Aaron_Taylor-Johnson",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Ralph Fiennes",
+    "wikiLink": "Ralph_Fiennes",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Jacob Elordi",
+    "wikiLink": "Jacob_Elordi",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Daniel Craig",
+    "wikiLink": "Daniel_Craig",
+    "gender": "male",
+    "type": "actor"
+  },
+  {
+    "displayName": "Glen Powell",
+    "wikiLink": "Glen_Powell",
+    "gender": "male",
+    "type": "actor"
+  }
+]
