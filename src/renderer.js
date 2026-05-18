@@ -38,6 +38,8 @@ const playerDisplay = document.getElementById("player-display");
 const timePowerupBtn = document.getElementById("time-powerup-btn");
 const timePowerupCountEl = document.getElementById("time-powerup-count");
 
+const imageElement = document.getElementById("wikiemediaQuestionImage");
+
 const bgTimerMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
 const bgTimerMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
 const bgTimerMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
@@ -637,7 +639,6 @@ function getWikimediaCategoryCount(category) {
 
 
 async function fetchWikimediaImage(pageTitle) {
-  const imageElement = document.getElementById("wikiemediaQuestionImage");
   if (!imageElement) return;
 
   try {
@@ -1433,6 +1434,7 @@ if (nextBtn) {
   nextBtn.addEventListener("click", () => {
     stopTimer();
     resetTimerMusic();
+    imageElement.src = "";
     currentQuestionIndex++;
 
     if (currentQuestionIndex < quizQuestions.length) {
