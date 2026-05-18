@@ -71,7 +71,7 @@ function escapeHtml(value) {
     .replaceAll("'", '&#039;');
 }
 
-async function loadQuestions() {
+async function loadQuestions() { //TODO: blockedIds
   clearStatusMessage(formMessage);
 
   try {

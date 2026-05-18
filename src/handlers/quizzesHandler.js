@@ -51,9 +51,15 @@ class QuizzesHandler {
     return this.mapQuestionRows(rows);
   }
 
-  async getQuestionsForRound(category, difficulty, count) {
+  /*
+  Zusätzlich blockedQuestionIds Parameter
+  SQL WHERE-Klausel: WHERE id NOT IN (?, ?, ...)
+  */
+
+  async getQuestionsForRound(category, difficulty, count, blockedQuestionIds = []) {
     const params = [];
     const conditions = [];
+
     if (category && category !== 'all') {
       conditions.push('category = ?');
       params.push(category);
@@ -62,8 +68,15 @@ class QuizzesHandler {
       conditions.push('difficulty = ?');
       params.push(difficulty);
     }
+    if (blockedQuestionIds.length > 0) {
+      const placeholders = blockedQuestionIds.map(() => '?').join(',');
+      conditions.push(`id NOT IN (${placeholders})`);
+      params.push(...blockedQuestionIds);
+    }
+
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
     const limit = Number(count) > 0 ? Number(count) : 10;
+
     const rows = await this.database.all(
       `SELECT id, question, category, difficulty FROM questions ${whereClause} ORDER BY RANDOM() LIMIT ?`,
       [...params, limit]

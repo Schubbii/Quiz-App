@@ -1,10 +1,12 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const fs = require('fs/promises');
 const path = require('path');
+const SessionHistoryHandler = require('./src/handlers/sessionHistoryHandler');
 
 let audioWindow;
 let audioReady = false;
 const pendingSounds = [];
+let sessionHistory;
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -23,8 +25,8 @@ function createWindow() {
 
   // Fenster mit Konsole öffnet sich beim start, bitte bei zuküftigen Versionen ohne Fenster nur auskommentieren, dass man das easy wieder einschalten kann:
   //                                        vvv
-  // win.webContents.openDevTools(); // Variante mit Konsole im Spielfenster
-  // win.webContents.openDevTools({ mode: 'detach' }); // Variante mit Konsle als seperates Fenster
+   win.webContents.openDevTools(); // Variante mit Konsole im Spielfenster
+   win.webContents.openDevTools({ mode: 'detach' }); // Variante mit Konsle als seperates Fenster
 
 
   win.on("closed", () => {
@@ -113,8 +115,21 @@ ipcMain.handle("mediawiki:getLinks", async () => {
   return JSON.parse(fileContent);
 });
 
+ipcMain.handle("history:getBlockedQuestionIds", async () => {
+  if (!sessionHistory) return [];
+  return sessionHistory.getBlockedQuestionIds();
+});
 
-app.whenReady().then(() => {
+ipcMain.handle("history:saveSessionQuestions", async (_event, questionIds) => {
+  if (!sessionHistory) return false;
+  await sessionHistory.saveSessionQuestions(questionIds);
+  return true;
+});
+
+app.whenReady().then(async () => {
+  sessionHistory = new SessionHistoryHandler(path.join(app.getPath('userData'), 'sessionHistory.json'));
+  await sessionHistory.init();
+
   createWindow();
   createAudioWindow();
 

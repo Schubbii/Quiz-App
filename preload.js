@@ -35,7 +35,7 @@ async function apiRequest(path, options = {}) {
 
 contextBridge.exposeInMainWorld('quizAPI', {
   getQuestions: () => apiRequest('/questions'),
-  getQuestionsForRound: (category, difficulty, count) => {
+  getQuestionsForRound: (category, difficulty, count) => { //TODO: blockedIds
     const query = new URLSearchParams({
       category: category || 'all',
       difficulty: difficulty || 'all',
@@ -70,6 +70,11 @@ contextBridge.exposeInMainWorld('quizAPI', {
 
 contextBridge.exposeInMainWorld('mediawikiAPI', {
   getLinks: () => ipcRenderer.invoke('mediawiki:getLinks'),
+});
+
+contextBridge.exposeInMainWorld('sessionHistoryAPI', {
+  getBlockedQuestionIds: () => ipcRenderer.invoke('history:getBlockedQuestionIds'),
+  saveSessionQuestions: (questionIds) => ipcRenderer.invoke('history:saveSessionQuestions', questionIds),
 });
 
 contextBridge.exposeInMainWorld("audio", {

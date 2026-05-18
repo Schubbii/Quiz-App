@@ -74,6 +74,70 @@ function parseJsonOrFallback(value, fallback) {
   }
 }
 
+const SESSION_SAVED_KEY = 'currentSessionSaved';
+
+async function getBlockedQuestionIds() {
+  try {
+    return await window.sessionHistoryAPI.getBlockedQuestionIds();
+  } catch (error) {
+    console.error('Fehler beim Lesen der Session-Historie:', error);
+    return [];
+  }
+}
+
+async function saveCurrentSessionQuestions(questionIds) {
+  if (!Array.isArray(questionIds) || questionIds.length === 0) {
+    return;
+  }
+
+  const uniqueIds = Array.from(new Set(questionIds.filter((id) => Number.isInteger(id))));
+  if (uniqueIds.length === 0) {
+    return;
+  }
+
+  try {
+    await window.sessionHistoryAPI.saveSessionQuestions(uniqueIds);
+    localStorage.setItem(SESSION_SAVED_KEY, 'true');
+  } catch (error) {
+    console.error('Fehler beim Speichern der Session-Historie:', error);
+  }
+}
+
+function filterBlockedQuestions(questions, blockedIds) {
+  if (!Array.isArray(questions) || blockedIds.length === 0) {
+    return questions;
+  }
+
+  const blockedSet = new Set(blockedIds);
+  return questions.filter((question) => {
+    return question == null || question.id == null || !blockedSet.has(question.id);
+  });
+}
+
+function buildSessionRounds(pool, questionsPerRound, roundCount) {
+  const totalQuestionsNeeded = Number(questionsPerRound) * Number(roundCount);
+  if (!Array.isArray(pool) || pool.length === 0 || totalQuestionsNeeded <= 0) {
+    return [];
+  }
+
+  if (pool.length < totalQuestionsNeeded) {
+    return [];
+  }
+
+  const poolCopy = [...pool];
+  shuffleArray(poolCopy);
+
+  const trimmedQuestions = poolCopy.slice(0, totalQuestionsNeeded);
+  const rounds = [];
+
+  for (let round = 0; round < roundCount; round += 1) {
+    const startIndex = round * questionsPerRound;
+    rounds.push(trimmedQuestions.slice(startIndex, startIndex + questionsPerRound));
+  }
+
+  return rounds;
+}
+
 function getWikimediaPersonKey(person) {
   return `${person.type}:${person.wikiLink || person.displayName}`;
 }
@@ -956,6 +1020,7 @@ if (startQuizBtn) {
     localStorage.removeItem("p2TimePowerups");
     localStorage.removeItem("p1CorrectStreak");
     localStorage.removeItem("p2CorrectStreak");
+    localStorage.removeItem(SESSION_SAVED_KEY);
     clearPersons();
 
     if (isMultiplayer) {
@@ -1065,10 +1130,16 @@ function shuffleArray(array) {
   }
 }
 
+/*
+Vor dem Fragenziehen: blockedIds = await getBlockedQuestionIds()
+Nach Session-Ende: saveCurrentSessionQuestions(questionIds)
+*/
 async function loadQuestions() {
   console.log("die function wurde ausgeführt");
   try {
+    const blockedQuestionIds = await getBlockedQuestionIds();
     let questions = await window.quizAPI.getQuestions();
+    questions = filterBlockedQuestions(questions, blockedQuestionIds);
 
     const count = Number(localStorage.getItem("questionCount")) || questions.length;
     const selectedCategory = localStorage.getItem("selectedCategory") || "all";
@@ -1103,6 +1174,7 @@ async function loadQuestions() {
         availableQuestionCount = questions.length;
       }
 
+
       //  {
       //   questions = questions.filter((question) => {
       //     return String(question.category || "").trim() === selectedCategory;
@@ -1113,76 +1185,71 @@ async function loadQuestions() {
 
     const roundCount = Number(localStorage.getItem("roundCount")) || 1;
     const currentRound = Number(localStorage.getItem("currentRound")) || 0;
+    const totalQuestionsNeeded = count * roundCount;
+    if (availableQuestionCount > 0 && totalQuestionsNeeded > availableQuestionCount) {
+      alert(`Es gibt nur ${availableQuestionCount} Fragen für diese Auswahl. Bitte weniger Fragen oder weniger Runden wählen.`);
+      return;
+    }
+    let savedRounds = [];
 
     if (gameMode === "multi") {
       if (currentPlayer === "2") {
-        const savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
+        savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
         quizQuestions = savedRounds[currentRound] || [];
       } else {
-        let savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
+        savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
 
         if (savedRounds.length === 0) {
-          const rounds = [];
-
-          for (let round = 0; round < roundCount; round++) {
-            let roundQuestions = [];
-
-            if (selectedCategory === "Geografie") {
-              for (let i = 0; i < count; i++) {
+          if (selectedCategory === "Geografie") {
+            for (let round = 0; round < roundCount; round += 1) {
+              const roundQuestions = [];
+              for (let i = 0; i < count; i += 1) {
                 roundQuestions.push(fetchGeoQuestion()[0]);
               }
-            } else if (isWikimediaCategory(selectedCategory)) {
-              for (let i = 0; i < count; i++) {
+              savedRounds.push(roundQuestions);
+            }
+          } else if (isWikimediaCategory(selectedCategory)) {
+            for (let round = 0; round < roundCount; round += 1) {
+              const roundQuestions = [];
+              for (let i = 0; i < count; i += 1) {
                 roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
               }
-            } else if (selectedCategory === "all") {
-              const questionsCopy = [...mixedQuestionPool];
-              shuffleArray(questionsCopy);
-              roundQuestions = questionsCopy
-                .slice(0, count)
-                .map(buildQuestionFromPoolItem);
-            } else{
-              const questionsCopy = [...questions];
-              shuffleArray(questionsCopy);
-              roundQuestions = questionsCopy.slice(0, count);
+              savedRounds.push(roundQuestions);
             }
-
-            rounds.push(roundQuestions);
+          } else if (selectedCategory === "all") {
+            savedRounds = buildSessionRounds(mixedQuestionPool, count, roundCount);
+          } else {
+            savedRounds = buildSessionRounds(questions, count, roundCount);
           }
 
-          localStorage.setItem("roundQuestions", JSON.stringify(rounds));
-          savedRounds = rounds;
+          localStorage.setItem("roundQuestions", JSON.stringify(savedRounds));
         }
 
         quizQuestions = savedRounds[currentRound] || [];
       }
     } else {
-      const rounds = [];
+      let rounds = [];
 
-      for (let round = 0; round < roundCount; round++) {
-        let roundQuestions = [];
-
-        if (selectedCategory === "Geografie") {
-          for (let i = 0; i < count; i++) {
+      if (selectedCategory === "Geografie") {
+        for (let round = 0; round < roundCount; round += 1) {
+          const roundQuestions = [];
+          for (let i = 0; i < count; i += 1) {
             roundQuestions.push(fetchGeoQuestion()[0]);
           }
-        } else if (isWikimediaCategory(selectedCategory)) {
-          for (let i = 0; i < count; i++) {
+          rounds.push(roundQuestions);
+        }
+      } else if (isWikimediaCategory(selectedCategory)) {
+        for (let round = 0; round < roundCount; round += 1) {
+          const roundQuestions = [];
+          for (let i = 0; i < count; i += 1) {
             roundQuestions.push(getWikimediaQuestion(selectedCategory)[0]);
           }
-        } else if (selectedCategory === "all") {
-          const questionsCopy = [...mixedQuestionPool];
-          shuffleArray(questionsCopy);
-          roundQuestions = questionsCopy
-            .slice(0, count)
-            .map(buildQuestionFromPoolItem);
-        } else{
-          const questionsCopy = [...questions];
-          shuffleArray(questionsCopy);
-          roundQuestions = questionsCopy.slice(0, count);
+          rounds.push(roundQuestions);
         }
-
-        rounds.push(roundQuestions);
+      } else if (selectedCategory === "all") {
+        rounds = buildSessionRounds(mixedQuestionPool, count, roundCount);
+      } else {
+        rounds = buildSessionRounds(questions, count, roundCount);
       }
 
       quizQuestions = rounds.flat();
@@ -1194,6 +1261,17 @@ async function loadQuestions() {
         questionFrame.textContent = "Keine Fragen gefunden.";
       }
       return;
+    }
+
+    if (!localStorage.getItem(SESSION_SAVED_KEY) && (gameMode !== "multi" || currentPlayer !== "2")) {
+      const sessionQuestions = gameMode === "multi"
+        ? (savedRounds || []).flat()
+        : quizQuestions;
+
+      saveCurrentSessionQuestions(sessionQuestions
+        .filter((question) => question && question.id != null)
+        .map((question) => question.id)
+      );
     }
 
     if (count > availableQuestionCount) { 
