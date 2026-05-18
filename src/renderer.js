@@ -90,7 +90,8 @@ async function saveCurrentSessionQuestions(questionIds) {
     return;
   }
 
-  const uniqueIds = Array.from(new Set(questionIds.filter((id) => Number.isInteger(id))));
+  const numericIds = questionIds.map((id) => Number(id)).filter((n) => Number.isFinite(n));
+  const uniqueIds = Array.from(new Set(numericIds));
   if (uniqueIds.length === 0) {
     return;
   }
@@ -104,13 +105,16 @@ async function saveCurrentSessionQuestions(questionIds) {
 }
 
 function filterBlockedQuestions(questions, blockedIds) {
-  if (!Array.isArray(questions) || blockedIds.length === 0) {
-    return questions;
+  if (!Array.isArray(questions) || !Array.isArray(blockedIds) || blockedIds.length === 0) {
+    return questions || [];
   }
 
-  const blockedSet = new Set(blockedIds);
-  return questions.filter((question) => {
-    return question == null || question.id == null || !blockedSet.has(question.id);
+  const blockedSet = new Set(blockedIds.map((id) => Number(id)).filter((n) => Number.isFinite(n)));
+  return (questions || []).filter((question) => {
+    if (!question || question.id == null) return true;
+    const qid = Number(question.id);
+    if (!Number.isFinite(qid)) return true;
+    return !blockedSet.has(qid);
   });
 }
 
@@ -703,17 +707,27 @@ async function fetchWikimediaImage(pageTitle) {
   if (!imageElement) return;
 
   try {
+    console.log('fetchWikimediaImage pageTitle=', pageTitle);
     const pageData = await fetch("https://en.wikipedia.org/api/rest_v1/page/summary/" + encodeURIComponent(pageTitle));
     const pageJson = await pageData.json();
-
-    if (pageJson.thumbnail?.source) {
+    if (pageJson && pageJson.thumbnail && pageJson.thumbnail.source) {
       imageElement.src = pageJson.thumbnail.source;
+      imageElement.alt = pageJson.title || pageTitle;
+      imageElement.style.display = '';
+      console.log('fetchWikimediaImage loaded thumbnail for', pageTitle, pageJson.thumbnail.source);
     } else {
-      imageElement.removeAttribute("src");
-      console.log("No Wikimedia thumbnail found for: " + pageTitle);
+      // Fallback: use a neutral placeholder so layout keeps stable
+      const placeholder = 'https://placehold.co/700x400/888/fff?text=Kein+Bild';
+      imageElement.src = placeholder;
+      imageElement.alt = pageJson?.title || pageTitle;
+      imageElement.style.display = '';
+      console.warn('No Wikimedia thumbnail found for:', pageTitle, 'using placeholder');
     }
   } catch (error) {
     console.log("Could not display Image: " + error);
+    try {
+      document.getElementById("wikiemediaQuestionImage").src = 'https://placehold.co/700x400/888/fff?text=Fehler';
+    } catch (e) {}
   }
 }
 
@@ -1138,8 +1152,15 @@ async function loadQuestions() {
   console.log("die function wurde ausgeführt");
   try {
     const blockedQuestionIds = await getBlockedQuestionIds();
+    console.log('session blockedQuestionIds:', blockedQuestionIds);
     let questions = await window.quizAPI.getQuestions();
+    if (!Array.isArray(questions)) {
+      console.warn('quizAPI.getQuestions() returned invalid data:', questions);
+      questions = [];
+    }
     questions = filterBlockedQuestions(questions, blockedQuestionIds);
+
+    console.log('questions after filtering:', questions.length);
 
     const count = Number(localStorage.getItem("questionCount")) || questions.length;
     const selectedCategory = localStorage.getItem("selectedCategory") || "all";
@@ -1196,6 +1217,7 @@ async function loadQuestions() {
       if (currentPlayer === "2") {
         savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
         quizQuestions = savedRounds[currentRound] || [];
+        console.log('loadQuestions multi player=2 currentRound=', currentRound, 'savedRounds=', savedRounds.length, 'quizQuestions=', quizQuestions.length);
       } else {
         savedRounds = JSON.parse(localStorage.getItem("roundQuestions") || "[]");
 
@@ -1218,6 +1240,8 @@ async function loadQuestions() {
             }
           } else if (selectedCategory === "all") {
             savedRounds = buildSessionRounds(mixedQuestionPool, count, roundCount);
+            // Convert any wikimedia placeholders into real question objects
+            savedRounds = savedRounds.map((round) => round.map((item) => buildQuestionFromPoolItem(item)));
           } else {
             savedRounds = buildSessionRounds(questions, count, roundCount);
           }
@@ -1226,6 +1250,7 @@ async function loadQuestions() {
         }
 
         quizQuestions = savedRounds[currentRound] || [];
+        console.log('loadQuestions multi player=1 currentRound=', currentRound, 'savedRounds=', savedRounds.length, 'quizQuestions=', quizQuestions.length);
       }
     } else {
       let rounds = [];
@@ -1248,6 +1273,7 @@ async function loadQuestions() {
         }
       } else if (selectedCategory === "all") {
         rounds = buildSessionRounds(mixedQuestionPool, count, roundCount);
+        rounds = rounds.map((round) => round.map((item) => buildQuestionFromPoolItem(item)));
       } else {
         rounds = buildSessionRounds(questions, count, roundCount);
       }
@@ -1284,7 +1310,12 @@ async function loadQuestions() {
 
     updatePlayerDisplay();
     updateTimePowerupDisplay();
-    showQuestion();
+    try {
+      showQuestion();
+    } catch (err) {
+      console.error('Fehler beim Anzeigen der Frage:', err);
+      if (questionFrame) questionFrame.textContent = 'Fehler beim Anzeigen der Frage.';
+    }
 
 
   } catch (error) {
@@ -1324,6 +1355,16 @@ function showQuestion() {
   updateTimePowerupDisplay();
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
+  if (!currentQuestion) {
+    console.error('showQuestion: currentQuestion is undefined at index', currentQuestionIndex, 'quizQuestions.length=', quizQuestions.length);
+    if (questionFrame) questionFrame.textContent = 'Fehlerhafte Frage (nicht vorhanden).';
+    return;
+  }
+  if (!Array.isArray(currentQuestion.answers)) {
+    console.error('showQuestion: currentQuestion.answers is not an array', currentQuestion);
+    if (questionFrame) questionFrame.textContent = 'Fehlerhafte Frage (keine Antworten).';
+    return;
+  }
   const isWikimediaQuestion = Boolean(currentQuestion.imageWikiLink);
   const imageFrame = document.querySelector(".image");
 
@@ -1580,6 +1621,7 @@ if (nextBtn) {
 
           localStorage.setItem("currentPlayer", "2");
 
+          console.log('Round finished for player1 currentRound=', currentRound);
           alert(`${localStorage.getItem("player1Name") || "Player 1"} ist mit Runde ${currentRound + 1} fertig. Jetzt spielt ${localStorage.getItem("player2Name") || "Player 2"} dieselbe Runde.`);
 
           goToQuestionPage();
@@ -1590,6 +1632,7 @@ if (nextBtn) {
 
           currentRound++;
 
+          console.log('Player2 finished round, incremented currentRound ->', currentRound);
           if (currentRound < roundCount) {
             localStorage.setItem("currentRound", currentRound);
             localStorage.setItem("currentPlayer", "1");

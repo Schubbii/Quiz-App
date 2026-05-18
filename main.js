@@ -25,8 +25,8 @@ function createWindow() {
 
   // Fenster mit Konsole öffnet sich beim start, bitte bei zuküftigen Versionen ohne Fenster nur auskommentieren, dass man das easy wieder einschalten kann:
   //                                        vvv
-  // win.webContents.openDevTools(); // Variante mit Konsole im Spielfenster
-  // win.webContents.openDevTools({ mode: 'detach' }); // Variante mit Konsle als seperates Fenster
+   win.webContents.openDevTools(); // Variante mit Konsole im Spielfenster
+   win.webContents.openDevTools({ mode: 'detach' }); // Variante mit Konsle als seperates Fenster
 
 
   win.on("closed", () => {
@@ -116,14 +116,27 @@ ipcMain.handle("mediawiki:getLinks", async () => {
 });
 
 ipcMain.handle("history:getBlockedQuestionIds", async () => {
-  if (!sessionHistory) return [];
-  return sessionHistory.getBlockedQuestionIds();
+  try {
+    if (!sessionHistory) return [];
+    const ids = sessionHistory.getBlockedQuestionIds();
+    console.log('[main] history:getBlockedQuestionIds ->', ids);
+    return ids;
+  } catch (err) {
+    console.error('[main] error in history:getBlockedQuestionIds', err);
+    return [];
+  }
 });
 
 ipcMain.handle("history:saveSessionQuestions", async (_event, questionIds) => {
-  if (!sessionHistory) return false;
-  await sessionHistory.saveSessionQuestions(questionIds);
-  return true;
+  try {
+    if (!sessionHistory) return false;
+    console.log('[main] history:saveSessionQuestions called count=', Array.isArray(questionIds) ? questionIds.length : 0);
+    await sessionHistory.saveSessionQuestions(questionIds);
+    return true;
+  } catch (err) {
+    console.error('[main] error in history:saveSessionQuestions', err);
+    return false;
+  }
 });
 
 app.whenReady().then(async () => {

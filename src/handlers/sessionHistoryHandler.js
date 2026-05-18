@@ -21,7 +21,9 @@ class SessionHistoryHandler {
   async loadSessionHistory() {
     try {
       const data = await fs.readFile(this.filePath, 'utf-8');
-      return JSON.parse(data).sessionHistory || [];
+      const parsed = JSON.parse(data);
+      console.log('[SessionHistoryHandler] loaded sessionHistory from', this.filePath, 'entries=', (parsed.sessionHistory || []).length);
+      return parsed.sessionHistory || [];
     } catch (error) {
       if (error.code !== 'ENOENT') {
         console.error('Fehler beim Laden der Session-Historie:', error);
@@ -46,11 +48,8 @@ class SessionHistoryHandler {
 
     try {
       await this.ensureDirectoryExists();
-      await fs.writeFile(
-        this.filePath,
-        JSON.stringify({ sessionHistory: this.sessionHistory }, null, 2),
-        'utf-8'
-      );
+      await fs.writeFile(this.filePath, JSON.stringify({ sessionHistory: this.sessionHistory }, null, 2), 'utf-8');
+      console.log('[SessionHistoryHandler] saved sessionHistory to', this.filePath, 'entries=', this.sessionHistory.length);
     } catch (error) {
       console.error('Fehler beim Speichern der Session-Historie:', error);
     }
@@ -60,9 +59,15 @@ class SessionHistoryHandler {
     const recentSessions = this.sessionHistory.slice(-2);
     const blockedIds = new Set();
     recentSessions.forEach(session => {
-      session.questionIds.forEach(id => blockedIds.add(id));
+      if (!Array.isArray(session.questionIds)) return;
+      session.questionIds.forEach((id) => {
+        const num = Number(id);
+        if (Number.isFinite(num)) blockedIds.add(num);
+      });
     });
-    return Array.from(blockedIds);
+    const result = Array.from(blockedIds);
+    console.log('[SessionHistoryHandler] getBlockedQuestionIds ->', result);
+    return result;
   }
 
   cleanupOldSessions() {
