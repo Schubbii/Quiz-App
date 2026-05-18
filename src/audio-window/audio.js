@@ -23,11 +23,14 @@ const MUSIC_CONFIG = {
 const pools = new Map();
 const musicTracks = new Map();
 
+let sfxMuted = false;
+
 function createAudio(src, volume) {
   const audio = new Audio(src);
 
   audio.preload = "auto";
   audio.volume = volume;
+  audio.muted = sfxMuted;
   audio.load();
 
   return audio;
@@ -74,6 +77,7 @@ function playSound(soundName) {
 
   audio.currentTime = 0;
   audio.volume = config.volume;
+  audio.muted = sfxMuted;
 
   audio.play().catch((error) => {
     console.warn(`Could not play sound "${soundName}":`, error);
@@ -140,4 +144,18 @@ window.audioHost.onStopMusic((musicName) => {
 
 window.audioHost.onPauseMusic((musicName) => {
   pauseMusic(musicName);
+});
+
+function setSfxMuted(isMuted) {
+  sfxMuted = isMuted;
+
+  for (const pool of pools.values()) {
+    for (const audio of pool) {
+      audio.muted = sfxMuted;
+    }
+  }
+}
+
+window.audioHost.onSetSfxMuted((isMuted) => {
+  setSfxMuted(isMuted);
 });

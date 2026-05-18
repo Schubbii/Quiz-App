@@ -45,6 +45,8 @@ const bgTimerMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
 const bgTimerMusic5sec = new Audio("./audio/Timer+5sec.mp3");
 bgTimerMusic5sec.volume = 0; // wird nur angeschalten, wenn das Powerup aktiviert wird
 
+const sfxMuteBtn = document.getElementById("ButtonsToggle");
+
 const WIKIMEDIA_CATEGORIES = {
   musician: "Sänger & Musiker",
   actor: "Schauspieler",
@@ -143,6 +145,27 @@ if (document.getElementById("musicToggle")) {
       window.audio?.playMusic("lobbyBackground");
 
       localStorage.setItem("musicMuted", "false");
+    }
+  }
+}
+
+if (localStorage.getItem("sfxMuted")) {
+  if (localStorage.getItem("sfxMuted") == "true") {
+    sfxMuteBtn.checked = true;
+  }
+}
+
+if (sfxMuteBtn) {
+  sfxMuteBtn.onchange = event => {
+    if (sfxMuteBtn.checked == true) {
+      window.audio?.setSfxMuted(true);
+
+      localStorage.setItem("sfxMuted", "true");
+    }
+    if (sfxMuteBtn.checked == false) {
+      window.audio?.setSfxMuted(false);
+
+      localStorage.setItem("sfxMuted", "false");
     }
   }
 }
@@ -1365,7 +1388,7 @@ if (window.location.pathname.includes("start.html")) {
   } else {
     if (logoAnimation && startAnimation && hauptmenue) {
       logoAnimation.addEventListener("loadedmetadata", () => {
-        const targetDuration = 1; // gewünschte Dauer in Sekunden
+        const targetDuration = 0; // gewünschte Dauer in Sekunden
         logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
       });
       let introDone = false;
@@ -1384,7 +1407,7 @@ if (window.location.pathname.includes("start.html")) {
       };
 
       const speedUpIntro = () => {
-        const targetDuration = 1; // gewünschte Dauer in Sekunden
+        const targetDuration = 0; // gewünschte Dauer in Sekunden
 
         if (Number.isFinite(logoAnimation.duration) && logoAnimation.duration > 0) {
           logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
