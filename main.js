@@ -81,6 +81,10 @@ ipcMain.on("music:pause", (_event, musicName) => {
   sendToAudioWindow("music:pause", musicName);
 });
 
+ipcMain.on("sfx:set-muted", (_event, isMuted) => {
+  sendToAudioWindow("sfx:set-muted", isMuted);
+});
+
 ipcMain.handle("mediawiki:getLinks", async () => {
   const filePath = path.join(__dirname, "src", "database", "mediawikiLinks.json");
   const fileContent = await fs.readFile(filePath, "utf-8");
