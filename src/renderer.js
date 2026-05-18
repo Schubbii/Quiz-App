@@ -4,16 +4,8 @@ const resultText = document.getElementById("result-text");
 const startAnimation = document.getElementById("Startanimation");
 const logoAnimation = document.getElementById("Logoanimation");
 const hauptmenue = document.getElementById("Hauptmenue");
-
-if (window.location.pathname.includes("start.html") && startAnimation && hauptmenue) {
-  setTimeout(() => {
-    if (startAnimation.style.display !== "none") {
-      startAnimation.style.display = "none";
-      hauptmenue.classList.remove("hidden");
-      sessionStorage.setItem("animationPlayed", "true");
-    }
-  }, 5000);
-}
+const INTRO_DURATION_SECONDS = 0;
+const INTRO_FALLBACK_MS = 7000;
 
 const adminBtn = document.getElementById("admin-btn");
 const menuBtn = document.getElementById("menu-btn");
@@ -1324,69 +1316,57 @@ function showQuestion() {
 }
 
 
-// MENU.HTML
-// Überprüft, ob Animation bereits abgespielt wurde
-if (window.location.pathname.includes("start.html")) {
-  const animationPlayed = sessionStorage.getItem("animationPlayed");
-
-  if (animationPlayed === "true") {
-    if (startAnimation) {
-      startAnimation.style.display = "none";
-    }
-    if (hauptmenue) {
-      hauptmenue.classList.remove("hidden");
-    }
-
-
-    if (localStorage.getItem("musicMuted") == "false") {
-      window.audio?.playMusic("lobbyBackground");
-    }
-
-  } else {
-    if (logoAnimation && startAnimation && hauptmenue) {
-      logoAnimation.addEventListener("loadedmetadata", () => {
-        const targetDuration = 1; // gewünschte Dauer in Sekunden
-        logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
-      });
-      let introDone = false;
-
-      const showStartMenu = () => {
-        if (introDone) return;
-
-        introDone = true;
-        startAnimation.style.display = "none";
-        hauptmenue.classList.remove("hidden");
-        sessionStorage.setItem("animationPlayed", "true");
-
-        if (localStorage.getItem("musicMuted") == "false") {
-          window.audio?.playMusic("lobbyBackground");
-        }
-      };
-
-      const speedUpIntro = () => {
-        const targetDuration = 1; // gewünschte Dauer in Sekunden
-
-        if (Number.isFinite(logoAnimation.duration) && logoAnimation.duration > 0) {
-          logoAnimation.playbackRate = logoAnimation.duration / targetDuration;
-        }
-      };
-
-      logoAnimation.addEventListener("loadedmetadata", speedUpIntro);
-      logoAnimation.addEventListener("ended", showStartMenu);
-      logoAnimation.addEventListener("error", showStartMenu);
-
-      if (logoAnimation.readyState >= 1) {
-        speedUpIntro();
-      }
-
-      if (logoAnimation.ended) {
-        showStartMenu();
-      }
-
-      setTimeout(showStartMenu, 5000);
-    }
+function playLobbyMusicIfEnabled() {
+  if (localStorage.getItem("musicMuted") == "false") {
+    window.audio?.playMusic("lobbyBackground");
   }
 }
+
+function setupIntroAnimation() {
+  if (!window.location.pathname.includes("start.html") || !startAnimation || !hauptmenue) return;
+
+  const showStartMenu = () => {
+    startAnimation.style.display = "none";
+    hauptmenue.classList.remove("hidden");
+    sessionStorage.setItem("animationPlayed", "true");
+    playLobbyMusicIfEnabled();
+  };
+
+  if (sessionStorage.getItem("animationPlayed") === "true" || !logoAnimation) {
+    showStartMenu();
+    return;
+  }
+
+  let introDone = false;
+  const finishIntro = () => {
+    if (introDone) return;
+
+    introDone = true;
+    showStartMenu();
+  };
+
+  const setIntroDuration = () => {
+    if (Number.isFinite(logoAnimation.duration) && logoAnimation.duration > 0) {
+      logoAnimation.playbackRate = logoAnimation.duration / INTRO_DURATION_SECONDS;
+    }
+  };
+
+  logoAnimation.addEventListener("loadedmetadata", setIntroDuration);
+  logoAnimation.addEventListener("ended", finishIntro);
+  logoAnimation.addEventListener("error", finishIntro);
+
+  if (logoAnimation.readyState >= 1) {
+    setIntroDuration();
+  }
+
+  if (logoAnimation.ended) {
+    finishIntro();
+  }
+
+  setTimeout(finishIntro, INTRO_FALLBACK_MS);
+}
+
+setupIntroAnimation();
 
 // Nächste Frage oder Quiz beenden
 if (nextBtn) {
