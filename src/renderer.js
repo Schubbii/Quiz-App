@@ -40,6 +40,8 @@ const playerDisplay = document.getElementById("player-display");
 const bgTimerMusic1 = new Audio("./audio/Timer_Variant-1.mp3");
 const bgTimerMusic2 = new Audio("./audio/Timer_Variant-2.mp3");
 const bgTimerMusic3 = new Audio("./audio/Timer_Variant-3.mp3");
+const bgTimerMusic5sec = new Audio("./audio/Timer+5sec.mp3");
+bgTimerMusic5sec.volume = 0; // wird nur angeschalten, wenn das Powerup aktiviert wird
 
 const WIKIMEDIA_CATEGORIES = {
   musician: "Sänger & Musiker",
@@ -105,54 +107,6 @@ function buildQuestionFromPoolItem(poolItem) {
   return poolItem;
 }
 
-
-// console.log("localStorage.getItem('firstOpen'): " + localStorage.getItem("firstOpen"));
-// console.log(localStorage.getItem("firstOpen"));
-
-// if (localStorage.getItem("firstOpen") == null) {
-//   localStorage.setItem("firstOpen", false);
-//   localStorage.setItem("musicMuted", false);
-// }
-
-// console.log("localStorage.getItem('musicMuted'): " + localStorage.getItem("musicMuted"))
-
-// if ((localStorage.getItem("musicMuted")) == "true") {
-//   console.log("trotzdem ausgefuehrt");
-//   bgTimerMusic1.volume = 0;
-//   bgTimerMusic2.volume = 0;
-//   bgTimerMusic3.volume = 0;
-
-//   window.audio.stopMusic("lobbyBackground");  
-
-//   document.getElementById("musicToggle").checked = true;
-//   console.log("hacken wurde gesetzt");
-// }
-
-// console.log("Musik stumm: " + document.getElementById("musicToggle").checked);
-
-// if (document.getElementById("musicToggle")) {
-//   document.getElementById("musicToggle").onchange = event => {
-
-//     if (document.getElementById("musicToggle").checked == true) {
-//       bgTimerMusic1.volume = 0;
-//       bgTimerMusic2.volume = 0;
-//       bgTimerMusic3.volume = 0;
-
-//       window.audio.stopMusic("lobbyBackground");
-//       localStorage.setItem("musicMuted", "true");
-//     }
-
-//     if (document.getElementById("musicToggle").checked == false) {
-//       bgTimerMusic1.volume = 1;
-//       bgTimerMusic2.volume = 1;
-//       bgTimerMusic3.volume = 1;
-
-//       window.audio.playMusic("lobbyBackground");
-//       localStorage.setItem("musicMuted", "false");
-//     }
-//   };
-// };
-
 if (localStorage.getItem("musicMuted") == "true") {
   bgTimerMusic1.volume = 0;
   bgTimerMusic2.volume = 0;
@@ -200,6 +154,9 @@ function resetTimerMusic() {
   bgTimerMusic2.currentTime = 0;
   bgTimerMusic3.pause();
   bgTimerMusic3.currentTime = 0;
+  bgTimerMusic5sec.pause();
+  bgTimerMusic5sec.currentTime = 0;
+
 }
 
 if (!(window.location.pathname.includes("menu.html") || window.location.pathname.includes("multiplayer.html") || window.location.pathname.includes("start.html"))) {
