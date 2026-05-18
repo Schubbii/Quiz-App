@@ -4,6 +4,7 @@ const path = require('path');
 
 let audioWindow;
 
+// --Silas Ciupke--
 function createWindow() {
   const win = new BrowserWindow({
     width: 1440,
@@ -19,10 +20,7 @@ function createWindow() {
   win.setMenuBarVisibility(false);
 
 
-  // Fenster mit Konsole öffnet sich beim start, bitte bei zuküftigen Versionen ohne Fenster nur auskommentieren, dass man das easy wieder einschalten kann:
-  //                                        vvv
-  // win.webContents.openDevTools(); // Variante mit Konsole im Spielfenster
-  // win.webContents.openDevTools({ mode: 'detach' }); // Variante mit Konsle als seperates Fenster
+  // --Vincent Rothweiler--
 
 
   win.on("closed", () => {
@@ -34,6 +32,7 @@ function createWindow() {
 
 }
 
+// --Vincent Rothweiler--
 function createAudioWindow() {
   audioWindow = new BrowserWindow({
     width: 1,
@@ -47,7 +46,6 @@ function createAudioWindow() {
       contextIsolation: true,
       nodeIntegration: false,
 
-      // Electron defaults to this, but being explicit is fine for a sound host.
       autoplayPolicy: "no-user-gesture-required",
     },
   });
@@ -59,6 +57,7 @@ function createAudioWindow() {
   });
 }
 
+// --Vincent Rothweiler--
 function sendToAudioWindow(channel, value) {
   if (!audioWindow || audioWindow.isDestroyed()) return;
 
@@ -85,6 +84,7 @@ ipcMain.on("sfx:set-muted", (_event, isMuted) => {
   sendToAudioWindow("sfx:set-muted", isMuted);
 });
 
+// --Vincent Rothweiler + Silas Ciupke--
 ipcMain.handle("mediawiki:getLinks", async () => {
   const filePath = path.join(__dirname, "src", "database", "mediawikiLinks.json");
   const fileContent = await fs.readFile(filePath, "utf-8");

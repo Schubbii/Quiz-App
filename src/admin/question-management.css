@@ -1,3 +1,4 @@
+/* --Marvin Litschauer-- */
 * {
     box-sizing: border-box;
 }
@@ -110,6 +111,7 @@ body {
     padding: 6px 10px;
 }
 
+/* --Marvin Litschauer-- */
 .question-list-section {
     display: flex;
     flex-direction: column;

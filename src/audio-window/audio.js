@@ -1,3 +1,4 @@
+// --Vincent Rothweiler--
 const SOUND_CONFIG = {
   buttonHover: {
     src: "./sounds/buttonHover.mp3",

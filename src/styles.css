@@ -1,4 +1,4 @@
-/* Basis */
+/* --Kira Grauf-- */
 
 * {
   box-sizing: border-box;
@@ -25,8 +25,8 @@ body {
   display: none !important;
 }
 
-/* Startanimation */
 
+/* --Philipp Rostock-- */
 #Startanimation {
   position: fixed;
   inset: 0;
@@ -43,8 +43,8 @@ body {
   object-fit: cover;
 }
 
-/* Hintergrund */
 
+/* --Kira Grauf-- */
 .background {
   position: fixed;
   inset: 0;
@@ -103,7 +103,6 @@ body {
   }
 }
 
-/* Allgemeines Layout */
 
 .menu {
   position: relative;
@@ -130,7 +129,7 @@ button {
   transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
 
-/* Menübuttons */
+/* --Philipp Rostock-- */
 #admin-btn,
 .menuBtn,
 .playBtn {
@@ -178,8 +177,8 @@ button {
   transform: translateY(1px) scale(0.98);
 }
 
-/* Quiz oben */
 
+/* --Kira Grauf-- */
 .rectangle {
   flex: 1;
   min-height: 72px;
@@ -225,7 +224,6 @@ button {
   line-height: 1.2;
 }
 
-/* Antwortbuttons */
 
 .buttonAnswers {
   width: 100%;
@@ -244,6 +242,7 @@ button {
   gap: 20px;
 }
 
+/* Vincent Rothweiler */
 .circleTimer {
   position: absolute;
   top: -16px;
@@ -294,8 +293,8 @@ button {
 }
 
 
-/* Zeit-Power-up */
 
+/* --Kira Grauf-- */
 .timePowerup {
   position: fixed;
   left: 50%;
@@ -367,7 +366,7 @@ button {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
 }
 
-/* Weiter-Button / extra Buttons */
+/* --Silas Ciupke-- */
 #next-btn,
 #menu-btn,
 #restart-btn {
@@ -375,7 +374,6 @@ button {
   max-width: 420px;
 }
 
-/* Responsive */
 
 @media (max-width: 900px) {
   body {
@@ -491,8 +489,8 @@ button {
 
 
 
-/* eingabe für maximale Fragen */
 
+/* --Silas Ciupke + Vincent Rothweiler + Kira Grauf-- */
 .quizSettings {
   width: 100%;
   max-width: 320px;
@@ -557,8 +555,8 @@ button {
 }
 
 
-/* Pop Up Buttons */
 
+/* --Vincent Rothweiler + Kira Grauf-- */
 dialog {
         border: none;
         border-radius: 8px;
@@ -589,7 +587,6 @@ dialog {
 
     }
 
-/* Layout für Startanimation und Einstellungen */
 
 .layoutStart {
         position: relative;
@@ -617,8 +614,8 @@ dialog {
   gap: 15px;
 }
 
-/* Nur Multiplayer-Menü */
 
+/* --Linett Biliczki + Kira Grauf + Philipp Rostock-- */
 .multiplayerMenu {
   position: relative;
   width: min(1100px, 100%);
@@ -699,10 +696,9 @@ dialog {
   opacity: 0.95;
 }
 
-/* Fragen mit Bild */
 
-/* Bild Layout */
 
+/* --Kira Grauf + Vincent Rothweiler-- */
 .image {
   display: flex;
   width: 700px;
@@ -812,6 +808,7 @@ dialog {
 
 
 
+/* --Philipp Rostock-- */
 #end-animation {
   position: fixed;
   inset: 0;

@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 const API_BASE_URL = "https://quiz-api-server-production-bdfd.up.railway.app";
 const ADMIN_TOKEN = 'Schubbii';
 
+// --Vincent Rothweiler--
 const allowedSounds = new Set([
   "buttonHover",
   "buttonClick",
@@ -13,6 +14,7 @@ const allowedMusic = new Set([
   "lobbyBackground",
 ]);
 
+// --Silas Ciupke--
 async function apiRequest(path, options = {}) {
   const headers = {
     'Content-Type': 'application/json',
@@ -68,10 +70,12 @@ contextBridge.exposeInMainWorld('quizAPI', {
     }),
 });
 
+// -- Vincent Rothweiler--
 contextBridge.exposeInMainWorld('mediawikiAPI', {
   getLinks: () => ipcRenderer.invoke('mediawiki:getLinks'),
 });
 
+// --Vincent Rothweiler--
 contextBridge.exposeInMainWorld("audio", {
   playSound(soundName) {
     if (!allowedSounds.has(soundName)) return;

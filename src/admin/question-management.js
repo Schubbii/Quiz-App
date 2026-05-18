@@ -3,6 +3,7 @@ const addQuestionForm = document.getElementById('addQuestionForm');
 const questionsTableBody = document.getElementById('questionsTableBody');
 const questionCount = document.getElementById('questionCount');
 
+// --Marvin Litschauer--
 const editModal = document.getElementById('editModal');
 const closeModalButton = document.getElementById('closeModalButton');
 const editQuestionForm = document.getElementById('editQuestionForm');
@@ -10,6 +11,7 @@ const deleteQuestionButton = document.getElementById('deleteQuestionButton');
 const editMessage = document.getElementById('editMessage');
 const backButton = document.getElementById('backButton');
 
+// --Marvin Litschauer--
 let allQuestions = [];
 let selectedQuestionId = null;
 
@@ -34,6 +36,7 @@ function toFormOptionsString(answers) {
   return answers.join('; ');
 }
 
+// --Marvin Litschauer--
 function renderQuestions(questions) {
   if (!Array.isArray(questions) || questions.length === 0) {
     questionsTableBody.innerHTML = `
@@ -71,6 +74,7 @@ function escapeHtml(value) {
     .replaceAll("'", '&#039;');
 }
 
+// --Marvin Litschauer--
 async function loadQuestions() {
   clearStatusMessage(formMessage);
 
@@ -84,6 +88,7 @@ async function loadQuestions() {
   }
 }
 
+// --Marvin Litschauer--
 function validateQuestionPayload({ question, answers, correctAnswerIndex, category, difficulty }) {
   if (!question) {
     throw new Error('Bitte einen Fragetext eingeben.');
@@ -174,6 +179,7 @@ function closeEditModal() {
   clearStatusMessage(editMessage);
 }
 
+// --Marvin Litschauer--
 addQuestionForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   clearStatusMessage(formMessage);
@@ -225,6 +231,7 @@ editQuestionForm.addEventListener('submit', async (event) => {
   }
 });
 
+// --Marvin Litschauer--
 deleteQuestionButton.addEventListener('click', async () => {
   if (!selectedQuestionId) {
     setStatusMessage(editMessage, 'Keine Frage ausgewählt.', true);

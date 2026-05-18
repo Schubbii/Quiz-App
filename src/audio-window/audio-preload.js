@@ -1,5 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
+// --Vincent Rothweiler--
 contextBridge.exposeInMainWorld("audioHost", {
   onPlaySound(callback) {
     ipcRenderer.on("sound:play", (_event, soundName) => {
